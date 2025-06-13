@@ -2,7 +2,7 @@ name: 🐞 Bug
 description: 버그가 발생했나요?
 title: '[fix] '
 labels: ['🐞 BugFix']
-projects: ['KFE3-e2e-WONDERFUL/157']
+projects: ['KFE3-e2e-WONDERFUL/159']
 body:
   - type: textarea
     id: bug-description
