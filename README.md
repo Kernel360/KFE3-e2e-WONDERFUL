@@ -30,7 +30,6 @@ pnpm install
 pnpm dev
 
 # 스토리북 실행
-cd packages/ui
+cd apps/docs
 pnpm run storybook
 ```
-
