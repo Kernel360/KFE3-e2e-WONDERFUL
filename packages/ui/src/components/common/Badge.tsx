@@ -15,7 +15,7 @@ const Badge = ({ title, color }: Props) => {
 
   return (
     <div
-      className={`text-white text-[8px] font-bold px-2 py-0.5 rounded-[20px] backdrop-blur-md inline-flex justify-center items-center gap-2.5 ${colorClass} `}
+      className={`inline-flex items-center justify-center gap-2.5 rounded-[20px] px-2 py-0.5 text-[8px] font-bold text-white backdrop-blur-md ${colorClass} `}
     >
       {title}
     </div>

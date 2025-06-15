@@ -1,18 +1,18 @@
-import Button from "@repo/ui/components/common/Button"
-import type { StoryObj, Meta } from "@storybook/nextjs"
+import Button from '@repo/ui/components/common/Button';
+import type { StoryObj, Meta } from '@storybook/nextjs';
 
 export default {
   component: Button,
-} satisfies Meta<typeof Button>
+} satisfies Meta<typeof Button>;
 
-type Story = StoryObj<typeof Button>
+type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
-    size: "sm",
-    color: "primary",
-    variant: "solid",
+    size: 'sm',
+    color: 'primary',
+    variant: 'solid',
     onClick: () => {},
-    className: ""
+    className: '',
   },
-}
+};

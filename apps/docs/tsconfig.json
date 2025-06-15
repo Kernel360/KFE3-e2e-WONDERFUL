@@ -12,7 +12,8 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.ts",
-    ".next/types/**/*.ts"
-, "../../packages/ui/src/components/common/Badge.tsx"  ],
+    ".next/types/**/*.ts",
+    "../../packages/ui/src/components/common/Badge.tsx"
+  ],
   "exclude": ["node_modules"]
 }

@@ -8,9 +8,5 @@
     "../../apps/docs/stories/Badge.stories.tsx",
     "../../apps/docs/stories/index.stories.tsx"
   ],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules"
-  ]
+  "exclude": ["dist", "build", "node_modules"]
 }

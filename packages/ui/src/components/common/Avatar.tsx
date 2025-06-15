@@ -21,13 +21,7 @@ const getRadiusClass = (variant: AvatarProps['variant']): string => {
   return variant === 'circle' ? 'rounded-full' : 'rounded-[10px]';
 };
 
-const Avatar = ({
-  size,
-  variant,
-  imgUrl,
-  alt,
-  className = '',
-}: AvatarProps) => {
+const Avatar = ({ size, variant, imgUrl, alt, className = '' }: AvatarProps) => {
   const sizeClass = SizeClassMap[size];
   const radiusClass = getRadiusClass(variant);
 
@@ -35,7 +29,7 @@ const Avatar = ({
     <div
       className={`${sizeClass} ${radiusClass} bg-contain bg-center bg-no-repeat ${className}`}
       style={{ backgroundImage: `url(${imgUrl})` }}
-      role='img'
+      role="img"
       aria-label={alt}
     >
       아바타
