@@ -1,3 +1,4 @@
+'use client';
 import { Heart, Plus, Search, Settings, User } from 'lucide-react';
 
 const TestLucide = () => {
