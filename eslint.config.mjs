@@ -14,5 +14,9 @@ export default [
       'pnpm-lock.yaml',
       'turbo.json',
     ],
+    rules: {
+      // 상대 경로 부모 디렉토리 임포트 허용
+      'import/no-relative-parent-imports': 'off',
+    },
   },
 ];
