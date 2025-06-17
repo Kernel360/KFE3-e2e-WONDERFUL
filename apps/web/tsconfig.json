@@ -5,7 +5,13 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "allowJs": true,
+    "resolveJsonModule": true
   },
   "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
