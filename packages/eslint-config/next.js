@@ -58,7 +58,7 @@ export const nextJsConfig = [
     },
     rules: {
       // 팀 컨벤션 규칙들
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {

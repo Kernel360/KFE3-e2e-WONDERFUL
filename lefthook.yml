@@ -1,18 +1,14 @@
-# lefthook.yml (프로젝트 루트에 생성)
 pre-commit:
   parallel: true
   commands:
-    # 테스트용 간단한 명령어
-    test-command:
-      run: echo "🎣 Lefthook is working!"
-
-    # ESLint 검사 및 자동 수정
+    # 변경된 파일만 ESLint 검사 및 자동 수정
     lint:
       glob: '*.{js,jsx,ts,tsx}'
-      run: pnpm lint
+      run: pnpm eslint --fix {staged_files}
+      stage_fixed: true
 
-    # Prettier 확인
+    # 변경된 파일만 Prettier 포맷팅
     format:
-      glob: '*.{js,jsx,ts,tsx,json,md,yml,yaml}'
-      run: pnpm format
-# pre-push는 설정하지 않음 (CI/CD에서 처리)
+      glob: '**/*.{js,jsx,ts,tsx,json,md,yml,yaml}'
+      run: pnpm prettier --write {staged_files}
+      stage_fixed: true
