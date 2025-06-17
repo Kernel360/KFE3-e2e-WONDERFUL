@@ -123,30 +123,52 @@ export const nextJsConfig = [
               group: 'external',
               position: 'before',
             },
+            // 🔥 FSD Layer 순서 (상위 → 하위)
             {
-              pattern: '@/app/**',
+              pattern: '~app/**',
               group: 'internal',
               position: 'before',
             },
             {
-              pattern: '@/pages/**',
+              pattern: '~pages/**',
               group: 'internal',
               position: 'before',
             },
+            {
+              pattern: '~widgets/**',
+              group: 'internal',
+              position: 'before',
+            },
+            {
+              pattern: '~features/**',
+              group: 'internal',
+              position: 'before',
+            },
+            {
+              pattern: '~entities/**',
+              group: 'internal',
+              position: 'before',
+            },
+            {
+              pattern: '~shared/**',
+              group: 'internal',
+              position: 'before',
+            },
+            // 🔥 Shared 세부 경로들 (@ prefix)
             {
               pattern: '@/components/**',
               group: 'internal',
-              position: 'before',
+              position: 'after',
             },
             {
-              pattern: '@/containers/**',
+              pattern: '@/ui/**',
               group: 'internal',
-              position: 'before',
+              position: 'after',
             },
             {
               pattern: '@/hooks/**',
               group: 'internal',
-              position: 'before',
+              position: 'after',
             },
             {
               pattern: '@/utils/**',
@@ -159,17 +181,27 @@ export const nextJsConfig = [
               position: 'after',
             },
             {
+              pattern: '@/store/**',
+              group: 'internal',
+              position: 'after',
+            },
+            {
+              pattern: '@/api/**',
+              group: 'internal',
+              position: 'after',
+            },
+            {
               pattern: '@/types/**',
               group: 'internal',
               position: 'after',
             },
             {
-              pattern: '@/constants/**',
+              pattern: '@/config/**',
               group: 'internal',
               position: 'after',
             },
             {
-              pattern: '@/styles/**',
+              pattern: '@/constants/**',
               group: 'internal',
               position: 'after',
             },
