@@ -107,6 +107,26 @@ export const nextJsConfig = [
         },
       ],
 
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../../*'], // 2단계 이상 상위 상대 경로 금지
+              message: '깊은 상대 경로 대신 ~layer/* 또는 @/* 를 사용해주세요',
+            },
+            {
+              group: ['~app/*'], // app layer import 금지
+              message: 'app layer는 최상위 layer로 import할 수 없습니다',
+            },
+            {
+              group: ['~pages/*/*'], // pages 내부 직접 접근 금지
+              message: 'pages 내부는 index.ts를 통해 접근해주세요',
+            },
+          ],
+        },
+      ],
+
       // Import 순서
       'import/order': [
         'error',
@@ -211,9 +231,6 @@ export const nextJsConfig = [
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
-
-      // 상대 경로 대신 절대 경로 사용 권장
-      'import/no-relative-parent-imports': 'warn',
     },
     settings: {
       'import/resolver': {
