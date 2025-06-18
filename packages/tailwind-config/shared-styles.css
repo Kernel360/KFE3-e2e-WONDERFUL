@@ -15,47 +15,47 @@ h6 {
 
 @theme {
   /* Primary Colors */
-  --primary-50: #edf0ff;
-  --primary-100: #dde4ff;
-  --primary-200: #c2ccfe;
-  --primary-300: #9dabff;
-  --primary-400: #747dff;
-  --primary-500: #5758fe;
-  --primary-600: #4238f1;
-  --primary-700: #372ecf;
-  --primary-800: #2e29a0;
+  --color-primary-50: #edf0ff;
+  --color-primary-100: #dde4ff;
+  --color-primary-200: #c2ccfe;
+  --color-primary-300: #9dabff;
+  --color-primary-400: #747dff;
+  --color-primary-500: #5758fe;
+  --color-primary-600: #4238f1;
+  --color-primary-700: #372ecf;
+  --color-primary-800: #2e29a0;
 
   /* Success Colors */
-  --success-50: #f0fdfa;
-  --success-100: #cbfbf1;
-  --success-200: #96f7e4;
-  --success-300: #46ecd5;
-  --success-400: #00d5be;
-  --success-500: #00bba7;
-  --success-600: #008b7e;
-  --success-700: #00786f;
-  --success-800: #005f5a;
+  --color-success-50: #f0fdfa;
+  --color-success-100: #cbfbf1;
+  --color-success-200: #96f7e4;
+  --color-success-300: #46ecd5;
+  --color-success-400: #00d5be;
+  --color-success-500: #00bba7;
+  --color-success-600: #008b7e;
+  --color-success-700: #00786f;
+  --color-success-800: #005f5a;
 
   /* Danger Colors */
-  --danger-50: #fff2ef;
-  --danger-100: #ffe6e0;
-  --danger-200: #fed0c6;
-  --danger-300: #ffa197;
-  --danger-400: #ff765a;
-  --danger-500: #ff4c00;
-  --danger-600: #ec3300;
-  --danger-700: #c73500;
-  --danger-800: #a52c00;
+  --color-danger-50: #fff2ef;
+  --color-danger-100: #ffe6e0;
+  --color-danger-200: #fed0c6;
+  --color-danger-300: #ffa197;
+  --color-danger-400: #ff765a;
+  --color-danger-500: #ff4c00;
+  --color-danger-600: #ec3300;
+  --color-danger-700: #c73500;
+  --color-danger-800: #a52c00;
 
   /* Neutral Colors */
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a1a1a1;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-900: #171717;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a1a1a1;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-900: #171717;
 
   /* Font Family */
 
@@ -70,14 +70,14 @@ h6 {
   --font-weight-extrabold: 800;
 
   /* Font Sizes */
-  --font-size-h2: 2rem; /* 32px */
-  --font-size-h3: 1.5rem; /* 24px */
-  --font-size-h4: 1.25rem; /* 20px */
-  --font-size-xl: 1.25rem; /* 20px */
-  --font-size-lg: 1.125rem; /* 18px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-min: 0.75rem; /* 12px */
+  --text-h2: 2rem; /* 32px */
+  --text-h3: 1.5rem; /* 24px */
+  --text-h4: 1.25rem; /* 20px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-base: 1rem; /* 16px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-min: 0.75rem; /* 12px */
 
   /* Line Heights */
   --line-height-h2: 2.375rem; /* 38px */
