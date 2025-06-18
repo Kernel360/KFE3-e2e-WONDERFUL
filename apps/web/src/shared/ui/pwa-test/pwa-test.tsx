@@ -27,7 +27,7 @@ const PWATest = () => {
 
   useEffect(() => {
     // 브라우저 감지
-    const userAgent = navigator.userAgent;
+    const { userAgent } = navigator;
     const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent); // 사파리 브라우저 감지
     const isIOS = /iPad|iPhone|iPod/.test(userAgent); // iOS 디바이스 감지
 

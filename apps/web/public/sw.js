@@ -4,7 +4,6 @@ self.addEventListener('push', function (event) {
       const data = event.data.json();
       const options = {
         body: data.body,
-        // icon2.tsx는 Next.js가 인식하는 파일명 (크기에 따라 적절한 아이콘 선택)
         icon: data.icon || '/icon/medium',
         badge: '/icon/small',
         vibrate: [100, 50, 100],

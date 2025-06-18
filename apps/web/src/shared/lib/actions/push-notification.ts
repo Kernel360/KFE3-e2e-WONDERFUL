@@ -2,11 +2,16 @@
 
 import webpush from 'web-push';
 
-webpush.setVapidDetails(
-  'mailto:support@yourcompany.com',
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+
+if (!vapidPublicKey || !vapidPrivateKey) {
+  throw new Error(
+    'VAPID public and private keys must be set in environment variables (NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)'
+  );
+}
+
+webpush.setVapidDetails('mailto:support@yourcompany.com', vapidPublicKey, vapidPrivateKey);
 
 let subscription: webpush.PushSubscription | null = null;
 
