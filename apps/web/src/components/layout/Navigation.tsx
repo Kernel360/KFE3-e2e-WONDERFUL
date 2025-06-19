@@ -19,7 +19,7 @@ const NAV_MENU = [
   { name: '프로필', href: '/profile', icon: <UserRoundIcon /> },
 ];
 
-const Footer = () => {
+const Navigation = () => {
   return (
     <NavigationMenu className="w-full p-8">
       <NavigationMenuList className="flex justify-between">
@@ -40,4 +40,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Navigation;
