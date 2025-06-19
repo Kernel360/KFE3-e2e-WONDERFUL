@@ -1,7 +1,91 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+body {
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
 
 @theme {
-  --blue-1000: #2a8af6;
-  --purple-1000: #a853ba;
-  --red-1000: #e92a67;
+  /* Primary Colors */
+  --color-primary-50: #edf0ff;
+  --color-primary-100: #dde4ff;
+  --color-primary-200: #c2ccfe;
+  --color-primary-300: #9dabff;
+  --color-primary-400: #747dff;
+  --color-primary-500: #5758fe;
+  --color-primary-600: #4238f1;
+  --color-primary-700: #372ecf;
+  --color-primary-800: #2e29a0;
+
+  /* Success Colors */
+  --color-success-50: #f0fdfa;
+  --color-success-100: #cbfbf1;
+  --color-success-200: #96f7e4;
+  --color-success-300: #46ecd5;
+  --color-success-400: #00d5be;
+  --color-success-500: #00bba7;
+  --color-success-600: #008b7e;
+  --color-success-700: #00786f;
+  --color-success-800: #005f5a;
+
+  /* Danger Colors */
+  --color-danger-50: #fff2ef;
+  --color-danger-100: #ffe6e0;
+  --color-danger-200: #fed0c6;
+  --color-danger-300: #ffa197;
+  --color-danger-400: #ff765a;
+  --color-danger-500: #ff4c00;
+  --color-danger-600: #ec3300;
+  --color-danger-700: #c73500;
+  --color-danger-800: #a52c00;
+
+  /* Neutral Colors */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a1a1a1;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-900: #171717;
+
+  /* Font Family */
+
+  --font-heading: 'Noto Sans Korean', sans-serif;
+  --font-body: 'Noto Sans Korean', sans-serif;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Font Sizes */
+  --text-h2: 2rem; /* 32px */
+  --text-h3: 1.5rem; /* 24px */
+  --text-h4: 1.25rem; /* 20px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-base: 1rem; /* 16px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-min: 0.75rem; /* 12px */
+
+  /* Line Heights */
+  --line-height-h2: 2.375rem; /* 38px */
+  --line-height-h3: 1.5rem; /* 24px */
+  --line-height-h4: 1.25rem; /* 20px */
+  --line-height-xl: auto; /* Auto */
+  --line-height-lg: auto; /* Auto */
+  --line-height-base: 1.375rem; /* 22px */
+  --line-height-sm: 1.25rem; /* 20px */
+  --line-height-min: auto; /* Auto */
 }
