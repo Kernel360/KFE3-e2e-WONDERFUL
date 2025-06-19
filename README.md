@@ -1,6 +1,6 @@
 # KFE-e2e-WONDERFUL✨
 
-위치기반 경매 웹 모바일 서비스
+위치기반 경매 웹 모바일 서비스!!
 
 ## 🛠️ Tech Stack
 
