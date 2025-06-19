@@ -2,9 +2,10 @@ import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
+import { MainLayout } from '@/components/layout';
+
 import QueryProvider from '@/lib/providers/query-provider';
 
-import MainLayout from '../src/components/layout/MainLayout';
 import './globals.css';
 
 const pretendard = localFont({

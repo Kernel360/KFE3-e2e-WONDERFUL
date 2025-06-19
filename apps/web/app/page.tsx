@@ -1,10 +1,9 @@
-// /apps/web/app/page.tsx
 'use client';
 
-import { PWATest } from '@/components/ui/pwa-test';
+import { HomePage } from '@/pages/HomePage';
 
 const Page = () => {
-  return <PWATest />;
+  return <HomePage />;
 };
 
 export default Page;
