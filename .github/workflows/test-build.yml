@@ -1,0 +1,99 @@
+name: Test Build (Personal Repo)
+
+on:
+  push:
+    branches: [chore/vercel-test-*] # 테스트 브랜치에서만 실행
+  workflow_dispatch: # 수동 실행
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Test build process
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Verify build output
+        run: |
+          echo "=== Checking output directory ==="
+          ls -la output/
+
+          echo "=== Checking package.json ==="
+          if [ -f "output/package.json" ]; then
+            cat output/package.json
+            echo "✅ package.json exists"
+          else
+            echo "❌ package.json missing"
+            exit 1
+          fi
+
+          echo "=== Checking for Next.js dependency ==="
+          if grep -q '"next"' output/package.json || [ -f "output/server.js" ]; then
+            echo "✅ Next.js found or Standalone mode detected"
+          else
+            echo "❌ Next.js not found!"
+            exit 1
+          fi
+
+          echo "=== Checking Vercel config ==="
+          if [ -f "output/vercel.json" ]; then
+            cat output/vercel.json
+            echo "✅ vercel.json exists"
+          else
+            echo "❌ vercel.json missing"
+          fi
+
+      - name: Simulate Vercel deployment
+        run: |
+          cd output
+          echo "=== Simulating Vercel deployment ==="
+
+          # 파일 구조 확인
+          echo "Files in output:"
+          find . -type f | head -20
+
+          # Standalone 모드 확인
+          if [ -f "server.js" ]; then
+            echo "✅ Standalone mode - server.js found"
+          elif [ -d ".next" ]; then
+            echo "✅ Standard Next.js build found"
+          else
+            echo "❌ No valid build output found"
+            exit 1
+          fi
+
+      - name: Push to main for Vercel deployment
+        if: success()
+        run: |
+          # output 내용을 main 브랜치로 푸시 (실제 배포 테스트)
+          git config --global user.name "Test Bot"
+          git config --global user.email "test@example.com"
+
+          # 임시 브랜치 생성
+          git checkout --orphan temp-deploy
+          git rm -rf .
+
+          # output 내용 복사
+          cp -R output/* .
+          cp output/.* . 2>/dev/null || true
+
+          git add .
+          git commit -m "🧪 Test deployment from ${{ github.ref_name }}"
+
+          # main 브랜치 강제 업데이트 (테스트용)
+          git push origin temp-deploy:main --force
