@@ -40,3 +40,6 @@ dist/
 .env.local
 .env.development
 .env.production
+
+# IDE settings
+.idea/
