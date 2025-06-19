@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import {
-  sendNotification,
-  subscribeUser,
-  unsubscribeUser,
-} from '@/src/shared/lib/actions/push-notification';
+import { sendNotification, subscribeUser, unsubscribeUser } from '@/lib/actions/push-notification';
 
 const urlBase64ToUint8Array = (base64String: string) => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);

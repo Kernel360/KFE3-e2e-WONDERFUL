@@ -1,7 +1,7 @@
 // /apps/web/app/page.tsx
 'use client';
 
-import { PWATest } from '../src/shared/ui/pwa-test';
+import { PWATest } from '@/components/ui/pwa-test';
 
 const Page = () => {
   return <PWATest />;

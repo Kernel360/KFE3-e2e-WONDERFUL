@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google';
 
 import type { Metadata, Viewport } from 'next';
 
-import ClientLayout from '@/src/shared/ui/layout/client-layout';
+import QueryProvider from '../src/lib/providers/query-provider';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -60,7 +60,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko">
       <body className={inter.className} suppressHydrationWarning>
-        <ClientLayout>{children}</ClientLayout>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

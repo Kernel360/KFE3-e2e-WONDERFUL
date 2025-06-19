@@ -8,27 +8,17 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-
-      // FSD Layer Aliases (상위 → 하위 순서)
-      "~app/*": ["./src/app/*"],
-      "~pages/*": ["./src/pages/*"],
-      "~widgets/*": ["./src/widgets/*"],
-      "~features/*": ["./src/features/*"],
-      "~entities/*": ["./src/entities/*"],
-      "~shared/*": ["./src/shared/*"],
-
-      // Shared 세부 경로들
-      "@/components/*": ["./src/shared/ui/components/*"],
-      "@/ui/*": ["./src/shared/ui/*"],
-      "@/lib/*": ["./src/shared/lib/*"],
-      "@/utils/*": ["./src/shared/lib/utils/*"],
-      "@/hooks/*": ["./src/shared/lib/hooks/*"],
-      "@/store/*": ["./src/shared/lib/store/*"],
-      "@/api/*": ["./src/shared/api/*"],
-      "@/config/*": ["./src/shared/config/*"],
-      "@/types/*": ["./src/shared/types/*"],
-      "@/constants/*": ["./src/shared/constants/*"]
+      "@/*": ["./src/*"],
+      "@/app/*": ["./app/*"],
+      "@/lib/*": ["./lib/*", "./src/lib/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/api/*": ["./src/api/*"],
+      "@/config/*": ["./src/config/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@repo/ui": ["../../packages/ui/src"],
+      "@repo/db": ["../../packages/db/src"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.ts", ".next/types/**/*.ts"],
