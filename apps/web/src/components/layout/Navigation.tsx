@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 
+import { HouseIcon, MessageSquareIcon, SearchIcon, UserRoundIcon } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from '@radix-ui/react-navigation-menu';
-
-import { HouseIcon, MessageSquareIcon, SearchIcon, UserRoundIcon } from 'lucide-react';
+} from '@/components/ui/navigation-menu';
 
 // route 작업 후 수정 필요
 const NAV_MENU = [
@@ -26,12 +25,13 @@ const Navigation = () => {
         {NAV_MENU.map(({ name, href, icon }) => (
           <NavigationMenuItem key={href}>
             <NavigationMenuLink asChild>
-              <button className="text-neutral-400">
-                <Link href={href} className="flex flex-col items-center gap-1 text-sm font-medium">
-                  {icon}
-                  <span>{name}</span>
-                </Link>
-              </button>
+              <Link
+                href={href}
+                className="flex flex-col items-center gap-1 text-sm font-medium text-neutral-400"
+              >
+                {icon}
+                <span>{name}</span>
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
