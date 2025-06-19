@@ -1,0 +1,29 @@
+# .github/workflows/cleanup-preview.yml
+name: Cleanup Preview Branch
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete preview branch from personal repo
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.SEUNG_GITHUB_KEY }}
+          script: |
+            const branchName = `preview/pr-${{ github.event.pull_request.number }}`;
+
+            try {
+              await github.rest.git.deleteRef({
+                owner: 'miniseung',
+                repo: 'KFE3-e2e-WONDERFUL',
+                ref: `heads/${branchName}`
+              });
+              console.log(`✅ Deleted branch: ${branchName}`);
+            } catch (error) {
+              console.log(`ℹ️ Branch ${branchName} may not exist or already deleted`);
+            }
