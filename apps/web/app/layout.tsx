@@ -1,11 +1,17 @@
-import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
-import QueryProvider from '../src/lib/providers/query-provider';
+import QueryProvider from '@/lib/providers/query-provider';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+const pretendard = localFont({
+  src: '../public/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '45 920',
+  style: 'normal',
+  variable: '--font-pretendard',
+});
 
 const APP_NAME = '지역 경매 서비스';
 const APP_DEFAULT_TITLE = '지역 경매 서비스';
@@ -58,8 +64,8 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="ko">
-      <body className={inter.className} suppressHydrationWarning>
+    <html lang="ko" className={pretendard.variable}>
+      <body className={pretendard.className} suppressHydrationWarning>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
