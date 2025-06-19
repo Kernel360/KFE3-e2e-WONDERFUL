@@ -116,12 +116,8 @@ export const nextJsConfig = [
               message: '깊은 상대 경로 대신 ~layer/* 또는 @/* 를 사용해주세요',
             },
             {
-              group: ['~app/*'], // app layer import 금지
-              message: 'app layer는 최상위 layer로 import할 수 없습니다',
-            },
-            {
-              group: ['~pages/*/*'], // pages 내부 직접 접근 금지
-              message: 'pages 내부는 index.ts를 통해 접근해주세요',
+              group: ['@/components/*/*/**'], // components 하위 깊은 접근 제한
+              message: 'components 내부는 index.ts를 통해 접근하거나 직접 import하세요',
             },
           ],
         },
@@ -143,87 +139,46 @@ export const nextJsConfig = [
               group: 'external',
               position: 'before',
             },
-            // 🔥 FSD Layer 순서 (상위 → 하위)
+            // 🔥 **[변경됨]** 전통방식 폴더 순서
             {
-              pattern: '~app/**',
+              pattern: '@/pages/**',
               group: 'internal',
               position: 'before',
             },
-            {
-              pattern: '~pages/**',
-              group: 'internal',
-              position: 'before',
-            },
-            {
-              pattern: '~widgets/**',
-              group: 'internal',
-              position: 'before',
-            },
-            {
-              pattern: '~features/**',
-              group: 'internal',
-              position: 'before',
-            },
-            {
-              pattern: '~entities/**',
-              group: 'internal',
-              position: 'before',
-            },
-            {
-              pattern: '~shared/**',
-              group: 'internal',
-              position: 'before',
-            },
-            // 🔥 Shared 세부 경로들 (@ prefix)
             {
               pattern: '@/components/**',
               group: 'internal',
-              position: 'after',
-            },
-            {
-              pattern: '@/ui/**',
-              group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/hooks/**',
               group: 'internal',
-              position: 'after',
-            },
-            {
-              pattern: '@/utils/**',
-              group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/lib/**',
               group: 'internal',
-              position: 'after',
-            },
-            {
-              pattern: '@/store/**',
-              group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/api/**',
               group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/types/**',
               group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/config/**',
               group: 'internal',
-              position: 'after',
+              position: 'before',
             },
             {
               pattern: '@/constants/**',
               group: 'internal',
-              position: 'after',
+              position: 'before',
             },
           ],
           pathGroupsExcludedImportTypes: ['react'],
