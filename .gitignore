@@ -40,3 +40,9 @@ dist/
 .env.local
 .env.development
 .env.production
+
+# Vercel
+.vercel
+
+# Build output (GitHub Actions용)
+output/

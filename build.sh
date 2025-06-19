@@ -36,9 +36,14 @@ elif [ -f "pnpm-lock.yaml" ]; then
   cp pnpm-lock.yaml output/pnpm-lock.yaml
 fi
 
-# Vercel 설정 파일 복사 (있다면)
-if [ -f "apps/web/vercel.json" ]; then
-  cp apps/web/vercel.json output/vercel.json
+# Vercel 설정 파일 복사 (루트에서)
+if [ -f "vercel.json" ]; then
+  cp vercel.json output/vercel.json
+fi
+
+# .gitignore 파일 복사 (루트에서)
+if [ -f ".gitignore" ]; then
+  cp .gitignore output/.gitignore
 fi
 
 echo "✅ Build completed successfully!"
