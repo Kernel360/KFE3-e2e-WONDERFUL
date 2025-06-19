@@ -41,8 +41,13 @@ dist/
 .env.development
 .env.production
 
+
 # Vercel
 .vercel
 
 # Build output (GitHub Actions용)
 output/
+
+# IDE settings
+.idea/
+

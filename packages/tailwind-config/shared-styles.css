@@ -58,9 +58,12 @@ h6 {
   --color-neutral-900: #171717;
 
   /* Font Family */
-
-  --font-heading: 'Noto Sans Korean', sans-serif;
-  --font-body: 'Noto Sans Korean', sans-serif;
+  --font-heading:
+    var(--font-pretendard), 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
+  --font-body:
+    var(--font-pretendard), 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
 
   /* Font Weights */
   --font-weight-regular: 400;
