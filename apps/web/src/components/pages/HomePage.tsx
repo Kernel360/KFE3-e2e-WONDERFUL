@@ -1,6 +1,6 @@
 'use client';
 
-import { TestLucide } from '~shared/ui/components/test-lucide';
+import { TestLucide } from '@/components/ui/test-lucide';
 
 export const HomePage = () => {
   return (

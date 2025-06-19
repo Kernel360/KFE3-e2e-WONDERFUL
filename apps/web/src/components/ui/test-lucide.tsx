@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Heart, Plus, Search, Settings, User } from 'lucide-react';
 
-import { fetchTestData } from '~shared/api/test';
+import { fetchTestData } from '@/api/test';
 
 export const TestLucide = () => {
   const { data, isLoading, error } = useQuery({
