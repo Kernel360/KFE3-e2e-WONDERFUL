@@ -1,0 +1,13 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["icn1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "preview/pr-*": true
+    }
+  }
+}
