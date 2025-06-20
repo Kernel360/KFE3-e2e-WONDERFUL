@@ -42,18 +42,41 @@ jobs:
 
       - name: Push to personal repo preview branch
         run: |
-          # SSH 설정
+          # SSH 디렉토리 설정
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
+
+          # SSH Key 설정 (더 안전한 방식)
+          echo "$SSH_DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          # SSH Key 유효성 검사
+          ssh-keygen -l -f ~/.ssh/deploy_key
+
+          # known_hosts 설정
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          # SSH config 설정
+          cat > ~/.ssh/config << EOF
+          Host github.com
+            HostName github.com
+            User git
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking no
+          EOF
+          chmod 600 ~/.ssh/config
 
           # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
+          # SSH 연결 테스트
+          ssh -T git@github.com || echo "SSH connection test completed"
+
           # SSH를 사용하여 개인 레포 클론
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
+          git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
           # 기존 파일 제거 후 새 파일 복사
@@ -67,7 +90,9 @@ jobs:
           # 커밋 및 푸시
           git add .
           git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }}" || echo "No changes"
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git push origin preview/pr-${{ github.event.pull_request.number }} --force
+          git push origin preview/pr-${{ github.event.pull_request.number }} --force
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
 
       - name: Wait for Vercel deployment
         run: sleep 30
@@ -146,18 +171,41 @@ jobs:
 
       - name: Push to personal repo main branch
         run: |
-          # SSH 설정
+          # SSH 디렉토리 설정
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
+
+          # SSH Key 설정 (더 안전한 방식)
+          echo "$SSH_DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          # SSH Key 유효성 검사
+          ssh-keygen -l -f ~/.ssh/deploy_key
+
+          # known_hosts 설정
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          # SSH config 설정
+          cat > ~/.ssh/config << EOF
+          Host github.com
+            HostName github.com
+            User git
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking no
+          EOF
+          chmod 600 ~/.ssh/config
 
           # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
+          # SSH 연결 테스트
+          ssh -T git@github.com || echo "SSH connection test completed"
+
           # SSH를 사용하여 개인 레포 클론
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
+          git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
           # main 브랜치로 이동
@@ -171,4 +219,6 @@ jobs:
           # 커밋 및 푸시
           git add .
           git commit -m "🚀 Production Deploy from ${{ github.ref_name }} branch" || echo "No changes"
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git push origin main
+          git push origin main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
