@@ -5,12 +5,14 @@ import { usePathname } from 'next/navigation';
 
 import { HouseIcon, MessagesSquare, SearchIcon, UserRoundIcon } from 'lucide-react';
 
+import { ROUTES, type NavMenuItem } from '@/constants/routes';
+
 // route 작업 후 수정 필요
-const NAV_MENU = [
-  { name: '홈', href: '/', icon: HouseIcon },
-  { name: '검색', href: '/search', icon: SearchIcon },
-  { name: '채팅', href: '/chat', icon: MessagesSquare },
-  { name: '프로필', href: '/profile', icon: UserRoundIcon },
+const NAV_MENU: NavMenuItem[] = [
+  { name: '홈', href: ROUTES.HOME, icon: HouseIcon },
+  { name: '검색', href: ROUTES.SEARCH, icon: SearchIcon },
+  { name: '채팅', href: ROUTES.CHAT, icon: MessagesSquare },
+  { name: '프로필', href: ROUTES.PROFILE, icon: UserRoundIcon },
 ];
 
 const Navigation = () => {
