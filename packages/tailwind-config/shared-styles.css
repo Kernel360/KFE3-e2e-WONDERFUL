@@ -2,6 +2,7 @@
 
 body {
   font-family: var(--font-body);
+  background-color: var(--color-primary-50);
 }
 
 h1,
@@ -91,4 +92,10 @@ h6 {
   --line-height-base: 1.375rem; /* 22px */
   --line-height-sm: 1.25rem; /* 20px */
   --line-height-min: auto; /* Auto */
+
+  /* box-shadow */
+  --shadow-nav:
+    0px -83px 23px 0px rgba(203, 195, 195, 0), 0px -53px 21px 0px rgba(203, 195, 195, 0.01),
+    0px -30px 18px 0px rgba(203, 195, 195, 0.05), 0px -13px 13px 0px rgba(203, 195, 195, 0.09),
+    0px -3px 7px 0px rgba(203, 195, 195, 0.1);
 }

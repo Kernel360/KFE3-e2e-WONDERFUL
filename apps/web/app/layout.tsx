@@ -2,7 +2,10 @@ import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
+import { MainLayout } from '@/components/layout';
+
 import QueryProvider from '@/lib/providers/query-provider';
+
 import './globals.css';
 
 const pretendard = localFont({
@@ -55,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#5758FE',
+  themeColor: '#fff',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -66,7 +69,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko" className={pretendard.variable}>
       <body className={pretendard.className} suppressHydrationWarning>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <MainLayout>{children}</MainLayout>
+        </QueryProvider>
       </body>
     </html>
   );
