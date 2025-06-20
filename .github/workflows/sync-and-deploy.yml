@@ -96,7 +96,7 @@ jobs:
       - name: Comment preview URL on PR
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.SEUNG_GITHUB_KEY }}
           script: |
             const prNumber = context.payload.pull_request.number;
             const previewUrl = `https://kfe3-e2e-wonderful-git-preview-pr-${prNumber}-miniseung.vercel.app`;
