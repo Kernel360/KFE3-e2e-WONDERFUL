@@ -2,7 +2,8 @@
 name: Cleanup Preview Branch
 
 on:
-  pull_request:
+  # Fork PR에서도 작동하도록 pull_request_target 사용
+  pull_request_target:
     types: [closed]
 
 jobs:
@@ -15,15 +16,51 @@ jobs:
         with:
           github-token: ${{ secrets.SEUNG_GITHUB_KEY }}
           script: |
-            const branchName = `preview/pr-${{ github.event.pull_request.number }}`;
+            const prNumber = context.payload.pull_request.number;
+            const branchName = `preview/pr-${prNumber}`;
 
             try {
+              // 브랜치 존재 확인
+              await github.rest.repos.getBranch({
+                owner: 'miniseung',
+                repo: 'KFE3-e2e-WONDERFUL',
+                branch: branchName
+              });
+              
+              // 브랜치 삭제
               await github.rest.git.deleteRef({
                 owner: 'miniseung',
                 repo: 'KFE3-e2e-WONDERFUL',
                 ref: `heads/${branchName}`
               });
-              console.log(`✅ Deleted branch: ${branchName}`);
+              
+              console.log(`✅ Successfully deleted branch: ${branchName}`);
+              
+              // PR에 정리 완료 댓글 (선택사항)
+              try {
+                await github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: `🧹 **Preview 브랜치 정리 완료**\n\n📝 삭제된 브랜치: \`${branchName}\`\n⏰ 정리 시간: ${new Date().toLocaleString('ko-KR')}`
+                });
+              } catch (commentError) {
+                console.log('ℹ️ 댓글 작성 실패 (권한 문제일 수 있음)');
+              }
+              
             } catch (error) {
-              console.log(`ℹ️ Branch ${branchName} may not exist or already deleted`);
+              if (error.status === 404) {
+                console.log(`ℹ️ Branch ${branchName} does not exist or already deleted`);
+              } else {
+                console.error(`❌ Error deleting branch ${branchName}:`, error.message);
+                throw error;
+              }
             }
+
+      - name: Create cleanup summary
+        run: |
+          echo "🧹 **Preview 브랜치 정리 완료**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📝 **삭제된 브랜치**: \`preview/pr-${{ github.event.pull_request.number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "⏰ **정리 시간**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "👤 **PR 작성자**: ${{ github.event.pull_request.user.login }}" >> $GITHUB_STEP_SUMMARY
