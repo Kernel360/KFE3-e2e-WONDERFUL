@@ -5,14 +5,16 @@ on:
   # Fork PR에서도 작동하도록 pull_request_target 사용
   pull_request_target:
     types: [opened, synchronize, reopened]
-    # paths:
-    #   - 'apps/web/**'  # 모든 변경사항에 대해 배포하려면 주석 처리
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
 
-  # main/develop 브랜치에 push 시 프로덕션 배포
+  # main/develop 브랜치에 push 시 해당 브랜치로 배포
   push:
     branches: [main, develop]
-    # paths:
-    #   - 'apps/web/**'  # 모든 변경사항에 대해 배포하려면 주석 처리
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
 
 jobs:
   # PR 프리뷰 배포 (Fork PR 포함)
@@ -29,12 +31,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: latest
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'pnpm'
 
       - name: Install dependencies & Build
@@ -111,7 +113,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
               });
-
+              
               console.log(`📄 총 댓글 수: ${comments.length}`);
 
               const botComment = comments.find(comment => 
@@ -158,7 +160,7 @@ jobs:
               console.log(`   ${previewUrl}`);
             }
 
-  # main/develop 브랜치 동기화
+  # main/develop 브랜치 동기화 (브랜치별로 다른 환경에 배포)
   sync-production:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -170,12 +172,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: latest
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'pnpm'
 
       - name: Install dependencies & Build
@@ -188,7 +190,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      - name: Push to personal repo main branch
+      - name: Push to personal repo (branch-specific)
         run: |
           # Git 설정
           git config --global user.name "seungmin"
@@ -198,8 +200,12 @@ jobs:
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
-          # main 브랜치로 이동
-          git checkout main || git checkout -b main
+          # 현재 브랜치명 가져오기 (develop 또는 main)
+          TARGET_BRANCH="${{ github.ref_name }}"
+          echo "🎯 Target branch: $TARGET_BRANCH"
+
+          # 해당 브랜치로 이동 (없으면 생성)
+          git checkout $TARGET_BRANCH || git checkout -b $TARGET_BRANCH
 
           # 기존 파일 제거 후 새 파일 복사
           rm -rf * .*  2>/dev/null || true
@@ -208,5 +214,27 @@ jobs:
 
           # 커밋 및 푸시
           git add .
-          git commit -m "🚀 Production Deploy from ${{ github.ref_name }} branch" || echo "No changes"
-          git push origin main
+          git commit -m "🚀 Production Deploy from $TARGET_BRANCH branch - $(date)" || echo "No changes"
+          git push origin $TARGET_BRANCH
+
+          echo "✅ Successfully deployed to $TARGET_BRANCH branch"
+
+      - name: Create deployment summary
+        run: |
+          TARGET_BRANCH="${{ github.ref_name }}"
+
+          if [ "$TARGET_BRANCH" = "main" ]; then
+            ENVIRONMENT="🚀 프로덕션"
+            VERCEL_URL="https://kfe3-e2e-wonderful.vercel.app"
+          else
+            ENVIRONMENT="🧪 스테이징"
+            VERCEL_URL="https://kfe3-e2e-wonderful-git-$TARGET_BRANCH-miniseung.vercel.app"
+          fi
+
+          echo "$ENVIRONMENT **배포 완료**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **배포 상태**: 성공" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **배포 링크**: $VERCEL_URL" >> $GITHUB_STEP_SUMMARY
+          echo "📝 **브랜치**: \`$TARGET_BRANCH\`" >> $GITHUB_STEP_SUMMARY
+          echo "⏰ **배포 시간**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "👤 **배포자**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
