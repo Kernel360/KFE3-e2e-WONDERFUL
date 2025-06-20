@@ -38,7 +38,7 @@ const Avatar = ({ size, variant, imgUrl, alt, className = '' }: AvatarProps) => 
 };
 
 export default Avatar;
-
+// vercel test
 // 예시
 {
   /* 
