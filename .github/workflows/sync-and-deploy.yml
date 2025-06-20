@@ -55,6 +55,8 @@ jobs:
       - name: Debug SSH Key Secret
         run: |
           echo "SSH_DEPLOY_KEY exists: ${{ secrets.SSH_DEPLOY_KEY != '' }}"
+          echo "DEPLOY_SSH_KEY exists: ${{ secrets.DEPLOY_SSH_KEY != '' }}"
+          echo "SEUNG_GITHUB_KEY exists: ${{ secrets.SEUNG_GITHUB_KEY != '' }}"
           if [ -n "$SSH_KEY" ]; then
             echo "SSH Key length: ${#SSH_KEY}"
             echo "SSH Key starts with: ${SSH_KEY:0:30}..."
@@ -67,7 +69,7 @@ jobs:
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
       - name: Push to personal repo preview branch
         run: |
