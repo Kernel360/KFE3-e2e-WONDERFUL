@@ -2,7 +2,6 @@
 name: Cleanup Preview Branch
 
 on:
-  # Fork PR에서도 작동하도록 pull_request_target 사용
   pull_request_target:
     types: [closed]
 
@@ -19,13 +18,19 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const branchName = `preview/pr-${prNumber}`;
 
+            console.log(`🧹 Starting cleanup for PR #${prNumber}`);
+            console.log(`🎯 Target branch: ${branchName}`);
+
             try {
               // 브랜치 존재 확인
+              console.log('🔍 Checking if branch exists...');
               await github.rest.repos.getBranch({
                 owner: 'miniseung',
                 repo: 'KFE3-e2e-WONDERFUL',
                 branch: branchName
               });
+              
+              console.log('✅ Branch exists, proceeding with deletion...');
               
               // 브랜치 삭제
               await github.rest.git.deleteRef({
@@ -36,23 +41,69 @@ jobs:
               
               console.log(`✅ Successfully deleted branch: ${branchName}`);
               
-              // PR에 정리 완료 댓글 (선택사항)
+              // 성공 댓글 작성
               try {
-                await github.rest.issues.createComment({
+                console.log('💬 Creating cleanup comment...');
+                const successMessage = '🧹 **Preview 브랜치 정리 완료**\n\n' +
+                  `📝 **삭제된 브랜치**: \`${branchName}\`\n` +
+                  `⏰ **정리 시간**: ${new Date().toLocaleString('ko-KR')}\n` +
+                  '🗑️ **상태**: 성공적으로 삭제됨\n\n' +
+                  '> 해당 Vercel 배포도 자동으로 정리됩니다.';
+                
+                const response = await github.rest.issues.createComment({
                   issue_number: prNumber,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  body: `🧹 **Preview 브랜치 정리 완료**\n\n📝 삭제된 브랜치: \`${branchName}\`\n⏰ 정리 시간: ${new Date().toLocaleString('ko-KR')}`
+                  body: successMessage
                 });
+                console.log(`✅ Cleanup comment created (ID: ${response.data.id})`);
               } catch (commentError) {
-                console.log('ℹ️ 댓글 작성 실패 (권한 문제일 수 있음)');
+                console.warn('⚠️ 댓글 작성 실패 (권한 문제일 수 있음):', commentError.message);
               }
               
             } catch (error) {
               if (error.status === 404) {
                 console.log(`ℹ️ Branch ${branchName} does not exist or already deleted`);
+                
+                // 브랜치가 없는 경우 댓글
+                try {
+                  const notFoundMessage = '🧹 **Preview 브랜치 정리 확인**\n\n' +
+                    `📝 **대상 브랜치**: \`${branchName}\`\n` +
+                    `⏰ **확인 시간**: ${new Date().toLocaleString('ko-KR')}\n` +
+                    'ℹ️ **상태**: 브랜치가 이미 존재하지 않습니다\n\n' +
+                    '> 정리가 완료된 상태입니다.';
+                  
+                  await github.rest.issues.createComment({
+                    issue_number: prNumber,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: notFoundMessage
+                  });
+                } catch (commentError) {
+                  console.warn('⚠️ 정리 확인 댓글 작성 실패:', commentError.message);
+                }
               } else {
                 console.error(`❌ Error deleting branch ${branchName}:`, error.message);
+                console.error('❌ Full error:', error);
+                
+                // 에러 댓글 작성
+                try {
+                  const errorMessage = '❌ **Preview 브랜치 정리 실패**\n\n' +
+                    `📝 **대상 브랜치**: \`${branchName}\`\n` +
+                    `⏰ **시도 시간**: ${new Date().toLocaleString('ko-KR')}\n` +
+                    `❌ **에러**: ${error.message}\n\n` +
+                    '> 수동으로 브랜치를 확인해주세요.';
+                  
+                  await github.rest.issues.createComment({
+                    issue_number: prNumber,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: errorMessage
+                  });
+                } catch (commentError) {
+                  console.warn('⚠️ 에러 댓글 작성 실패:', commentError.message);
+                }
+                
                 throw error;
               }
             }
@@ -61,6 +112,7 @@ jobs:
         run: |
           echo "🧹 **Preview 브랜치 정리 완료**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📝 **삭제된 브랜치**: \`preview/pr-${{ github.event.pull_request.number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "📝 **삭제 대상**: \`preview/pr-${{ github.event.pull_request.number }}\`" >> $GITHUB_STEP_SUMMARY
           echo "⏰ **정리 시간**: $(date)" >> $GITHUB_STEP_SUMMARY
           echo "👤 **PR 작성자**: ${{ github.event.pull_request.user.login }}" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Personal Repo**: https://github.com/miniseung/KFE3-e2e-WONDERFUL" >> $GITHUB_STEP_SUMMARY

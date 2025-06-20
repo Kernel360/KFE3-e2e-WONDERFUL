@@ -15,14 +15,16 @@ on:
     #   - 'apps/web/**'  # 모든 변경사항에 대해 배포하려면 주석 처리
 
 jobs:
-  # PR 프리뷰 배포
+  # PR 프리뷰 배포 (Fork PR 포함)
   preview-deploy:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request_target' # ✅ 수정됨
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout team repo
+      - name: Checkout PR code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # ✅ PR 코드 체크아웃
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -42,43 +44,9 @@ jobs:
 
       - name: Debug SSH Key Secret
         run: |
-          echo "SSH_DEPLOY_KEY exists: ${{ secrets.SSH_DEPLOY_KEY != '' }}"
-          if [ -n "$SSH_KEY" ]; then
-            echo "SSH Key length: ${#SSH_KEY}"
-            echo "SSH Key starts with: ${SSH_KEY:0:30}..."
-          else
-            echo "SSH_DEPLOY_KEY is empty!"
-          fi
-        env:
-          SSH_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-
-      - name: Debug SSH Key Secret
-        run: |
-          echo "SSH_DEPLOY_KEY exists: ${{ secrets.SSH_DEPLOY_KEY != '' }}"
           echo "DEPLOY_SSH_KEY exists: ${{ secrets.DEPLOY_SSH_KEY != '' }}"
           echo "SEUNG_GITHUB_KEY exists: ${{ secrets.SEUNG_GITHUB_KEY != '' }}"
-          if [ -n "$SSH_KEY" ]; then
-            echo "SSH Key length: ${#SSH_KEY}"
-            echo "SSH Key starts with: ${SSH_KEY:0:30}..."
-          else
-            echo "SSH_DEPLOY_KEY is empty!"
-          fi
-        env:
-          SSH_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-
-      - name: Debug SSH Key Secret
-        run: |
-          echo "SSH_DEPLOY_KEY exists: ${{ secrets.SSH_DEPLOY_KEY != '' }}"
-          echo "DEPLOY_SSH_KEY exists: ${{ secrets.DEPLOY_SSH_KEY != '' }}"
-          echo "SEUNG_GITHUB_KEY exists: ${{ secrets.SEUNG_GITHUB_KEY != '' }}"
-          if [ -n "$SSH_KEY" ]; then
-            echo "SSH Key length: ${#SSH_KEY}"
-            echo "SSH Key starts with: ${SSH_KEY:0:30}..."
-          else
-            echo "SSH_DEPLOY_KEY is empty!"
-          fi
-        env:
-          SSH_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          echo "SEUNG_ACCOUNT_EMAIL exists: ${{ secrets.SEUNG_ACCOUNT_EMAIL != '' }}"
 
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.9.0
@@ -95,18 +63,22 @@ jobs:
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
+          # 기존 브랜치가 있으면 삭제 후 새로 생성
+          BRANCH_NAME="preview/pr-${{ github.event.pull_request.number }}"
+          git push origin --delete $BRANCH_NAME 2>/dev/null || echo "Branch doesn't exist yet"
+
           # 기존 파일 제거 후 새 파일 복사
           rm -rf * .*  2>/dev/null || true
           cp -r ../output/* . 2>/dev/null || true
           cp -r ../output/.* . 2>/dev/null || true
 
-          # 브랜치 생성/이동
-          git checkout -b preview/pr-${{ github.event.pull_request.number }}
+          # 새 브랜치 생성
+          git checkout -b $BRANCH_NAME
 
           # 커밋 및 푸시
           git add .
-          git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }}" || echo "No changes"
-          git push origin preview/pr-${{ github.event.pull_request.number }} --force
+          git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }} - $(date)" || echo "No changes"
+          git push origin $BRANCH_NAME
 
       - name: Wait for Vercel deployment
         run: sleep 30
@@ -126,46 +98,64 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.issue.number;
+            const prNumber = context.payload.pull_request.number;
             const previewUrl = `https://kfe3-e2e-wonderful-git-preview-pr-${prNumber}-miniseung.vercel.app`;
 
-            // 기존 봇 댓글 찾기
-            const comments = await github.rest.issues.listComments({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
+            console.log(`🔗 배포 URL: ${previewUrl}`);
+            console.log(`📝 PR 번호: ${prNumber}`);
 
-            const botComment = comments.data.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('Vercel Preview')
-            );
+            try {
+              // 기존 봇 댓글 찾기
+              const { data: comments } = await github.rest.issues.listComments({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
 
-            const commentBody = `## 🚀 Vercel Preview 배포 완료
+              console.log(`📄 총 댓글 수: ${comments.length}`);
+
+              const botComment = comments.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('Vercel Preview')
+              );
+
+              const commentBody = `## 🚀 Vercel Preview 배포 완료
 
             ✅ **배포 상태**: 성공  
             🔗 **미리보기 링크**: ${previewUrl}  
             📝 **브랜치**: \`preview/pr-${prNumber}\`  
             ⏰ **배포 시간**: ${new Date().toLocaleString('ko-KR')}
+            👤 **배포자**: ${{ github.event.pull_request.user.login }}
+            🔄 **커밋**: ${{ github.event.pull_request.head.sha.substring(0, 7) }}
 
             > 변경사항이 반영되려면 1-2분 정도 소요될 수 있습니다.`;
 
-            if (botComment) {
-              // 기존 댓글 업데이트
-              await github.rest.issues.updateComment({
-                comment_id: botComment.id,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: commentBody
-              });
-            } else {
-              // 새 댓글 생성
-              await github.rest.issues.createComment({
-                issue_number: prNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: commentBody
-              });
+              if (botComment) {
+                console.log(`🔄 기존 댓글 업데이트 중... (ID: ${botComment.id})`);
+                await github.rest.issues.updateComment({
+                  comment_id: botComment.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: commentBody
+                });
+                console.log('✅ 기존 댓글 업데이트 완료');
+              } else {
+                console.log('💬 새 댓글 생성 중...');
+                const response = await github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: commentBody
+                });
+                console.log(`✅ 새 댓글 생성 완료 (ID: ${response.data.id})`);
+              }
+            } catch (error) {
+              console.error('❌ 댓글 작성 실패 상세:', error);
+              console.error('❌ 에러 스택:', error.stack);
+              
+              // 댓글 실패해도 배포 URL은 로그에 출력
+              console.log('🔗 배포는 성공했습니다. URL을 확인하세요:');
+              console.log(`   ${previewUrl}`);
             }
 
   # main/develop 브랜치 동기화
@@ -196,7 +186,7 @@ jobs:
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
       - name: Push to personal repo main branch
         run: |
