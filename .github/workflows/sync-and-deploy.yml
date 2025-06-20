@@ -53,13 +53,13 @@ jobs:
           # remote URL 설정
           git remote set-url origin https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git
 
-          # 브랜치 생성/이동
-          git checkout -B preview/pr-${{ github.event.pull_request.number }}
-
-          # 기존 파일 제거 후 새 파일 복사
+          # 기존 파일 제거 후 새 파일 복사 (브랜치 생성 전에)
           rm -rf * .*  2>/dev/null || true
           cp -r ../output/* . 2>/dev/null || true
           cp -r ../output/.* . 2>/dev/null || true
+
+          # 브랜치 생성/이동 (파일 복사 후에)
+          git checkout -b preview/pr-${{ github.event.pull_request.number }}
 
           # 커밋 및 푸시
           git add .
