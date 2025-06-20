@@ -6,13 +6,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     # paths:
-    #   - 'apps/web/**'
+    #   - 'apps/web/**'  # 모든 변경사항에 대해 배포하려면 주석 처리
 
   # main/develop 브랜치에 push 시 프로덕션 배포
   push:
     branches: [main, develop]
     # paths:
-    #   - 'apps/web/**'
+    #   - 'apps/web/**'  # 모든 변경사항에 대해 배포하려면 주석 처리
 
 jobs:
   # PR 프리뷰 배포
@@ -50,6 +50,9 @@ jobs:
           git clone https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
+          # remote URL 설정
+          git remote set-url origin https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git
+
           # 브랜치 생성/이동
           git checkout -B preview/pr-${{ github.event.pull_request.number }}
 
@@ -61,7 +64,7 @@ jobs:
           # 커밋 및 푸시
           git add .
           git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }}" || echo "No changes"
-          git push origin preview/pr-${{ github.event.pull_request.number }} --force
+          git push https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git preview/pr-${{ github.event.pull_request.number }} --force
 
       - name: Wait for Vercel deployment
         run: sleep 30
@@ -148,6 +151,9 @@ jobs:
           git clone https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
           cd temp-repo
 
+          # remote URL 설정
+          git remote set-url origin https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git
+
           # main 브랜치로 이동
           git checkout main || git checkout -b main
 
@@ -159,4 +165,4 @@ jobs:
           # 커밋 및 푸시
           git add .
           git commit -m "🚀 Production Deploy from ${{ github.ref_name }} branch" || echo "No changes"
-          git push origin main
+          git push https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git main
