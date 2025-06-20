@@ -64,16 +64,6 @@ const Header = ({
       );
     }
 
-    // 기본값: 뒤로가기 (leftIcon이 명시적으로 없을 때만)
-    // return (
-    //   <button
-    //     onClick={onLeftClick || (() => router.back())}
-    //     className="cursor-pointer p-1"
-    //     aria-label="Back Button"
-    //   >
-    //     <ChevronLeft size={28} />
-    //   </button>
-    // );
     // 기본값: 빈 공간 (공간만 차지)
     return <div className="h-[40px] w-[40px]" />;
   };
@@ -103,9 +93,6 @@ const Header = ({
     return null;
   };
 
-  // 왼쪽과 오른쪽 영역이 모두 없는지 확인
-  // const hasLeftSection = !hideLeft && (leftContent || leftIcon || (!leftIcon && leftIcon !== null));
-  // const hasRightSection = !hideRight && (rightContent || rightIcon);
   // 왼쪽과 오른쪽 영역이 존재하는지 확인
   const hasLeftSection = !hideLeft && (leftContent || leftIcon !== undefined);
   const hasRightSection = !hideRight && (rightContent || rightIcon);
