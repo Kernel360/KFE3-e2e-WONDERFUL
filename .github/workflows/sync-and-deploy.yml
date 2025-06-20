@@ -126,7 +126,7 @@ jobs:
             📝 **브랜치**: \`preview/pr-${prNumber}\`  
             ⏰ **배포 시간**: ${new Date().toLocaleString('ko-KR')}
             👤 **배포자**: ${{ github.event.pull_request.user.login }}
-            🔄 **커밋**: ${{ github.event.pull_request.head.sha.substring(0, 7) }}
+            🔄 **커밋**: ${{ github.event.pull_request.head.sha }}
 
             > 변경사항이 반영되려면 1-2분 정도 소요될 수 있습니다.`;
 
