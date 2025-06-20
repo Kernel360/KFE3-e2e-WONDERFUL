@@ -5,14 +5,14 @@ on:
   # PR 생성/업데이트 시 프리뷰 배포
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'apps/web/**'
+    # paths:
+    #   - 'apps/web/**'
 
   # main/develop 브랜치에 push 시 프로덕션 배포
   push:
     branches: [main, develop]
-    paths:
-      - 'apps/web/**'
+    # paths:
+    #   - 'apps/web/**'
 
 jobs:
   # PR 프리뷰 배포
