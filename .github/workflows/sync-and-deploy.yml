@@ -46,12 +46,12 @@ jobs:
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
-          # 개인 레포 클론
-          git clone https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
-          cd temp-repo
+          # 토큰을 환경변수로 설정
+          export GITHUB_TOKEN="${{ secrets.SEUNG_GITHUB_KEY }}"
 
-          # remote URL 설정
-          git remote set-url origin https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git
+          # 개인 레포 클론 (토큰을 URL에 직접 포함)
+          git clone https://${GITHUB_TOKEN}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
+          cd temp-repo
 
           # 기존 파일 제거 후 새 파일 복사 (브랜치 생성 전에)
           rm -rf * .*  2>/dev/null || true
@@ -61,10 +61,10 @@ jobs:
           # 브랜치 생성/이동 (파일 복사 후에)
           git checkout -b preview/pr-${{ github.event.pull_request.number }}
 
-          # 커밋 및 푸시
+          # 커밋 및 푸시 (토큰 포함 URL 사용)
           git add .
           git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }}" || echo "No changes"
-          git push https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git preview/pr-${{ github.event.pull_request.number }} --force
+          git push https://${GITHUB_TOKEN}@github.com/miniseung/KFE3-e2e-WONDERFUL.git preview/pr-${{ github.event.pull_request.number }} --force
 
       - name: Wait for Vercel deployment
         run: sleep 30
@@ -147,12 +147,12 @@ jobs:
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
-          # 개인 레포 클론
-          git clone https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
-          cd temp-repo
+          # 토큰을 환경변수로 설정
+          export GITHUB_TOKEN="${{ secrets.SEUNG_GITHUB_KEY }}"
 
-          # remote URL 설정
-          git remote set-url origin https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git
+          # 개인 레포 클론 (토큰을 URL에 직접 포함)
+          git clone https://${GITHUB_TOKEN}@github.com/miniseung/KFE3-e2e-WONDERFUL.git temp-repo
+          cd temp-repo
 
           # main 브랜치로 이동
           git checkout main || git checkout -b main
@@ -162,7 +162,7 @@ jobs:
           cp -r ../output/* . 2>/dev/null || true
           cp -r ../output/.* . 2>/dev/null || true
 
-          # 커밋 및 푸시
+          # 커밋 및 푸시 (토큰 포함 URL 사용)
           git add .
           git commit -m "🚀 Production Deploy from ${{ github.ref_name }} branch" || echo "No changes"
-          git push https://${{ secrets.SEUNG_GITHUB_KEY }}@github.com/miniseung/KFE3-e2e-WONDERFUL.git main
+          git push https://${GITHUB_TOKEN}@github.com/miniseung/KFE3-e2e-WONDERFUL.git main
