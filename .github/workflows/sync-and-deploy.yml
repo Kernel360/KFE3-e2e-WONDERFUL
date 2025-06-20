@@ -46,12 +46,9 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # SSH Key 설정 (더 안전한 방식)
+          # SSH Key 설정
           echo "$SSH_DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-
-          # SSH Key 유효성 검사
-          ssh-keygen -l -f ~/.ssh/deploy_key
 
           # known_hosts 설정
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
@@ -71,9 +68,6 @@ jobs:
           # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
-
-          # SSH 연결 테스트
-          ssh -T git@github.com || echo "SSH connection test completed"
 
           # SSH를 사용하여 개인 레포 클론
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
@@ -175,12 +169,9 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # SSH Key 설정 (더 안전한 방식)
+          # SSH Key 설정
           echo "$SSH_DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-
-          # SSH Key 유효성 검사
-          ssh-keygen -l -f ~/.ssh/deploy_key
 
           # known_hosts 설정
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
@@ -200,9 +191,6 @@ jobs:
           # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
-
-          # SSH 연결 테스트
-          ssh -T git@github.com || echo "SSH connection test completed"
 
           # SSH를 사용하여 개인 레포 클론
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git temp-repo
