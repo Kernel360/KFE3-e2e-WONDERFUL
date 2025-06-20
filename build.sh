@@ -9,7 +9,7 @@ echo "🏗️  Starting standalone build process..."
 cd apps/web || exit 1
 
 echo "📦 Installing dependencies..."
-pnpm install
+pnpm install --no-frozen-lockfile
 
 echo "🔨 Building standalone application..."
 pnpm build
