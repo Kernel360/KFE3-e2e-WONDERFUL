@@ -13,13 +13,12 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 const MainLayout = ({ children }: MainLayoutProps) => {
-  const [selectedFruit, setSelectedFruit] = useState('');
-  const fruitOptions = [
-    { value: 'apple', label: 'Apple' },
-    { value: 'banana', label: 'Banana' },
-    { value: 'blueberry', label: 'Blueberry' },
-    { value: 'grapes', label: 'Grapes' },
-    { value: 'pineapple', label: 'Pineapple' },
+  const [selectedState, setSelectedState] = useState('');
+  const stateOptions = [
+    { value: 'all', label: '전체' },
+    { value: 'active', label: '진행중' },
+    { value: 'completed', label: '완료' },
+    { value: 'pending', label: '대기' },
   ];
   return (
     <div className="mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col">
@@ -27,11 +26,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <Header
         leftContent={
           <SelectBox
-            options={fruitOptions}
-            placeholder="과일을 선택하세요"
-            value={selectedFruit}
-            onValueChange={setSelectedFruit}
-            className="w-[200px]"
+            options={stateOptions}
+            placeholder="상태"
+            value={selectedState}
+            onValueChange={setSelectedState}
+            // className="w-[100px]" // 다른 너비 지정
           />
         }
         rightIcon={Bell}
