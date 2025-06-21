@@ -1,24 +1,38 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Bell } from 'lucide-react';
+
+import { SelectBox } from '@/components/common/SelectBox';
 
 import Header from './Header';
 import Navigation from './Navigation';
+
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const [selectedFruit, setSelectedFruit] = useState('');
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'blueberry', label: 'Blueberry' },
+    { value: 'grapes', label: 'Grapes' },
+    { value: 'pineapple', label: 'Pineapple' },
+  ];
   return (
     <div className="mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col">
       {/* 상품 목록 - 카테고리 선택 + 제목 + 필터 */}
       <Header
         leftContent={
-          <select className="rounded border border-gray-300 bg-white p-1 text-sm">
-            <option value="all">전체</option>
-            <option value="electronics">전자제품</option>
-            <option value="clothing">의류</option>
-            <option value="books">도서</option>
-          </select>
+          <SelectBox
+            options={fruitOptions}
+            placeholder="과일을 선택하세요"
+            value={selectedFruit}
+            onValueChange={setSelectedFruit}
+            className="w-[200px]"
+          />
         }
         rightIcon={Bell}
         className="bg-white"
