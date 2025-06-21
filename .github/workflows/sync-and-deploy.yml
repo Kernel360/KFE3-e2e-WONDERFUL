@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies & Build
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           sh ./build.sh
 
       - name: Setup SSH Key
@@ -177,7 +177,7 @@ jobs:
 
       - name: Install dependencies & Build
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           sh ./build.sh
 
       - name: Setup SSH Key
