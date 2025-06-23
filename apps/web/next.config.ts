@@ -2,11 +2,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   optimizeFonts: true,
-  env: {
-    // 환경변수가 존재할 때만 포함
-    ...(process.env.DATABASE_URL && { DATABASE_URL: process.env.DATABASE_URL }),
-    ...(process.env.DIRECT_URL && { DIRECT_URL: process.env.DIRECT_URL }),
-  },
   experimental: {
     serverComponentsExternalPackages: ['@repo/db', '@prisma/client'],
   },
