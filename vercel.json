@@ -1,12 +1,13 @@
 {
   "buildCommand": "pnpm build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install",
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": "nextjs",
   "regions": ["icn1"],
   "git": {
     "deploymentEnabled": {
       "main": true,
+      "develop": true,
       "preview/pr-*": true
     }
   }
