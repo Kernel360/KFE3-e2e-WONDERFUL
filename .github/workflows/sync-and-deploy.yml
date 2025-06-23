@@ -64,10 +64,13 @@ jobs:
           BRANCH_NAME="preview/pr-${{ github.event.pull_request.number }}"
           git push origin --delete $BRANCH_NAME 2>/dev/null || echo "Branch doesn't exist yet"
 
-          # 기존 파일 제거 후 새 파일 복사
-          rm -rf * .*  2>/dev/null || true
+          # .git 폴더를 제외하고 기존 파일 제거
+          find . -maxdepth 1 ! -name '.' ! -name '..' ! -name '.git' -exec rm -rf {} + 2>/dev/null || true
+
+          # 새 파일 복사
           cp -r $GITHUB_WORKSPACE/output/* . 2>/dev/null || true
-          cp -r $GITHUB_WORKSPACE/output/.* . 2>/dev/null || true
+          # .git을 제외한 숨김 파일들만 복사
+          find $GITHUB_WORKSPACE/output -maxdepth 1 -name ".*" ! -name ".git" -exec cp -r {} . \; 2>/dev/null || true
 
           # 새 브랜치 생성
           git checkout -b $BRANCH_NAME
