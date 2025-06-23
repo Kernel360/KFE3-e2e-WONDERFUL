@@ -1,2 +1,2 @@
-export { db } from './client.js';
-export * from './generated/index.js';
+export { prisma } from './client';
+export * from './generated';
