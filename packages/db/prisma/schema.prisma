@@ -10,6 +10,196 @@ datasource db {
 }
 
 model User {
-  // ...
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email       String    @unique @db.VarChar(255)
+  password    String    @db.VarChar(255)
+  phone       String?   @unique @db.VarChar(20)
+  isVerified  Boolean   @default(false) @map("is_verified")
+  profileImg  String?   @map("profile_img") @db.Text
+  nickname    String    @unique @db.VarChar(50)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime? @map("updated_at") @db.Timestamp(6)
+
+  // Relations
+  locations      Location[]
+  alerts         Alert[]
+  favoriteItems  FavoriteItem[]
+  auctionItems   AuctionItem[]  @relation("SellerItems")
+  bids           Bid[]
+  sales          Sale[]
+  chatRoomsSeller ChatRoom[]    @relation("SellerChatRooms")
+  chatRoomsBuyer  ChatRoom[]    @relation("BuyerChatRooms")
+  chatMessages   ChatMessage[]
+
+  @@map("users")
 }
 
+model Location {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  locationName String?  @map("location_name") @db.VarChar(100)
+  latitude     Decimal? @db.Decimal(9, 6)
+  longitude    Decimal? @db.Decimal(9, 6)
+  isPrimary    Boolean  @default(false) @map("is_primary")
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auctionItems AuctionItem[]
+
+  @@map("locations")
+}
+
+model Alert {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  title         String?  @db.VarChar(100)
+  content       String?  @db.VarChar(255)
+  alertCategory String?  @map("alert_category") @db.VarChar(50)
+  isRead        Boolean  @default(false) @map("is_read")
+  createdAt     DateTime @map("created_at") @db.Timestamp(6)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model FavoriteItem {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  itemId    String   @map("item_id") @db.Uuid
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+
+  // Relations
+  user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("favorite_items")
+}
+
+model Category {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique @db.VarChar(100)
+
+  // Relations
+  auctionItems AuctionItem[]
+
+  @@map("categories")
+}
+
+model AuctionItem {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sellerId    String    @map("seller_id") @db.Uuid
+  auctionType String    @map("auction_type") @db.VarChar(20)
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  categoryId  String    @map("category_id") @db.Uuid
+  locationId  String    @map("location_id") @db.Uuid
+  startTime   DateTime? @map("start_time") @db.Timestamp(6)
+  endTime     DateTime  @map("end_time") @db.Timestamp(6)
+  status      String    @db.VarChar(50)
+  thumbnailUrl String?  @map("thumbnail_url") @db.Text // 썸네일이미지 URL
+  createdAt   DateTime  @map("created_at") @db.Timestamp(6)
+
+  // Relations
+  seller        User           @relation("SellerItems", fields: [sellerId], references: [id], onDelete: Cascade)
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  location      Location       @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  auctionPrice  AuctionPrice?
+  bids          Bid[]
+  auctionImages AuctionImage[]
+  favoriteItems FavoriteItem[]
+  sales         Sale[]
+  chatRooms     ChatRoom[]
+
+  @@map("auction_items")
+}
+
+model AuctionPrice {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId       String @unique @map("item_id") @db.Uuid
+  startPrice   Int    @map("start_price")
+  instantPrice Int?   @map("instant_price")
+  minBidUnit   Int    @map("min_bid_unit")
+  currentPrice Int    @map("current_price")
+
+  // Relations
+  item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("auction_prices")
+}
+
+model Bid {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId    String   @map("item_id") @db.Uuid
+  bidderId  String   @map("bidder_id") @db.Uuid
+  price     Int
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+
+  // Relations
+  item   AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  bidder User        @relation(fields: [bidderId], references: [id], onDelete: Cascade)
+
+  @@map("bids")
+}
+
+model AuctionImage {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId String @map("item_id") @db.Uuid
+  url    String @db.Text
+
+  // Relations
+  item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("auction_images")
+}
+
+model Sale {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId        String   @map("item_id") @db.Uuid
+  buyerId       String   @map("buyer_id") @db.Uuid
+  finalPrice    Int      @map("final_price")
+  paymentStatus String   @map("payment_status") @db.VarChar(50)
+  result        String   @db.VarChar(50)
+  createdAt     DateTime @map("created_at") @db.Timestamp(6)
+
+  // Relations
+  item  AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  buyer User        @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+
+  @@map("sales")
+}
+
+model ChatRoom {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  auctionId     String    @map("auction_id") @db.Uuid
+  sellerId      String    @map("seller_id") @db.Uuid
+  buyerId       String    @map("buyer_id") @db.Uuid
+  roomType      String    @map("room_type") @db.VarChar(50)
+  createdAt     DateTime  @map("created_at") @db.Timestamp(6)
+  lastMessageAt DateTime? @map("last_message_at") @db.Timestamp(6)
+  isDeleted     Boolean   @default(false) @map("is_deleted")
+
+  // Relations
+  auction  AuctionItem   @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  seller   User          @relation("SellerChatRooms", fields: [sellerId], references: [id], onDelete: Cascade)
+  buyer    User          @relation("BuyerChatRooms", fields: [buyerId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@map("chat_rooms")
+}
+
+model ChatMessage {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roomId   String   @map("room_id") @db.Uuid
+  senderId String   @map("sender_id") @db.Uuid
+  content  String?  @db.Text
+  imageUrl String?  @map("image_url") @db.Text
+  sentAt   DateTime @map("sent_at") @db.Timestamp(6)
+
+  // Relations
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}

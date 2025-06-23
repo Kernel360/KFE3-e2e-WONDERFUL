@@ -13,5 +13,5 @@
     "types": ["node"]
   },
   "include": ["src/**/*", "prisma/**/*"],
-  "exclude": ["node_modules", "src/generated", "dist"]
+  "exclude": ["node_modules", "src/generated", "dist", "src/generated/**/*"]
 }
