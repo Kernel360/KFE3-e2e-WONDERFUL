@@ -19,15 +19,23 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  // 요청 전 처리
-  console.log('API 요청:', config.url);
+  // 개발 환경에서만 API 요청 로그 출력
+  if (process.env.NODE_ENV === 'development') {
+    console.log('API 요청:', config.url);
+  }
   return config;
 });
 
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API 에러:', error);
+    if (process.env.NODE_ENV === 'development') {
+      // 개발 환경에서는 전체 에러 로그 출력
+      console.error('API 에러:', error);
+    } else {
+      // 운영 환경에서는 민감한 정보 노출 방지
+      console.error('API 에러: 요청 처리 중 오류가 발생했습니다.');
+    }
     return Promise.reject(error);
   }
 );
