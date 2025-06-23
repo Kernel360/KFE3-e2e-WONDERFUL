@@ -10,12 +10,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // defualt=solid type
+        // default=solid type
         solid: '',
-        outline: 'border-1 bg-transparent',
+        outline: 'borde bg-transparent',
       },
       color: {
-        // defualt=primary color
+        // default=primary color
         primary: 'focus-visible:ring-primary-500/50',
         secondary: 'focus-visible:ring-neutral-400/50',
         disabled: 'cursor-not-allowed ',
@@ -74,7 +74,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'disabled',
-        className: 'border-netral-200 bg-neutral-50 text-neutral-300',
+        className: 'border-neutral-200 bg--50 text-neutral-300',
       },
       {
         variant: 'outline',
