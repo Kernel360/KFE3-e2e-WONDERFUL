@@ -51,7 +51,7 @@ const LocationSearchForm = () => {
     setHasSearched(true);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
@@ -59,60 +59,37 @@ const LocationSearchForm = () => {
 
   return (
     <div className="mx-auto w-full max-w-sm p-4">
-      <div className="mb-[15px]">
+      <div className="mb-4">
         <Input
           type="text"
           placeholder="동명(읍, 면)으로 검색 (ex. 서초동)"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className="w-[312px] rounded-md border-[#E4E4E7]"
-          style={{
-            height: '44px',
-            padding: '4px 12px',
-          }}
+          onKeyDown={handleKeyDown}
+          className="w-[345px]"
         />
       </div>
 
-      <div className="mb-[25px]">
-        <Button
-          onClick={handleSearch}
-          color="primary"
-          className="w-[312px] rounded-md"
-          style={{
-            height: '46px',
-            padding: '0px 16px',
-            backgroundColor: '#5758FE',
-          }}
-        >
+      <div className="mb-6">
+        <Button onClick={handleSearch} size="medium" color="primary" className="w-[345px]">
           <MapPin className="h-4 w-4" />
           검색하기
         </Button>
       </div>
 
       {hasSearched && (
-        <div className="w-[312px]">
+        <div className="w-[345px]">
           {filteredResults.length > 0 ? (
             filteredResults.map((district, index) => (
               <div
                 key={index}
-                className="flex cursor-pointer items-center px-1 text-base font-normal text-neutral-900 transition-colors hover:bg-neutral-50"
-                style={{
-                  lineHeight: '40px',
-                  fontFamily: '"Noto Sans KR"',
-                }}
+                className="flex cursor-pointer items-center px-4 py-2 text-base font-normal text-neutral-900 transition-colors hover:bg-neutral-50"
               >
                 {district}
               </div>
             ))
           ) : (
-            <div
-              className="flex items-center px-1 text-base font-normal text-neutral-400"
-              style={{
-                lineHeight: '40px',
-                fontFamily: '"Noto Sans KR"',
-              }}
-            >
+            <div className="flex items-center px-4 py-2 text-base font-normal text-neutral-400">
               검색 결과가 없습니다.
             </div>
           )}
