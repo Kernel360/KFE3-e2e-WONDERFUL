@@ -4,10 +4,5 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "apps/web/.next",
   "framework": "nextjs",
-  "functions": {
-    "apps/web/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ packages/ .github/ || echo 'Deploy'"
 }
