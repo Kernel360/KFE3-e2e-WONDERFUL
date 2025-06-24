@@ -1,9 +1,14 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
-const ProfileImage = () => {
+interface ProfileImageProps {
+  src: string;
+  alt: string;
+}
+
+const ProfileImage = ({ src, alt }: ProfileImageProps) => {
   return (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+      <AvatarImage src={src} alt={alt} />
     </Avatar>
   );
 };

@@ -1,10 +1,11 @@
 name: Vercel Auto Deploy
 
 on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
   push:
     branches: [main, develop]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -18,11 +19,13 @@ env:
 jobs:
   # PR 프리뷰 배포
   preview:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout PR code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,7 +38,7 @@ jobs:
           version: 9.11.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Generate Prisma Client
         run: pnpm db:generate
@@ -73,13 +76,16 @@ jobs:
         with:
           script: |
             const deploymentUrl = '${{ steps.deploy.outputs.deployment_url }}';
-            const body = `🚀 Preview Deployment
+            const commitHash = '${{ github.event.pull_request.head.sha }}';
+            const shortCommit = commitHash.substring(0, 7);
+            const body = `🚀 **Fork PR 배포 완료!**
 
-            ✅ Preview deployment ready!
+            ✅ 프리뷰 배포가 준비되었습니다!
 
-            🔗 Preview URL: ${deploymentUrl}
-            🔄 Commit: ${context.sha.substring(0, 7)}
-            👤 Author: @${context.actor}
+            🔗 **프리뷰 URL:** ${deploymentUrl}
+            🔄 **커밋:** ${shortCommit}
+            📝 **브랜치:** ${{ github.event.pull_request.head.ref }}
+            👤 **작성자:** @${{ github.event.pull_request.user.login }}
 
             이 댓글은 최신 배포로 자동 업데이트됩니다.`;
 
@@ -91,7 +97,7 @@ jobs:
 
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
-              comment.body.includes('🚀 Preview Deployment')
+              comment.body.includes('🚀 **Fork PR 배포 완료!**')
             );
 
             if (botComment) {
@@ -129,7 +135,7 @@ jobs:
           version: 9.11.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Generate Prisma Client
         run: pnpm db:generate
@@ -178,7 +184,7 @@ jobs:
           version: 9.11.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Generate Prisma Client
         run: pnpm db:generate
