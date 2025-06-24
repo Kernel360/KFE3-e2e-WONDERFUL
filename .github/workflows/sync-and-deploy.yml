@@ -2,14 +2,12 @@
 name: Sync to Personal Repo and Deploy
 
 on:
-  # Fork PR에서도 작동하도록 pull_request_target 사용
   pull_request_target:
     types: [opened, synchronize, reopened]
     paths:
       - 'apps/web/**'
       - 'packages/**'
 
-  # main/develop 브랜치에 push 시 해당 브랜치로 배포
   push:
     branches: [main, develop]
     paths:
@@ -17,7 +15,6 @@ on:
       - 'packages/**'
 
 jobs:
-  # PR 프리뷰 배포 (Fork PR 포함)
   preview-deploy:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
@@ -42,7 +39,36 @@ jobs:
       - name: Install dependencies & Build
         run: |
           pnpm install --no-frozen-lockfile
-          sh ./build.sh
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: Create optimized Vercel config
+        run: |
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "buildCommand": "cd apps/web && pnpm build",
+            "outputDirectory": "apps/web/.next",
+            "installCommand": "pnpm install --no-frozen-lockfile",
+            "framework": "nextjs",
+            "regions": ["icn1"],
+            "git": {
+              "deploymentEnabled": {
+                "main": true,
+                "develop": true,
+                "preview/pr-*": true
+              }
+            },
+            "functions": {
+              "apps/web/app/api/**/*.ts": {
+                "maxDuration": 10
+              }
+            },
+            "buildEnv": {
+              "TURBO_TELEMETRY_DISABLED": "1"
+            }
+          }
+          EOF
 
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.9.0
@@ -51,47 +77,56 @@ jobs:
 
       - name: Push to personal repo preview branch
         run: |
-          # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
-          # 임시 디렉토리에서 개인 레포 클론
           cd /tmp
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git personal-repo
           cd personal-repo
 
-          # 기존 브랜치가 있으면 삭제 후 새로 생성
           BRANCH_NAME="preview/pr-${{ github.event.pull_request.number }}"
+
+          # 기존 브랜치 삭제
           git push origin --delete $BRANCH_NAME 2>/dev/null || echo "Branch doesn't exist yet"
-
-          # .git 폴더를 제외하고 기존 파일 제거
-          find . -maxdepth 1 ! -name '.' ! -name '..' ! -name '.git' -exec rm -rf {} + 2>/dev/null || true
-
-          # 새 파일 복사
-          cp -r $GITHUB_WORKSPACE/output/* . 2>/dev/null || true
-          # .git을 제외한 숨김 파일들만 복사
-          find $GITHUB_WORKSPACE/output -maxdepth 1 -name ".*" ! -name ".git" -exec cp -r {} . \; 2>/dev/null || true
 
           # 새 브랜치 생성
           git checkout -b $BRANCH_NAME
 
-          # 커밋 및 푸시 (개인 레포로)
+          # 기존 파일들 제거 (.git 제외)
+          find . -maxdepth 1 ! -name '.' ! -name '..' ! -name '.git' -exec rm -rf {} + 2>/dev/null || true
+
+          # 전체 프로젝트 복사
+          echo "📁 Copying project structure..."
+          cp -r $GITHUB_WORKSPACE/* . 2>/dev/null || true
+
+          # 숨김 파일들 복사 (.git 제외)
+          find $GITHUB_WORKSPACE -maxdepth 1 -name ".*" ! -name ".git" -exec cp -r {} . \; 2>/dev/null || true
+
+          # 최적화된 Vercel 설정 적용
+          cp $GITHUB_WORKSPACE/vercel.json .
+
+          echo "📦 Final structure verification:"
+          echo "Root files:"
+          ls -la | head -10
+          echo "Apps/web structure:"
+          ls -la apps/web/ | head -10
+          echo "Build output:"
+          ls -la apps/web/.next/ | head -5
+
+          # 커밋 및 푸시
           git add .
-          git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }} - $(date)" || echo "No changes"
-          git push origin $BRANCH_NAME
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🧪 Preview Deploy from PR #${{ github.event.pull_request.number }} - $(date)"
+            git push origin $BRANCH_NAME
+            echo "✅ Successfully pushed to preview branch: $BRANCH_NAME"
+          fi
 
       - name: Wait for Vercel deployment
-        run: sleep 30
-
-      - name: Create deployment summary
         run: |
-          echo "🚀 **Vercel Preview 배포 완료**" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **배포 상태**: 성공" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 **미리보기 링크**: https://kfe3-e2e-wonderful-git-preview-pr-${{ github.event.pull_request.number }}-miniseung.vercel.app" >> $GITHUB_STEP_SUMMARY
-          echo "📝 **브랜치**: \`preview/pr-${{ github.event.pull_request.number }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "⏰ **배포 시간**: $(date)" >> $GITHUB_STEP_SUMMARY
-          echo "👤 **배포자**: ${{ github.event.pull_request.user.login }}" >> $GITHUB_STEP_SUMMARY
+          echo "⏳ Waiting for Vercel to process the deployment..."
+          sleep 90
 
       - name: Comment preview URL on PR
         uses: actions/github-script@v7
@@ -101,25 +136,7 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const previewUrl = `https://kfe3-e2e-wonderful-git-preview-pr-${prNumber}-miniseung.vercel.app`;
 
-            console.log(`🔗 배포 URL: ${previewUrl}`);
-            console.log(`📝 PR 번호: ${prNumber}`);
-
-            try {
-              // 기존 봇 댓글 찾기
-              const { data: comments } = await github.rest.issues.listComments({
-                issue_number: prNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-              });
-              
-              console.log(`📄 총 댓글 수: ${comments.length}`);
-
-              const botComment = comments.find(comment => 
-                comment.user.type === 'Bot' && 
-                comment.body.includes('Vercel Preview')
-              );
-
-              const commentBody = `## 🚀 Vercel Preview 배포 완료
+            const commentBody = `## 🚀 Vercel Preview 배포 완료
 
             ✅ **배포 상태**: 성공  
             🔗 **미리보기 링크**: ${previewUrl}  
@@ -127,11 +144,23 @@ jobs:
             ⏰ **배포 시간**: ${new Date().toLocaleString('ko-KR')}
             👤 **배포자**: ${{ github.event.pull_request.user.login }}
             🔄 **커밋**: ${{ github.event.pull_request.head.sha }}
+            📱 **앱 타입**: Next.js App Router + 모노레포
 
-            > 변경사항이 반영되려면 1-2분 정도 소요될 수 있습니다.`;
+            > 배포 완료까지 2-3분 정도 소요될 수 있습니다.`;
+
+            try {
+              const { data: comments } = await github.rest.issues.listComments({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+
+              const botComment = comments.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('Vercel Preview')
+              );
 
               if (botComment) {
-                console.log(`🔄 기존 댓글 업데이트 중... (ID: ${botComment.id})`);
                 await github.rest.issues.updateComment({
                   comment_id: botComment.id,
                   owner: context.repo.owner,
@@ -140,25 +169,19 @@ jobs:
                 });
                 console.log('✅ 기존 댓글 업데이트 완료');
               } else {
-                console.log('💬 새 댓글 생성 중...');
-                const response = await github.rest.issues.createComment({
+                await github.rest.issues.createComment({
                   issue_number: prNumber,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   body: commentBody
                 });
-                console.log(`✅ 새 댓글 생성 완료 (ID: ${response.data.id})`);
+                console.log('✅ 새 댓글 생성 완료');
               }
             } catch (error) {
-              console.error('❌ 댓글 작성 실패 상세:', error);
-              console.error('❌ 에러 스택:', error.stack);
-              
-              // 댓글 실패해도 배포 URL은 로그에 출력
-              console.log('🔗 배포는 성공했습니다. URL을 확인하세요:');
-              console.log(`   ${previewUrl}`);
+              console.error('❌ 댓글 작성 실패:', error);
+              console.log(`🔗 수동 확인 URL: ${previewUrl}`);
             }
 
-  # main/develop 브랜치 동기화 (브랜치별로 다른 환경에 배포)
   sync-production:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -181,42 +204,83 @@ jobs:
       - name: Install dependencies & Build
         run: |
           pnpm install --no-frozen-lockfile
-          sh ./build.sh
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: Create optimized Vercel config
+        run: |
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "buildCommand": "cd apps/web && pnpm build",
+            "outputDirectory": "apps/web/.next",
+            "installCommand": "pnpm install --no-frozen-lockfile",
+            "framework": "nextjs",
+            "regions": ["icn1"],
+            "git": {
+              "deploymentEnabled": {
+                "main": true,
+                "develop": true,
+                "preview/pr-*": true
+              }
+            },
+            "functions": {
+              "apps/web/app/api/**/*.ts": {
+                "maxDuration": 10
+              }
+            },
+            "buildEnv": {
+              "TURBO_TELEMETRY_DISABLED": "1"
+            }
+          }
+          EOF
 
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      - name: Push to personal repo (branch-specific)
+      - name: Push to personal repo
         run: |
-          # Git 설정
           git config --global user.name "seungmin"
           git config --global user.email "${{ secrets.SEUNG_ACCOUNT_EMAIL }}"
 
-          # 임시 디렉토리에서 개인 레포 클론
           cd /tmp
           git clone git@github.com:miniseung/KFE3-e2e-WONDERFUL.git personal-repo
           cd personal-repo
 
-          # 현재 브랜치명 가져오기 (develop 또는 main)
           TARGET_BRANCH="${{ github.ref_name }}"
           echo "🎯 Target branch: $TARGET_BRANCH"
 
-          # 해당 브랜치로 이동 (없으면 생성)
+          # 브랜치 체크아웃 또는 생성
           git checkout $TARGET_BRANCH || git checkout -b $TARGET_BRANCH
 
-          # 기존 파일 제거 후 새 파일 복사
-          rm -rf * .*  2>/dev/null || true
-          cp -r $GITHUB_WORKSPACE/output/* . 2>/dev/null || true
-          cp -r $GITHUB_WORKSPACE/output/.* . 2>/dev/null || true
+          # 기존 파일 제거 (.git 제외)
+          find . -maxdepth 1 ! -name '.' ! -name '..' ! -name '.git' -exec rm -rf {} + 2>/dev/null || true
 
-          # 커밋 및 푸시 (개인 레포로)
+          # 전체 프로젝트 복사
+          echo "📁 Copying project structure..."
+          cp -r $GITHUB_WORKSPACE/* . 2>/dev/null || true
+          find $GITHUB_WORKSPACE -maxdepth 1 -name ".*" ! -name ".git" -exec cp -r {} . \; 2>/dev/null || true
+
+          # 최적화된 Vercel 설정 적용
+          cp $GITHUB_WORKSPACE/vercel.json .
+
+          echo "📦 Production deployment verification:"
+          echo "✅ Root structure: $(ls -1 | wc -l) items"
+          echo "✅ Apps/web exists: $([ -d "apps/web" ] && echo "YES" || echo "NO")"
+          echo "✅ Build output: $([ -d "apps/web/.next" ] && echo "YES" || echo "NO")"
+          echo "✅ Package files: $([ -f "package.json" ] && echo "YES" || echo "NO")"
+
+          # 커밋 및 푸시
           git add .
-          git commit -m "🚀 Production Deploy from $TARGET_BRANCH branch - $(date)" || echo "No changes"
-          git push origin $TARGET_BRANCH
-
-          echo "✅ Successfully deployed to $TARGET_BRANCH branch"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🚀 Production Deploy from $TARGET_BRANCH branch - $(date)"
+            git push origin $TARGET_BRANCH
+            echo "✅ Successfully deployed to $TARGET_BRANCH branch"
+          fi
 
       - name: Create deployment summary
         run: |
@@ -237,3 +301,5 @@ jobs:
           echo "📝 **브랜치**: \`$TARGET_BRANCH\`" >> $GITHUB_STEP_SUMMARY
           echo "⏰ **배포 시간**: $(date)" >> $GITHUB_STEP_SUMMARY
           echo "👤 **배포자**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "📱 **앱 구조**: Next.js App Router (apps/web)" >> $GITHUB_STEP_SUMMARY
+          echo "🏗️ **빌드 도구**: pnpm + Turborepo" >> $GITHUB_STEP_SUMMARY
