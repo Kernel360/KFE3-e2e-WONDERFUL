@@ -1,6 +1,5 @@
 'use client';
 
-// apps/web/app/page.tsx에 추가
 import ChatTest from '@/components/chat/chat-test';
 import RealtimeTest from '@/components/ui/realtime-test';
 const HomePage = () => {

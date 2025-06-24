@@ -1,4 +1,3 @@
-// apps/web/src/components/common/RealtimeTest.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
