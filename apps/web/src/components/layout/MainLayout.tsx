@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Bell } from 'lucide-react';
 
-import { SelectBox } from '@/components/common/SelectBox';
+import { SelectBox } from '@/components/common/select-box';
 
 import Header from './Header';
 import Navigation from './Navigation';
