@@ -1,40 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "cd apps/web && pnpm build",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": "nextjs",
-  "regions": ["icn1"],
-  "git": {
-    "deploymentEnabled": {
-      "main": true,
-      "develop": true,
-      "preview/pr-*": true
-    }
-  },
   "functions": {
     "apps/web/app/api/**/*.ts": {
-      "maxDuration": 10
+      "runtime": "nodejs18.x"
     }
   },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/apps/web/app/api/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/sw.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    }
-  ],
-  "buildEnv": {
-    "TURBO_TELEMETRY_DISABLED": "1"
-  }
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ packages/ || echo 'Deploy'"
 }
