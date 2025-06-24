@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TabBasic, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tab-basic';
 import React from 'react';
 
 interface TabProps {
@@ -13,7 +13,7 @@ interface TabItem {
 
 const Tab = ({ tabs }: TabProps) => {
   return (
-    <Tabs defaultValue={tabs[0]?.key}>
+    <TabBasic defaultValue={tabs[0]?.key}>
       <TabsList>
         {tabs.map((tab) => (
           <TabsTrigger key={tab.key} value={tab.key}>
@@ -27,7 +27,7 @@ const Tab = ({ tabs }: TabProps) => {
           {tab.content}
         </TabsContent>
       ))}
-    </Tabs>
+    </TabBasic>
   );
 };
 
