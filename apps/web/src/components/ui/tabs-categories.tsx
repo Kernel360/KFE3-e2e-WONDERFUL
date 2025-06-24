@@ -6,7 +6,7 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 import { cn } from '@/lib/utils';
 
-const CategoryTabs = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) => {
+const Tabs = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) => {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
@@ -16,7 +16,7 @@ const CategoryTabs = ({ className, ...props }: React.ComponentProps<typeof TabsP
   );
 };
 
-const CategoryList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) => {
+const TabsList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) => {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
@@ -33,7 +33,7 @@ const CategoryList = ({ className, ...props }: React.ComponentProps<typeof TabsP
   );
 };
 
-const CategoriesTrigger = ({
+const TabsTrigger = ({
   className,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) => {
@@ -50,7 +50,7 @@ const CategoriesTrigger = ({
   );
 };
 
-const CategoriesContent = ({
+const TabsContent = ({
   className,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) => {
@@ -63,4 +63,4 @@ const CategoriesContent = ({
   );
 };
 
-export { CategoryTabs, CategoryList, CategoriesTrigger, CategoriesContent };
+export { Tabs, TabsList, TabsTrigger, TabsContent };
