@@ -9,7 +9,7 @@ function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      className={cn('flex w-full flex-col gap-2', className)}
+      className={cn('flex w-full flex-col gap-2 bg-white', className)}
       {...props}
     />
   );
@@ -20,7 +20,7 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        'text-muted-foreground inline-flex h-9 w-full items-center justify-center bg-transparent p-[3px]',
+        'inline-flex h-9 w-full items-center justify-center bg-transparent p-[3px]',
         className
       )}
       {...props}
@@ -45,7 +45,7 @@ function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPr
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn('flex-1 outline-none', className)}
+      className={cn('flex-1 p-3 outline-none', className)}
       {...props}
     />
   );
