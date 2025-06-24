@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "cd apps/web && pnpm build",
+  "buildCommand": "cd apps/web && pnpm build && echo '=== Build Output Location ===' && find . -name '.next' -type d && echo '=== .next Contents ===' && ls -la .next/ || echo 'No .next directory found'",
   "outputDirectory": "apps/web/.next",
   "installCommand": "pnpm install --no-frozen-lockfile"
 }
