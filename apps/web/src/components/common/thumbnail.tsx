@@ -11,7 +11,7 @@ interface ThumbnailProps extends HTMLAttributes<HTMLDivElement> {
 
 const Thumbnail = ({ className, url, alt, ...props }: ThumbnailProps) => {
   return (
-    <div className={cn('overflow-hidden rounded-sm border border-neutral-200', className)}>
+    <div className={cn('overflow-hidden rounded-md border border-neutral-200', className)}>
       <img src={url} alt={alt} className="h-full w-full object-cover" {...props} />
     </div>
   );
