@@ -90,7 +90,7 @@ const LocationSearchForm = () => {
             ))
           ) : (
             <div className="flex items-center px-4 py-2 text-base font-normal text-neutral-400">
-              검색 결과가 없습니다.
+              검색 결과가 없습니다. Workflow test change
             </div>
           )}
         </div>
