@@ -136,7 +136,7 @@ const ChatRoom = ({ roomId, currentUserId, auctionTitle }: ChatRoomProps) => {
   };
 
   // 엔터키로 메시지 전송
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -243,7 +243,7 @@ const ChatRoom = ({ roomId, currentUserId, auctionTitle }: ChatRoomProps) => {
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             placeholder="메시지를 입력하세요..."
             disabled={connectionStatus !== 'connected' || isSending}
             className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
