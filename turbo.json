@@ -4,7 +4,7 @@
   "globalEnv": ["NODE_ENV", "DATABASE_URL", "NEXT_PUBLIC_VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@repo/db#db:generate"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
       "env": ["DATABASE_URL", "DIRECT_URL", "NODE_ENV"]
@@ -18,12 +18,14 @@
       "dependsOn": ["^check-types"]
     },
     "dev": {
+      "dependsOn": ["@repo/db#db:generate"],
       "cache": false,
       "persistent": true,
       "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL"]
     },
     "db:generate": {
       "cache": false,
+      "inputs": ["prisma/schema.prisma", ".env*"],
       "env": ["NODE_ENV", "DATABASE_URL"]
     },
     "db:push": {

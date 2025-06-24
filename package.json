@@ -2,13 +2,14 @@
   "name": "with-tailwind",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build": "pnpm --filter @repo/db db:generate && turbo run build",
+    "dev": "pnpm --filter @repo/db db:generate && turbo run dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,yml,yaml}\"",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "db:generate": "pnpm --filter @repo/db db:generate"
   },
   "devDependencies": {
     "lefthook": "^1.11.13",
