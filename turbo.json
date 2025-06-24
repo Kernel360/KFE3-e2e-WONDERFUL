@@ -7,10 +7,12 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "env": ["NODE_ENV"]
+      "env": ["DATABASE_URL", "DIRECT_URL", "NODE_ENV"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "inputs": ["src/**/*.{ts,tsx}", "!src/generated/**"],
+      "env": ["DATABASE_URL", "DIRECT_URL"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
@@ -18,7 +20,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["NODE_ENV", "DATABASE_URL"]
+      "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL"]
     },
     "db:generate": {
       "cache": false,

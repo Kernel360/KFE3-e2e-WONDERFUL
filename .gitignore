@@ -51,3 +51,5 @@ output/
 # IDE settings
 .idea/
 
+# Prisma generated files
+packages/db/src/generated/
