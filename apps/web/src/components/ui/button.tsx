@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         // default=solid type
         solid: '',
-        outline: 'borde bg-transparent',
+        outline: 'border bg-transparent',
       },
       color: {
         // default=primary color
