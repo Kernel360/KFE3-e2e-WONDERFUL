@@ -9,5 +9,5 @@
       "runtime": "nodejs18.x"
     }
   },
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ packages/ || echo 'Deploy'"
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web/ packages/ .github/ || echo 'Deploy'"
 }
