@@ -1,4 +1,4 @@
-// apps/web/src/hooks/useUsers.ts
+// apps/web/src/hooks/queries/users/useUsers.ts
 import { useQuery } from '@tanstack/react-query';
 
 import { getUsers } from '@/api/users';
