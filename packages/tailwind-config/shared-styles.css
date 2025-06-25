@@ -99,3 +99,10 @@ h6 {
     0px -30px 18px 0px rgba(203, 195, 195, 0.05), 0px -13px 13px 0px rgba(203, 195, 195, 0.09),
     0px -3px 7px 0px rgba(203, 195, 195, 0.1);
 }
+
+.korean-calendar th:first-child {
+  color: rgb(239 68 68); /* red-500 */
+}
+.korean-calendar th:last-child {
+  color: rgb(59 130 246); /* blue-500 */
+}
