@@ -1,5 +1,6 @@
 import { Label } from '@/components/ui/label';
 import React from 'react';
+import InputBasic from '@/components/common/input-basic';
 
 interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
   id: string;
@@ -9,8 +10,12 @@ interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
 
 const InputIcon = ({ id, label, children, ...props }: InputIconProps) => {
   return (
-    <div className="grid w-full max-w-sm items-center gap-3">
-      {label && <Label htmlFor={id}>{label}</Label>}
+    <div className="flex w-full flex-col items-start justify-center gap-1">
+      {label && (
+        <label className="font-medium" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <div className="shadow-xs flex h-11 w-full min-w-0 items-center justify-between rounded-md border bg-transparent px-3 py-1 text-base text-neutral-400 transition-[color,box-shadow] focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm">
         <div className="flex items-center gap-2 [&>svg]:h-5 [&>svg]:w-5">
           {React.Children.toArray(children)[0]}
