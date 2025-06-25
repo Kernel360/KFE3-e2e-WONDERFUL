@@ -8,12 +8,14 @@ interface MenuItem {
 }
 
 interface MenuSection {
+  id: string; // 고유 ID 추가!
   title: string;
   items: MenuItem[];
 }
 
 const menuSections: MenuSection[] = [
   {
+    id: 'account', // 고유 ID
     title: '계정 정보',
     items: [
       { title: '판매 내역', route: '/profile/sales' },
@@ -24,6 +26,7 @@ const menuSections: MenuSection[] = [
     ],
   },
   {
+    id: 'support',
     title: '고객 지원',
     items: [
       { title: '고객센터', route: '/support' },
@@ -34,25 +37,24 @@ const menuSections: MenuSection[] = [
 
 export const MenuList = () => {
   return (
-    <div className="space-y-14">
+    <nav aria-label="마이페이지 메뉴 목록">
       {menuSections.map((section) => (
-        <div key={section.title} className="w-full px-6">
-          <div className="mb-6 font-['Noto_Sans_KR'] text-lg font-bold text-neutral-900">
-            {section.title}
-          </div>
-          <div className="space-y-6">
+        <section key={section.id} className="mb-14 w-full space-y-6 px-6">
+          <h2 className="mb-6 text-lg font-bold text-neutral-900">{section.title}</h2>
+          <ul className="space-y-6">
             {section.items.map((item) => (
-              <Link
-                key={item.title}
-                href={item.route}
-                className="block font-['Noto_Sans_KR'] text-sm font-medium leading-[24px] text-neutral-900"
-              >
-                {item.title}
-              </Link>
+              <li key={item.route}>
+                <Link
+                  href={item.route}
+                  className="block text-sm font-medium leading-[24px] text-neutral-900"
+                >
+                  {item.title}
+                </Link>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
       ))}
-    </div>
+    </nav>
   );
 };
