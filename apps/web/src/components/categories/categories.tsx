@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs-categories';
+import { TabsList, TabsTrigger } from '@/components/ui/tabs-categories';
 
 interface CategoriesProps {
   id: string;
@@ -40,19 +40,15 @@ const CATEGORIES: CategoriesProps[] = [
 
 const Categories = () => {
   return (
-    <Tabs defaultValue={CATEGORIES[0]?.name}>
-      <TabsList>
-        {CATEGORIES.map(({ id, name }) => {
-          return (
-            <TabsTrigger value={name} key={id}>
-              {name}
-            </TabsTrigger>
-          );
-        })}
-      </TabsList>
-      <TabsContent value="account">Make changes to your account here.</TabsContent>
-      <TabsContent value="password">Change your password here.</TabsContent>
-    </Tabs>
+    <TabsList className="my-3">
+      {CATEGORIES.map(({ id, name }) => {
+        return (
+          <TabsTrigger value={id} key={name}>
+            {name}
+          </TabsTrigger>
+        );
+      })}
+    </TabsList>
   );
 };
 
