@@ -25,6 +25,7 @@ const TimePickerExample = () => {
       <div className="flex items-center gap-2">
         {/* <span className="text-[16px]! mr-1 text-sm font-medium">시간 선택</span> */}
         <TimePicker
+          className="w-full"
           time={selectedTime}
           setTime={setSelectedTime}
           placeholder="시간을 선택해주세요"
