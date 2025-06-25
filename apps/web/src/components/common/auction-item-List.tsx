@@ -27,7 +27,7 @@ import { AuctionItemProps } from '@/types/auction';
 
 const AuctionItemList = () => {
   return (
-    <section className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3">
       {AUCTION_ITEMS.map(
         ({ id, title, status, originalPrice, currentPrice, deadline, thumbnailUrl }) => {
           return (
@@ -44,7 +44,7 @@ const AuctionItemList = () => {
           );
         }
       )}
-    </section>
+    </div>
   );
 };
 
