@@ -95,7 +95,8 @@ const Calendar = ({
         range_middle: cn('rounded-none', defaultClassNames.range_middle),
         range_end: cn('rounded-r-md bg-accent', defaultClassNames.range_end),
         today: cn(
-          'bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none',
+          // "today" 스타일은 선택되지 않은 경우에만 적용. 선택된 경우에는 "selected" 스타일이 적용.
+          'bg-accent text-accent-foreground rounded-md data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground data-[selected=true]:rounded-md',
           defaultClassNames.today
         ),
         outside: cn(
