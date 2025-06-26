@@ -32,7 +32,7 @@ const AuctionItemCard = ({
   const { hours, minutes } = useCountdown(new Date(deadline));
 
   return (
-    <Link href={`/product/${id}`} className="flex w-full items-center justify-between gap-2.5">
+    <Link href={`/auction/${id}`} className="flex w-full items-center justify-between gap-2.5">
       <div className="relative">
         <BadgeBidStatus status={status} />
         <Thumbnail url={thumbnailUrl} alt="test dummy" className="w-26.5 h-26.5" />
