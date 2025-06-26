@@ -3,14 +3,16 @@
 import React from 'react';
 
 import { useParams } from 'next/navigation';
+
+import { MessageSquareMore } from 'lucide-react';
+
+import BidForm from '@/components/auction-detail/bid-form';
+import BidTable from '@/components/auction-detail/bid-table';
 import ItemImages from '@/components/auction-detail/item-images';
 import ItemInformation, { Item } from '@/components/auction-detail/item-information';
-import Tab from '@/components/common/tab';
-import BidTable from '@/components/auction-detail/bid-table';
 import { ProfileCard } from '@/components/common/profile-card';
+import Tab from '@/components/common/tab';
 import { Button } from '@/components/ui/button';
-import { MessageSquareMore } from 'lucide-react';
-import BidForm from '@/components/auction-detail/bid-form';
 
 interface TabItem {
   key: string;
