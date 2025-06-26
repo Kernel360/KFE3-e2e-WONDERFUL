@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 
 import useCountdown from '@/hooks/useCountdown';
 
-import { AuctionItemCardProps } from '@/types/auction';
+import { AuctionItemProps } from '@/types/auction';
 
 const renderTimeBadge = ({ hours, minutes }: { hours: string; minutes: string }) => {
   const timeBadgeStyle = hours === '00' && minutes === '00' ? 'closed' : 'tertiary';
@@ -28,7 +28,7 @@ const AuctionItemCard = ({
   currentPrice,
   deadline,
   thumbnailUrl,
-}: AuctionItemCardProps) => {
+}: AuctionItemProps) => {
   const { hours, minutes } = useCountdown(new Date(deadline));
 
   return (
