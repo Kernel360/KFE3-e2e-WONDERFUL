@@ -1,4 +1,4 @@
-export interface AuctionItemCardProps {
+interface AuctionItemProps {
   id: string;
   title: string;
   status: '경매중' | '경매종료';
@@ -7,3 +7,5 @@ export interface AuctionItemCardProps {
   deadline: string;
   thumbnailUrl: string;
 }
+
+export type { AuctionItemProps };
