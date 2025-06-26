@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import BottomModal from '@/components/auth/Bottommodal';
 import LocationSetup from '@/components/auth/LocationSetup';
-import SignupForm from '@/components/auth/SignupFrom';
+import SignupForm from '@/components/auth/SignupForm';
 import StartInfo from '@/components/auth/StartInfo';
 
 import { SignupFormData } from '@/types/auth';
