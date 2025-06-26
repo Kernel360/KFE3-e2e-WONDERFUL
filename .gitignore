@@ -51,5 +51,6 @@ output/
 # IDE settings
 .idea/
 
-# Prisma generated files
+# Prisma
+packages/db/prisma/migrations/migration_lock.toml
 packages/db/src/generated/

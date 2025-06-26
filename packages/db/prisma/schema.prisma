@@ -119,9 +119,14 @@ model AuctionPrice {
   id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   itemId       String @unique @map("item_id") @db.Uuid
   startPrice   Int    @map("start_price")
-  instantPrice Int?   @map("instant_price")
+  instantPrice Int?   @map("instant_price") // 즉시 구매 가격
   minBidUnit   Int    @map("min_bid_unit")
   currentPrice Int    @map("current_price")
+
+  // 즉시 구매 여부
+  isInstantBuyEnabled Boolean @default(false) @map("is_instant_buy_enabled")
+  // 연장경매 여부 (새로 추가)
+  isExtendedAuction   Boolean @default(false) @map("is_extended_auction")
 
   // Relations
   item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
