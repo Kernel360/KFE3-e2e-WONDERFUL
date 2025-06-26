@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ko } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
@@ -32,11 +32,19 @@ function isValidDate(date: Date | undefined) {
 
 const DatePicker = () => {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(new Date()); // 현재 날짜로 초기화
-  const [month, setMonth] = useState<Date | undefined>(date);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [month, setMonth] = useState<Date | undefined>(undefined);
   const [value, setValue] = useState(formatDate(date));
 
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    // 현재 날짜로 초기화
+    const today = new Date();
+    setDate(today);
+    setMonth(today);
+    setValue(formatDate(today));
+  }, []);
 
   return (
     <div>
