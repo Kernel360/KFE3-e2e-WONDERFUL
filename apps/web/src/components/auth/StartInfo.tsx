@@ -15,7 +15,7 @@ const StartInfo = ({ onStartActivity }: StartInfoProps) => {
         <div className="mt-[110px] flex justify-center">
           <div className="flex h-[375px] w-[375px] items-center justify-center rounded-2xl">
             <Image
-              src="/Megaphone.svg"
+              src="/icon/Megaphone.svg"
               alt="축하 일러스트"
               width={375}
               height={375}

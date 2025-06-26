@@ -1,5 +1,3 @@
-'use client';
-
 import SigninPage from '@/pages/SigninPage';
 
 const Page = () => {
