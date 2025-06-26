@@ -62,6 +62,7 @@ const AuthForm = <T extends AuthFormData>({
       });
     }
   };
+
   const setIndividualFieldErrors = () => {
     const newFieldErrors: Record<string, string> = {};
 
@@ -135,7 +136,7 @@ const AuthForm = <T extends AuthFormData>({
 
   const renderIcon = (iconType: string) => {
     const iconProps = {
-      className: error ? 'text-[var(--color-danger-650)]' : 'text-[var(--color-neutral-900)]',
+      className: error ? 'text-danger-600' : 'text-neutral-900',
     };
 
     switch (iconType) {
@@ -182,7 +183,7 @@ const AuthForm = <T extends AuthFormData>({
               key={field.id}
               className={`h-[54px] w-[327px] ${
                 hasFieldError(field.id)
-                  ? '[&_.shadow-xs]:focus-within:ring-[var(--color-danger-650)]/50 [&_.shadow-xs]:border-[var(--color-danger-650)] [&_.shadow-xs]:bg-[var(--color-danger-70)] [&_.shadow-xs]:focus-within:border-[var(--color-danger-650)]'
+                  ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
                   : ''
               }`}
             >
@@ -195,9 +196,7 @@ const AuthForm = <T extends AuthFormData>({
                   handleInputChange(field.id, e.target.value)
                 }
                 className={
-                  hasFieldError(field.id)
-                    ? 'placeholder:text-[var(--color-danger-650)]/60 text-[var(--color-danger-650)]'
-                    : ''
+                  hasFieldError(field.id) ? 'text-danger-600 placeholder:text-danger-600/60' : ''
                 }
               >
                 {renderIcon(field.icon)}
@@ -207,8 +206,8 @@ const AuthForm = <T extends AuthFormData>({
                     onClick={handleTogglePassword}
                     className={`p-1 transition-colors focus:outline-none ${
                       hasFieldError(field.id)
-                        ? 'hover:text-[var(--color-danger-650)]/80 text-[var(--color-danger-650)]'
-                        : 'text-[var(--color-neutral-900)] hover:text-neutral-600'
+                        ? 'text-danger-600 hover:text-danger-600/80'
+                        : 'text-neutral-900 hover:text-neutral-600'
                     }`}
                     aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                   >
@@ -270,8 +269,8 @@ const AuthForm = <T extends AuthFormData>({
 
         <div className="mt-[68px] flex h-[26px] items-center justify-center">
           {(error || Object.keys(fieldErrors).length > 0) && (
-            <div className="flex items-center gap-2 text-sm text-[var(--color-danger-650)]">
-              <div className="flex h-4 w-4 items-center justify-center rounded-full border border-[var(--color-danger-650)]">
+            <div className="text-danger-600 flex items-center gap-2 text-sm">
+              <div className="border-danger-600 flex h-4 w-4 items-center justify-center rounded-full border">
                 <span className="text-xs">!</span>
               </div>
               <span>
@@ -302,8 +301,7 @@ const AuthForm = <T extends AuthFormData>({
           <span className="text-sm text-neutral-600">{config.footerText} </span>
           <span
             onClick={onToggleForm}
-            className="text-primary-500 hover:text-primary-600 cursor-pointer text-sm transition-colors"
-            style={{ fontWeight: 'var(--font-weight-medium)' }}
+            className="text-primary-500 hover:text-primary-600 cursor-pointer text-sm font-medium transition-colors"
           >
             {config.footerLinkText}
           </span>

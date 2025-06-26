@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import AuthForm from '@/components/auth/AuthForm';
 
 import { SignupFormData } from '@/types/auth';
-
 interface SignupFormProps {
   onSignup?: (data: SignupFormData) => void;
   onToggleToSignin?: () => void;
@@ -11,27 +12,19 @@ interface SignupFormProps {
 }
 
 const SignupForm = ({ onSignup, onToggleToSignin, initialData }: SignupFormProps) => {
+  const router = useRouter();
   const handleSubmit = (data: SignupFormData) => {
     onSignup?.(data);
   };
 
   const handleToggleToSignin = () => {
-    console.log('로그인 페이지로 이동');
+    router.push('/auth/signin');
     onToggleToSignin?.();
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center overflow-hidden bg-white px-[154px] pt-[131px]">
-      <h1
-        className="whitespace-nowrap text-center"
-        style={{
-          color: 'var(--color-neutral-900)',
-          fontSize: 'var(--text-h3)',
-          fontStyle: 'normal',
-          fontWeight: 'var(--font-weight-bold)',
-          lineHeight: 'var(--line-height-h3)',
-        }}
-      >
+      <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
         회원 가입
       </h1>
 

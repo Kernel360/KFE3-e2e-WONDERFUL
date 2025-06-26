@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import AuthForm from '@/components/auth/AuthForm';
 import { FloatButton } from '@/components/ui/float-button';
 
@@ -11,6 +13,8 @@ interface SigninFormProps {
 }
 
 const SigninForm = ({ onLogin, initialData }: SigninFormProps) => {
+  const router = useRouter();
+
   const handleSubmit = (data: SigninFormData) => {
     onLogin?.(data);
   };
@@ -20,21 +24,12 @@ const SigninForm = ({ onLogin, initialData }: SigninFormProps) => {
   };
 
   const handleSignUp = () => {
-    console.log('회원가입 페이지로 이동');
+    router.push('/auth/signup');
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center overflow-hidden bg-white px-[154px] pt-[131px]">
-      <h1
-        className="whitespace-nowrap text-center"
-        style={{
-          color: 'var(--color-neutral-900)',
-          fontSize: 'var(--text-h3)',
-          fontStyle: 'normal',
-          fontWeight: 'var(--font-weight-bold)',
-          lineHeight: 'var(--line-height-h3)',
-        }}
-      >
+      <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
         로그인
       </h1>
 
@@ -96,8 +91,7 @@ const SigninForm = ({ onLogin, initialData }: SigninFormProps) => {
         <span className="text-sm text-neutral-600">계정이 없으신가요? </span>
         <span
           onClick={handleSignUp}
-          className="text-primary-500 hover:text-primary-600 cursor-pointer text-sm transition-colors"
-          style={{ fontWeight: 'var(--font-weight-medium)' }}
+          className="text-primary-500 hover:text-primary-600 cursor-pointer text-sm font-medium transition-colors"
         >
           회원 가입
         </span>
