@@ -61,12 +61,14 @@ h6 {
 
   /* Danger Colors */
   --color-danger-50: #fff2ef;
+  --color-danger-70: #ffeff0;
   --color-danger-100: #ffe6e0;
   --color-danger-200: #fed0c6;
   --color-danger-300: #ffa197;
   --color-danger-400: #ff765a;
   --color-danger-500: #ff4c00;
   --color-danger-600: #ec3300;
+  --color-danger-650: #e80039;
   --color-danger-700: #c73500;
   --color-danger-800: #a52c00;
 
