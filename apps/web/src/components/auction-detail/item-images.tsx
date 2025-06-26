@@ -7,7 +7,7 @@ import {
 import React from 'react';
 
 interface ItemImagesProps {
-  urls: string[];
+  urls?: string[];
 }
 
 const dummyUrls: string[] = [
@@ -40,11 +40,7 @@ const ItemImages = ({ urls = dummyUrls }: ItemImagesProps) => {
       <CarouselContent>
         {urls.map((url, index) => (
           <CarouselItem key={index}>
-            <img
-              src={url}
-              alt={`item-${index}`}
-              className="aspect-square w-full rounded-md object-cover"
-            />
+            <img src={url} alt={`item-${index}`} className="aspect-square w-full object-cover" />
           </CarouselItem>
         ))}
       </CarouselContent>

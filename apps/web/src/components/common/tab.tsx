@@ -8,7 +8,7 @@ interface TabProps {
 interface TabItem {
   key: string;
   label: string;
-  content: React.ReactNode;
+  content: React.ReactNode | string;
 }
 
 const Tab = ({ tabs }: TabProps) => {
@@ -23,7 +23,7 @@ const Tab = ({ tabs }: TabProps) => {
       </TabsList>
 
       {tabs.map((tab) => (
-        <TabsContent key={tab.key} value={tab.key}>
+        <TabsContent key={tab.key} value={tab.key} className="min-h-full">
           {tab.content}
         </TabsContent>
       ))}
