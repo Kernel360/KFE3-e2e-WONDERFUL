@@ -3,6 +3,5 @@
   "buildCommand": "cd ../.. && pnpm install --prod=false && turbo build --filter=web",
   "installCommand": "cd ../.. && pnpm install --prod=false",
   "outputDirectory": "apps/web/.next",
-  "framework": "nextjs",
-  "nodeVersion": "18.x"
+  "framework": "nextjs"
 }
