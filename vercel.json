@@ -1,19 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "apps/web/package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "apps/web/$1"
-    }
-  ],
-  "buildCommand": "turbo build --filter=web",
+  "buildCommand": "cd ../.. && pnpm install --prod=false && turbo build --filter=web",
+  "installCommand": "cd ../.. && pnpm install --prod=false",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "pnpm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "rootDirectory": "apps/web",
+  "nodeVersion": "18.x"
 }
