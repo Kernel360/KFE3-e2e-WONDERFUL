@@ -33,13 +33,9 @@ Thumbs.db
 *.db
 *.db-journal
 
-# Only deploy web app
+# Only deploy web app, but include necessary packages
 apps/docs/
 !apps/web/
 
-# Keep necessary packages for build
-!packages/typescript-config/
-!packages/ui/
-!packages/db/
-!packages/eslint-config/
-!packages/tailwind-config/
+# Include all packages needed for build
+!packages/
