@@ -1,0 +1,48 @@
+name: Sync and Deploy
+
+on:
+  push:
+    branches: [develop]
+  repository_dispatch:
+    types: [team-repo-updated]
+  workflow_dispatch:
+
+jobs:
+  notify-personal-repo:
+    if: github.repository == 'Kernel360/KFE3-e2e-WONDERFUL'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger personal repo sync
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.PERSONAL_REPO_TOKEN }}" \
+            https://api.github.com/repos/miniseung/KFE3-e2e-WONDERFUL/dispatches \
+            -d '{"event_type":"team-repo-updated"}'
+          echo "✅ 개인 레포에 동기화 요청을 보냈습니다!"
+
+  sync-upstream:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Sync with team repo
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # 팀 레포 추가
+          git remote add upstream https://github.com/Kernel360/KFE3-e2e-WONDERFUL.git || true
+          git fetch upstream
+
+          # develop 브랜치로 체크아웃 후 머지
+          git checkout develop
+          git merge upstream/develop --no-edit
+          git push origin develop
+
+          echo "✅ 팀 레포와 동기화 완료! Vercel 배포 시작됩니다."
