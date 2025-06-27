@@ -36,3 +36,10 @@ Thumbs.db
 # Only deploy web app
 apps/docs/
 !apps/web/
+
+# Keep necessary packages for build
+!packages/typescript-config/
+!packages/ui/
+!packages/db/
+!packages/eslint-config/
+!packages/tailwind-config/
