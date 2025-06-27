@@ -125,7 +125,7 @@ const Header = ({
           }`}
         >
           <h1
-            className={`max-w-[300px] truncate text-base font-semibold leading-[20px] text-[var(--color-neutral-900)] font-normal${
+            className={`max-w-[300px] truncate text-[20px] font-semibold leading-[20px] text-[var(--color-neutral-900)] font-normal${
               titleAlignment === 'center' ? 'text-center' : 'text-left'
             }`}
           >
