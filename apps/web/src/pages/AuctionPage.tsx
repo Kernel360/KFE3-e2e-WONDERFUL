@@ -22,7 +22,12 @@ interface TabItem {
 
 const AuctionPage = () => {
   const param = useParams();
-  const { id } = param!;
+  // const { id } = param!;
+  const id = param?.id;
+
+  if (!id) {
+    return <div>Loading...</div>;
+  }
 
   const endTime = new Date(Date.now() + 30 * 60 * 60 * 1000);
   const description: string =
