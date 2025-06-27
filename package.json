@@ -8,7 +8,7 @@
     "lint:fix": "turbo run lint:fix",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,yml,yaml}\"",
-    "prepare": "lefthook install",
+    "prepare": "[ \"$VERCEL\" != \"1\" ] && lefthook install || echo 'Skipping lefthook on Vercel'",
     "db:generate": "pnpm --filter @repo/db db:generate"
   },
   "devDependencies": {
