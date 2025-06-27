@@ -10,14 +10,14 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/app/*": ["./app/*"],
-      "@/lib/*": ["./lib/*", "./src/lib/*"],
+      "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/components/*"],
       "@/pages/*": ["./src/pages/*"],
       "@/hooks/*": ["./src/hooks/*"],
-      "@/types/*": ["./src/types/*"],
+      "@/types/*": ["./src/lib/types/*"],
       "@/api/*": ["./src/api/*"],
-      "@/config/*": ["./src/config/*"],
-      "@/constants/*": ["./src/constants/*"],
+      "@/config/*": ["./src/lib/config/*"],
+      "@/constants/*": ["./src/lib/constants/*"],
       "@repo/ui": ["../../packages/ui/src"],
       "@repo/db": ["../../packages/db/src"]
     }

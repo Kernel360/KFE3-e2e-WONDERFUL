@@ -6,9 +6,8 @@ import { Clock } from 'lucide-react';
 
 import { useOnClickOutside } from '@/hooks/common/useOnClickOutside';
 
-import { cn } from '@/lib/utils';
-
-import { formatTimeString, formatTo12HourTime } from '@/utils/date';
+import { cn } from '@/lib/cn';
+import { formatTimeString, formatTo12HourTime } from '@/lib/utils/date';
 
 interface TimePickerProps {
   time: string;

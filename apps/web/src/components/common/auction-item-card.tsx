@@ -6,9 +6,9 @@ import BadgeBidStatus from '@/components/common/badge-bid-status';
 import Thumbnail from '@/components/common/thumbnail';
 import { Badge } from '@/components/ui/badge';
 
-import useCountdown from '@/hooks/useCountdown';
+import useCountdown from '@/hooks/common/useCountdown';
 
-import { AuctionItemProps } from '@/types/auction';
+import { AuctionItemProps } from '@/lib/types/auction';
 
 const renderTimeBadge = ({ hours, minutes }: { hours: string; minutes: string }) => {
   const timeBadgeStyle = hours === '00' && minutes === '00' ? 'closed' : 'tertiary';

@@ -1,11 +1,10 @@
 'use client';
-import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import AuthForm from '@/components/auth/AuthForm';
+import AuthForm from '@/components/auth/authForm';
 
-import { SignupFormData } from '@/types/auth';
+import { SignupFormData } from '@/lib/types/auth';
 interface SignupFormProps {
   onSignup?: (data: SignupFormData) => void;
   onToggleToSignin?: () => void;

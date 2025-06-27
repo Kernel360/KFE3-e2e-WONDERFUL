@@ -1,4 +1,4 @@
-import apiClient from '@/lib/client';
+import apiClient from '@/lib/api/client';
 
 // 사용자 목록 조회
 export const getUsers = async () => {

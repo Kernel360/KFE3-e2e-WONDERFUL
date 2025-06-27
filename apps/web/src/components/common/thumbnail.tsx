@@ -1,8 +1,8 @@
 'use client';
 
-import React, { HTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 interface ThumbnailProps extends HTMLAttributes<HTMLDivElement> {
   url: string;

@@ -3,8 +3,7 @@ import localFont from 'next/font/local';
 import type { Metadata, Viewport } from 'next';
 
 import { MainLayout } from '@/components/layout';
-
-import QueryProvider from '@/lib/providers/query-provider';
+import QueryProvider from '@/components/providers/query-provider';
 
 import './globals.css';
 
