@@ -16,10 +16,5 @@
   "outputDirectory": "apps/web/.next",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "rootDirectory": "apps/web",
-  "functions": {
-    "apps/web/app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  }
+  "rootDirectory": "apps/web"
 }
