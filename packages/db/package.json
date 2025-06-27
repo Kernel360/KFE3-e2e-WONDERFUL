@@ -8,13 +8,13 @@
     "./client": "./src/client.ts"
   },
   "scripts": {
-    "db:generate": "dotenv -e ../../.env -- prisma generate",
+    "db:generate": "npx prisma generate",
     "db:push": "dotenv -e ../../.env -- prisma db push",
     "db:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
     "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
     "db:studio": "dotenv -e ../../.env -- prisma studio",
     "db:reset": "dotenv -e ../../.env -- prisma migrate reset --force",
-    "postinstall": "dotenv -e ../../.env -- prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0"
