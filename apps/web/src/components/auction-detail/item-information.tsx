@@ -1,6 +1,7 @@
-import { Badge } from '@/components/ui/badge';
 import Countdown from '@/components/common/countdown';
-import { formatDate } from '@/utils/date';
+import { Badge } from '@/components/ui/badge';
+
+import { formatDate } from '@/lib/utils/date';
 
 interface ItemInformationProps {
   item: Item;

@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 const Select = SelectPrimitive.Root;
 
@@ -136,13 +136,13 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
   Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
   SelectContent,
-  SelectLabel,
+  SelectGroup,
   SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
+  SelectLabel,
   SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
 };
