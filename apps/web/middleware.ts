@@ -1,12 +1,9 @@
 // 요청이 완료되기 전에 서버에서 실행되는 코드
 // 들어오는 요청에 따라 응답을 수정하거나 리다이렉트, 헤더 수정, 직접 응답 등을 할 수 있음
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 
-import { createServerClient } from '@supabase/ssr';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+import { createMiddlewareClient, handleAuthRoutes } from './src/lib/supabase/middleware';
 
 // 보호된 라우트 정의 (예: 프로필, 경매, 채팅 등)
 //const protectedRoutes = ['/profile', '/auction', '/chat'];
@@ -16,30 +13,7 @@ const authRoutes = ['/auth/signin', '/auth/signup'];
 
 export async function middleware(request: NextRequest) {
   // Supabase 클라이언트 생성
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
-        });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options)
-        );
-      },
-    },
-  });
+  const { supabase } = createMiddlewareClient(request);
 
   // 사용자 인증 상태 확인 (예: 로그인 여부)
   const {
@@ -54,40 +28,13 @@ export async function middleware(request: NextRequest) {
     console.log(`🔍 [Middleware] ${pathname} | User: ${user?.email || '❌ Anonymous'}`);
   }
 
-  // 보호된 라우트 접근 제어
-  if (authRoutes.some((route) => pathname.startsWith(route)) && user && !error) {
-    console.log(`🔄 [Authenticated Redirect] ${pathname} → /`);
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // 인증된 사용자의 인증 페이지 접근 제어
-  if (authRoutes.some((route) => pathname.startsWith(route))) {
-    if (user && !error) {
-      // 인증된 사용자가 인증 페이지에 접근하려고 할 때
-      const url = new URL(request.url);
-      const redirectTo = url.searchParams.get('redirectTo');
-      const destination = redirectTo ? redirectTo : '/';
-      console.log(`🔄 [Authenticated Redirect] ${pathname} → ${destination}`);
-      return NextResponse.redirect(new URL(destination, request.url));
+  // 인증 라우트 처리
+  if (!error) {
+    const authRedirect = await handleAuthRoutes(request, user, authRoutes);
+    if (authRedirect) {
+      return authRedirect;
     }
   }
-
-  // API 라우트에 사용자 정보 헤더 추가
-  if (pathname.startsWith('/api/') && user && !error) {
-    response.headers.set('x-user-id', user.id);
-    response.headers.set('x-user-email', user.email || '');
-    response.headers.set('x-user-verified', user.email_confirmed_at ? 'true' : 'false');
-  }
-
-  // 경매 관련 특별 처리
-  if (pathname.startsWith('/auction/')) {
-    const auctionId = pathname.split('/')[2];
-    if (auctionId && user) {
-      response.headers.set('x-auction-id', auctionId);
-    }
-  }
-
-  return response;
 }
 
 export const config = {
