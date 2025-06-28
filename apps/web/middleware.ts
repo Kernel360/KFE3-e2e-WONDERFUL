@@ -55,33 +55,28 @@ export async function middleware(request: NextRequest) {
   }
 
   // 보호된 라우트 접근 제어
-  //   if (protectedRoutes.some((route) => pathname.startsWith(route))) {
-  //     if (!user || error) {
-  //       console.log(`🚫 [Auth Required] ${pathname}`);
-
-  //       const redirectUrl = new URL('/auth/signin', request.url);
-  //       redirectUrl.searchParams.set('redirectTo', pathname);
-
-  //       return NextResponse.redirect(redirectUrl);
-  //     }
-  //   }
+  if (authRoutes.some((route) => pathname.startsWith(route)) && user && !error) {
+    console.log(`🔄 [Authenticated Redirect] ${pathname} → /`);
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
   // 인증된 사용자의 인증 페이지 접근 제어
   if (authRoutes.some((route) => pathname.startsWith(route))) {
     if (user && !error) {
-      console.log(`🔄 [Authenticated Redirect] ${pathname} → /`);
-
-      return NextResponse.redirect(new URL('/', request.url));
+      // 인증된 사용자가 인증 페이지에 접근하려고 할 때
+      const url = new URL(request.url);
+      const redirectTo = url.searchParams.get('redirectTo');
+      const destination = redirectTo ? redirectTo : '/';
+      console.log(`🔄 [Authenticated Redirect] ${pathname} → ${destination}`);
+      return NextResponse.redirect(new URL(destination, request.url));
     }
   }
 
   // API 라우트에 사용자 정보 헤더 추가
-  if (pathname.startsWith('/api/')) {
-    if (user && !error) {
-      response.headers.set('x-user-id', user.id);
-      response.headers.set('x-user-email', user.email || '');
-      response.headers.set('x-user-verified', user.email_confirmed_at ? 'true' : 'false');
-    }
+  if (pathname.startsWith('/api/') && user && !error) {
+    response.headers.set('x-user-id', user.id);
+    response.headers.set('x-user-email', user.email || '');
+    response.headers.set('x-user-verified', user.email_confirmed_at ? 'true' : 'false');
   }
 
   // 경매 관련 특별 처리
