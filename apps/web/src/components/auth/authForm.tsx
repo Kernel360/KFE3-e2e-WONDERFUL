@@ -1,23 +1,22 @@
 'use client';
 import React, { useState } from 'react';
 
-import { User, Lock, Eye, EyeOff, Mail } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import InputIcon from '@/components/common/input-icon';
 import { Button } from '@/components/ui/button';
 
-import { AuthErrorType, AuthFormData, FormType } from '@/types/auth';
-
+import { AuthErrorType, AuthFormData, FormType } from '@/lib/types/auth';
 import {
   getAuthErrorMessage,
   getFormConfig,
   getInitialFormData,
-  validateSignin,
-  validateSignup,
   validateEmail,
   validatePassword,
+  validateSignin,
+  validateSignup,
   validateUsername,
-} from '@/utils/auth';
+} from '@/lib/utils/auth';
 
 interface AuthFormProps<T extends AuthFormData = AuthFormData> {
   formType: FormType;

@@ -1,4 +1,4 @@
-import useCountdown from '@/hooks/useCountdown';
+import useCountdown from '@/hooks/common/useCountdown';
 
 interface CountdownProps {
   date: Date;

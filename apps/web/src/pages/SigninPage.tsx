@@ -1,11 +1,10 @@
 'use client';
-import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import SigninForm from '@/components/auth/SigninForm';
 
-import { SigninFormData } from '@/types/auth';
+import { SigninFormData } from '@/lib/types/auth';
 const ChatPage = () => {
   const router = useRouter();
   const handleLogin = (data: SigninFormData) => {

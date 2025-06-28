@@ -1,13 +1,12 @@
 'use client';
-import React from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import AuthForm from '@/components/auth/AuthForm';
+import AuthForm from '@/components/auth/authForm';
 import { FloatButton } from '@/components/ui/float-button';
 
-import { SigninFormData } from '@/types/auth';
+import { SigninFormData } from '@/lib/types/auth';
 
 interface SigninFormProps {
   onLogin?: (data: SigninFormData) => void;

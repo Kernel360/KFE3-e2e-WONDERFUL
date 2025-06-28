@@ -1,10 +1,13 @@
-import { Button } from '@/components/ui/button';
-import ButtonFavorite from '@/components/auction-detail/button-favorite';
-import BannerDirect from '@/components/auction-detail/banner-direct';
-import { formatCurrencyWithUnit } from '@/utils/price';
-import BidInput from '@/components/auction-detail/bid-input';
 import { useState } from 'react';
+
 import { tv } from 'tailwind-variants';
+
+import BannerDirect from '@/components/auction-detail/banner-direct';
+import BidInput from '@/components/auction-detail/bid-input';
+import ButtonFavorite from '@/components/auction-detail/button-favorite';
+import { Button } from '@/components/ui/button';
+
+import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 const bidInputWrapper = tv({
   base: 'transition-all duration-700 overflow-hidden',

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { HouseIcon, MessagesSquare, SearchIcon, UserRoundIcon } from 'lucide-react';
 
-import { ROUTES, type NavMenuItem } from '@/constants/routes';
+import { ROUTES, type NavMenuItem } from '@/lib/constants/routes';
 
 // route 작업 후 수정 필요
 const NAV_MENU: NavMenuItem[] = [
