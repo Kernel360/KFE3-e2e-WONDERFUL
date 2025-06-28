@@ -1,6 +1,4 @@
-import { Label } from '@/components/ui/label';
 import React from 'react';
-import InputBasic from '@/components/common/input-basic';
 
 interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
   id: string;
