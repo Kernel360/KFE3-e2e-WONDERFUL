@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import AuthForm from '@/components/auth/authForm';
+import AuthForm from '@/components/auth/auth-form';
 import { FloatButton } from '@/components/ui/float-button';
 
 import { SigninFormData } from '@/lib/types/auth';
