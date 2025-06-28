@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
+
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cn';
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -38,7 +39,7 @@ function useCarousel() {
   return context;
 }
 
-function Carousel({
+const Carousel = ({
   orientation = 'horizontal',
   opts,
   setApi,
@@ -46,7 +47,7 @@ function Carousel({
   className,
   children,
   ...props
-}: React.ComponentProps<'div'> & CarouselProps) {
+}: React.ComponentProps<'div'> & CarouselProps) => {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -125,9 +126,9 @@ function Carousel({
       </div>
     </CarouselContext.Provider>
   );
-}
+};
 
-function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
+const CarouselContent = ({ className, ...props }: React.ComponentProps<'div'>) => {
   const { carouselRef, orientation } = useCarousel();
 
   return (
@@ -138,9 +139,9 @@ function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
       />
     </div>
   );
-}
+};
 
-function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
+const CarouselItem = ({ className, ...props }: React.ComponentProps<'div'>) => {
   const { orientation } = useCarousel();
 
   return (
@@ -156,6 +157,6 @@ function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
       {...props}
     />
   );
-}
+};
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselItem };
+export { Carousel, CarouselContent, CarouselItem, type CarouselApi };

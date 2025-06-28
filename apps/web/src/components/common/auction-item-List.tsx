@@ -23,7 +23,7 @@ const AUCTION_ITEMS: AuctionItemProps[] = [
 
 import AuctionItemCard from '@/components/common/auction-item-card';
 
-import { AuctionItemProps } from '@/types/auction';
+import { AuctionItemProps } from '@/lib/types/auction';
 
 const AuctionItemList = () => {
   return (

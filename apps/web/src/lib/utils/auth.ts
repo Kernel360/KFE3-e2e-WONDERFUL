@@ -1,4 +1,10 @@
-import { AuthErrorType, FormConfig, FormType, SigninFormData, SignupFormData } from '@/types/auth';
+import {
+  AuthErrorType,
+  FormConfig,
+  FormType,
+  SigninFormData,
+  SignupFormData,
+} from '@/lib/types/auth';
 
 // 임시 로그인 정보
 export const TEMP_SIGNIN_DATA = {
