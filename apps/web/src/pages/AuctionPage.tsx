@@ -3,14 +3,16 @@
 import React from 'react';
 
 import { useParams } from 'next/navigation';
+
+import { MessageSquareMore } from 'lucide-react';
+
+import BidForm from '@/components/auction-detail/bid-form';
+import BidTable from '@/components/auction-detail/bid-table';
 import ItemImages from '@/components/auction-detail/item-images';
 import ItemInformation, { Item } from '@/components/auction-detail/item-information';
-import Tab from '@/components/common/tab';
-import BidTable from '@/components/auction-detail/bid-table';
 import { ProfileCard } from '@/components/common/profile-card';
+import Tab from '@/components/common/tab';
 import { Button } from '@/components/ui/button';
-import { MessageSquareMore } from 'lucide-react';
-import BidForm from '@/components/auction-detail/bid-form';
 
 interface TabItem {
   key: string;
@@ -20,7 +22,12 @@ interface TabItem {
 
 const AuctionPage = () => {
   const param = useParams();
-  const { id } = param!;
+  // const { id } = param!;
+  const id = param?.id;
+
+  if (!id) {
+    return <div>Loading...</div>;
+  }
 
   const endTime = new Date(Date.now() + 30 * 60 * 60 * 1000);
   const description: string =

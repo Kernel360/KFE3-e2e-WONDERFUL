@@ -102,7 +102,7 @@ const DynamicHeader = () => {
           //   router.push('/settings');
           console.log('프로필 설정 더 보기 메뉴 클릭');
         }}
-        className="border-b border-gray-200 bg-white"
+        className="h-[51px] border-b bg-neutral-100 bg-white"
       />
     );
   }
