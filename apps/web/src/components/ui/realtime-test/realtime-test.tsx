@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/supabase/supabase-client';
+import { supabase } from '@/lib/supabase/client';
 
 const RealtimeTest = () => {
   const [connectionStatus, setConnectionStatus] = useState<
