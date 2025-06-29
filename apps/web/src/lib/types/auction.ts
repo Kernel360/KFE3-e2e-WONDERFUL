@@ -53,11 +53,13 @@ export interface AuctionFilters {
 
 export type SortOption = 'latest' | 'ending_soon' | 'price_low' | 'price_high' | 'popular';
 
-//경매 게시글 등록 스토리지 이미지
-export interface AddAuctionFormData {
-  title: string;
+export interface AttacedAuctionImageProps {
+  url: string;
+  handleDelete: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export interface AttacedAuctionImage {
-  url: string;
+//경매 게시글 등록 스토리지 이미지
+export interface AttachImageInputProps {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imgLength: number;
 }

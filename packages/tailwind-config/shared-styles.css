@@ -23,17 +23,16 @@ h6 {
   white-space: nowrap;
   /* 내용이 한 줄로 유지되도록 */
 
-  /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-
-  /* Firefox에서 스크롤바 숨기기 */
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+.scrollbar-hide-x:-webkit-scrollbar {
+  /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+  width: 0;
+  height: 0;
 }
 
 @theme {
@@ -141,8 +140,11 @@ h6 {
 }
 
 .korean-calendar th:first-child {
-  color: rgb(239 68 68); /* red-500 */
+  color: rgb(239 68 68);
+  /* red-500 */
 }
+
 .korean-calendar th:last-child {
-  color: rgb(59 130 246); /* blue-500 */
+  color: rgb(59 130 246);
+  /* blue-500 */
 }

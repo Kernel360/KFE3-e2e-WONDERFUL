@@ -1,35 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { ImageUp } from 'lucide-react';
+import AttacedAuctionPreview from '@/components/add-auction/add-auction-thumbnail';
+import AttachImageInput from '@/components/add-auction/attache-image-input';
 
-import AddAuctionThumbnail from '@/components/add-auction/add-auction-thumbnail';
-
-import { onChangeImages } from '@/hooks/common/useOnChangeImages';
-
-import { AttacedAuctionImage } from '@/types/auction';
+import deletePreviewImage from '@/hooks/add-auction/useDeletePreview';
+import useOnChagePreview from '@/hooks/add-auction/useOnChangePreview';
 
 const ImagesUploader = () => {
-  const [saveImages, setSaveImages] = useState<AttacedAuctionImage[]>([]);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [imgLength, setImgLength] = useState<number>(0);
+
+  const attachImageHandler = useOnChagePreview(setImgLength, setPreviewImages);
+
+  useEffect(() => {
+    if (previewImages.length > 8) {
+      alert('이미지는 최대 8개까지 등록할 수 있습니다.');
+      setPreviewImages((prev) => prev.slice(0, 8)); // 8개까지만 유지
+      setImgLength(8);
+    }
+  }, [previewImages]);
 
   return (
-    <div>
-      <div className="w-fit">
-        <input type="file" id="attachImages" className="hidden" />
-        <label
-          htmlFor="attachImages"
-          className="w-15 h-15 flex flex-col items-center justify-center gap-0.5 rounded-md border border-neutral-200 text-neutral-600"
-        >
-          <ImageUp />
-          <p className="text-min font-medium">0/8</p>
-        </label>
+    <div className="flex h-20 items-center gap-2">
+      <AttachImageInput onChange={attachImageHandler} imgLength={imgLength} />
+      <div className="scrollbar-hide-x flex w-full gap-1">
+        {!previewImages
+          ? ''
+          : previewImages!.map((item, index) => {
+              return (
+                <AttacedAuctionPreview
+                  key={index}
+                  url={item}
+                  handleDelete={() => deletePreviewImage({ setImgLength, setPreviewImages, index })}
+                />
+              );
+            })}
       </div>
-      {!saveImages
-        ? ''
-        : saveImages!.map((item, idx) => {
-            return <AddAuctionThumbnail key={idx} url={item.url} />;
-          })}
     </div>
   );
 };
