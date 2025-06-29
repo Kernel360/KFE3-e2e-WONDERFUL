@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs-categories';
+
 import { TabItem } from '@/lib/constants/tabs';
 
 interface CategoriesProps {

@@ -1,9 +1,9 @@
-'use client';
+import ChatListItem from '@/components/chat/chat-list-item';
 
 const ChatPage = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <h1 className="text-2xl font-bold">채팅 페이지</h1>
+    <div className="flex h-full w-full">
+      <ChatListItem />
     </div>
   );
 };
