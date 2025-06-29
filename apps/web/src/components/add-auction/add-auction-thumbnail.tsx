@@ -5,7 +5,7 @@ import { AttacedAuctionImageProps } from '@/lib/types/auction';
 import Thumbnail from '../common/thumbnail';
 
 const AttacedAuctionPreview = ({ url, handleDelete }: AttacedAuctionImageProps) => {
-  if (!url) return;
+  if (!url) return null;
 
   return (
     <div className="relative">

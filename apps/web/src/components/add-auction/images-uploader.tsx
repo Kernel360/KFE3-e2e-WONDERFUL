@@ -26,7 +26,7 @@ const ImagesUploader = () => {
     <div className="flex h-20 items-center gap-2">
       <AttachImageInput onChange={attachImageHandler} imgLength={imgLength} />
       <div className="scrollbar-hide-x flex w-full gap-1">
-        {!previewImages
+        {previewImages.length < 1
           ? ''
           : previewImages!.map((item, index) => {
               return (
