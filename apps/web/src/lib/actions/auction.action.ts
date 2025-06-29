@@ -95,7 +95,7 @@ export const updateAuction = async (itemId: string, data: AuctionFormData) => {
   if (data.images.length > 0) {
     const { error: imageInsertError } = await supabase.from('auction_images').insert({
       item_id: itemId,
-      url: data.images,
+      urls: data.images,
     });
 
     if (imageInsertError) {
