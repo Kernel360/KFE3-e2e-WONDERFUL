@@ -57,6 +57,12 @@ export const nextJsConfig = [
       import: importPlugin,
     },
     rules: {
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        {
+          allowInGenericTypeArguments: true, // Prisma 같은 제네릭에서 허용
+        },
+      ],
       // 팀 컨벤션 규칙들
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       '@typescript-eslint/no-unused-vars': [
