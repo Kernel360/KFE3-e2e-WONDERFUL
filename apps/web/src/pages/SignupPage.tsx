@@ -17,7 +17,7 @@ interface SignupProps {
 const Signup = ({ onLocationComplete }: SignupProps) => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<'signup' | 'modal' | 'location' | 'start'>(
-    'signup'
+    'location'
   );
 
   const handleSignup = (data: SignupFormData) => {
