@@ -21,7 +21,7 @@ const buttonVariants = cva(
         disabled: 'cursor-not-allowed ',
         positive: 'focus-visible:ring-success-600/40',
         negative: 'focus-visible:ring-danger-600/40',
-        transparent: 'focus-visible:ring-primary-500/50 bg-transprents',
+        transparent: 'focus-visible:ring-primary-500/50 bg-transprent',
       },
       size: {
         min: 'h-8 text-sm font-weight-semibold px-3 [&_svg]:!w-4',
