@@ -11,13 +11,14 @@ interface ItemImagesProps {
   urls?: string[];
 }
 
-import { dummyUrls } from '../../lib/constants/dummy-urls';
+// import { dummyUrls } from '../../lib/constants/dummy-urls';
 
-const ItemImages = ({ urls = dummyUrls }: ItemImagesProps) => {
+const ItemImages = ({ urls }: ItemImagesProps) => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
 
+  console.log('ItemImages urls:', urls);
   React.useEffect(() => {
     if (!api) {
       return;
@@ -32,7 +33,7 @@ const ItemImages = ({ urls = dummyUrls }: ItemImagesProps) => {
   return (
     <Carousel className="relative w-full" setApi={setApi}>
       <CarouselContent>
-        {urls.map((url, index) => (
+        {urls?.map((url, index) => (
           <CarouselItem key={index}>
             <img src={url} alt={`item-${index}`} className="aspect-square w-full object-cover" />
           </CarouselItem>

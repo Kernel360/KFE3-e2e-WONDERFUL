@@ -1,18 +1,28 @@
+// apps/web/app/auction-list-test/page.tsx
 'use client';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Badge } from './ui/badge';
 
 export default function TestAuctionsPage() {
   const [locationId, setLocationId] = useState<string>('');
   const [categoryId, setCategoryId] = useState<string>('');
   const [sort, setSort] = useState<string>('latest');
 
+  const router = useRouter();
+
   const {
     data: auctionsData,
     isLoading,
     error,
   } = useAuctions(locationId, categoryId || undefined, sort);
+
+  // 경매 아이템 클릭 핸들러
+  const handleAuctionClick = (auctionId: string) => {
+    router.push(`/auction/detail/${auctionId}`);
+  };
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -51,8 +61,10 @@ export default function TestAuctionsPage() {
                   border: '1px solid #ddd',
                   margin: '10px 0',
                   padding: '15px',
+                  cursor: 'pointer',
                   backgroundColor: '#f9f9f9',
                 }}
+                onClick={() => handleAuctionClick(auction.id)}
               >
                 {/* 화면에 보여질 필드들: 카테고리, 아이템 썸네일, 타이틀, 경매상태, 시작가, 시작시간, 마감시간, 현재 가격 */}
 
@@ -67,7 +79,13 @@ export default function TestAuctionsPage() {
                 </p>
 
                 <p>
-                  <strong>📊 경매상태:</strong> {auction.status}
+                  <strong>📊 경매상태:</strong>
+                  {/* 🔄 status 조건부 렌더링 수정 (48번째 라인 근처) */}
+                  <Badge className="rounded-sm px-1.5 py-0 text-xs">
+                    {auction.status === 'ACTIVE' || auction.status === '경매중'
+                      ? '경매중'
+                      : '경매종료'}
+                  </Badge>
                 </p>
 
                 <p>
