@@ -41,6 +41,12 @@ export const formatTo12HourTime = (time: string) => {
  * @returns ISO 형식의 타임스탬프
  */
 export const convertHoursToTimestamp = (hours: string): string => {
+  const parsedHours = parseInt(hours, 10);
+
+  if (isNaN(parsedHours) || parsedHours < 1 || parsedHours > 99) {
+    throw new Error('유효하지 않은 시간입니다. 1~99 사이의 숫자를 입력해주세요.');
+  }
+
   const now = new Date();
   const added = new Date(now.getTime() + parseInt(hours, 10) * 60 * 60 * 1000);
   return added.toISOString();
