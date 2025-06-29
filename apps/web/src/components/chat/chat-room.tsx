@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
-import { supabase } from '@/lib/supabase/supabase-client';
+import { supabase } from '@/lib/supabase/client';
 import type { ChatMessage } from '@/lib/types/chat';
 
 interface ChatRoomProps {

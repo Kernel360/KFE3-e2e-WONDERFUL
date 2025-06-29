@@ -30,6 +30,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       return '';
     }
 
+    // 검색 페이지도 패딩 없음
+    if (pathname?.startsWith('/search')) {
+      return '';
+    }
+
     // 기본 패딩
     return 'p-[15px]';
   };
