@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 
+import { LucideCircleAlert } from 'lucide-react';
+
 const AddAuction = () => {
   return (
     <main className="relative mx-auto w-full overflow-hidden bg-white">
@@ -144,9 +146,12 @@ const AddAuction = () => {
       <section className="left-0 flex w-full flex-col gap-7 px-3.5 py-2">
         <div className="flex flex-col items-start pt-5">
           <div className="flex w-full items-center gap-2 rounded-md bg-rose-50 px-4 py-3">
-            <span className="text-sm font-medium text-orange-600">
-              경매 등록시 바로 경매가 시작됩니다!
-            </span>
+            <div className="flex items-center gap-2">
+              <LucideCircleAlert className="size-4 text-orange-600" />
+              <span className="text-sm font-medium text-orange-600">
+                경매 등록시 바로 경매가 시작됩니다!
+              </span>
+            </div>
           </div>
         </div>
 
