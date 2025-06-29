@@ -18,7 +18,6 @@ interface KakaoMapProps {
   className?: string;
 }
 
-// Kakao Map API 타입 선언
 declare global {
   interface Window {
     kakao: {
@@ -39,7 +38,6 @@ declare global {
   }
 }
 
-// Kakao Map 관련 타입 정의
 interface KakaoLatLng {
   getLat: () => number;
   getLng: () => number;

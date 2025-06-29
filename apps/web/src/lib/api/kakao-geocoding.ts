@@ -1,4 +1,3 @@
-// src/lib/api/kakao-geocoding.ts
 interface KakaoGeocodingResponse {
   meta: {
     total_count: number;
@@ -94,7 +93,7 @@ export const convertCoordinatesToAddress = async (
       return '주소 정보 없음';
     }
   } catch (error) {
-    console.error('❌ 카카오 주소 변환 실패:', error);
+    console.error('카카오 주소 변환 실패:', error);
     return '주소 변환 실패';
   }
 };
