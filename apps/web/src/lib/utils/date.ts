@@ -34,3 +34,14 @@ export const formatTo12HourTime = (time: string) => {
   const date = setMinutes(setHours(new Date(), hour), minute);
   return format(date, 'a hh:mm', { locale: ko });
 };
+
+/**
+ * 문자열로 받은 시간(예: "3")을 현재 시각 기준으로 더한 ISO 문자열을 반환
+ * @param hours 문자열 형태의 시간 (예: "3" => 3시간 후)
+ * @returns ISO 형식의 타임스탬프
+ */
+export const convertHoursToTimestamp = (hours: string): string => {
+  const now = new Date();
+  const added = new Date(now.getTime() + parseInt(hours, 10) * 60 * 60 * 1000);
+  return added.toISOString();
+};
