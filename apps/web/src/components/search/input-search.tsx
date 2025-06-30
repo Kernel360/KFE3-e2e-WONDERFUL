@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { CircleX } from 'lucide-react';
 
 interface InputSearchProps {
@@ -6,8 +8,10 @@ interface InputSearchProps {
 }
 
 const InputSearch = ({ id, ...props }: InputSearchProps) => {
+  const [value, setValue] = useState('');
+
   const handleClick = () => {
-    console.log('click 하면 input 메시지 삭제 기능 추가하기');
+    setValue('');
   };
 
   return (
@@ -16,6 +20,8 @@ const InputSearch = ({ id, ...props }: InputSearchProps) => {
         <input
           id={id}
           placeholder="검색어를 입력하세요."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           {...props}
           className="selection:bg-primary selection:text-primary-foreground file:text-foreground aria-invalid:ring-destructive/20 aria-invalid:border-destructive text-black file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
         />
