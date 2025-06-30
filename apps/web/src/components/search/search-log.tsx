@@ -24,7 +24,9 @@ const SearchLog = ({ logs }: SearchLogProps) => {
       <p className="text-lg font-bold text-neutral-900">최근 검색어</p>
       <div>
         {logList.length === 0 ? (
-          <p className="text-sm text-neutral-500">최근 검색 기록이 없습니다.</p>
+          <p className="font-regular flex justify-center text-neutral-600">
+            최근 검색어가 없습니다.
+          </p>
         ) : (
           logList.map((log) => (
             <div key={log.id} className="flex w-full items-center justify-between">
