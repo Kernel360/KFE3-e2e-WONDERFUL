@@ -1,6 +1,4 @@
-'use client';
-
-import Page from '../../../components/pages/AddAuctionPage';
+import AddAuctionPage from '@/pages/AddAcutionPage';
 
 const Page = () => {
   return <AddAuctionPage />;

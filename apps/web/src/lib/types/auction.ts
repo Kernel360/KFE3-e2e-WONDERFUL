@@ -27,6 +27,13 @@ export interface AuctionFormData {
   images: string[];
 }
 
+//경매 게시글 등록 스토리지 이미지
+export interface AttachImageInputProps {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imgLength: number;
+  id: string;
+}
+
 export interface Auction extends AuctionFormData {
   id: string;
   seller_id: string;
