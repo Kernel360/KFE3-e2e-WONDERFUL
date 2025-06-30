@@ -8,7 +8,7 @@ import AttachImageInput from '@/components/add-auction/attache-image-input';
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
 
-const ImagesUploader = () => {
+const ImagesUploader = ({ id }: { id: string }) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imgLength, setImgLength] = useState<number>(0);
 
@@ -24,7 +24,7 @@ const ImagesUploader = () => {
 
   return (
     <div className="flex h-20 items-center gap-2">
-      <AttachImageInput onChange={attachImageHandler} imgLength={imgLength} />
+      <AttachImageInput onChange={attachImageHandler} imgLength={imgLength} id={id} />
       <div className="scrollbar-hide-x flex w-full gap-1">
         {previewImages.length < 1
           ? ''

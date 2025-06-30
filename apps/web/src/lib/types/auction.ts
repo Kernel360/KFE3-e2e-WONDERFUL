@@ -62,4 +62,5 @@ export interface AttacedAuctionImageProps {
 export interface AttachImageInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   imgLength: number;
+  id: string;
 }
