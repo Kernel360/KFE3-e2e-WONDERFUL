@@ -1,31 +1,31 @@
 export interface TabItem {
-  id: string;
-  name: string;
+  value: string;
+  label: string;
 }
 
 export const CATEGORIES: TabItem[] = [
   {
-    id: '1',
-    name: 'NOW 🔥',
+    value: '1',
+    label: 'NOW 🔥',
   },
   {
-    id: '2',
-    name: '가전제품',
+    value: '2',
+    label: '가전제품',
   },
   {
-    id: '3',
-    name: '생활용품',
+    value: '3',
+    label: '생활용품',
   },
   {
-    id: '4',
-    name: '가구',
+    value: '4',
+    label: '가구',
   },
   {
-    id: '5',
-    name: '생활용품',
+    value: '5',
+    label: '생활용품',
   },
   {
-    id: '6',
-    name: '가구',
+    value: '6',
+    label: '가구',
   },
 ];
