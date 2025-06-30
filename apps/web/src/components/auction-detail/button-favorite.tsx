@@ -4,10 +4,10 @@ import { Heart } from 'lucide-react';
 import { useState } from 'react';
 
 interface ButtonFavoriteProps {
-  itemId: string;
+  auctionId: string;
 }
 
-const ButtonFavorite = ({ itemId }: ButtonFavoriteProps) => {
+const ButtonFavorite = ({ auctionId }: ButtonFavoriteProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
 
   const fillColor = isFavorited ? '#f43f5e' : 'none';

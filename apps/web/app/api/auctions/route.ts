@@ -72,6 +72,13 @@ export async function GET(request: NextRequest) {
             isExtendedAuction: true, // 연장 경매 여부 (is_extended_auction)
           },
         },
+        // 이미지 관계 추가
+        auctionImages: {
+          select: {
+            id: true,
+            urls: true,
+          },
+        },
         _count: {
           select: {
             bids: true,
@@ -82,9 +89,15 @@ export async function GET(request: NextRequest) {
       orderBy,
     });
 
+    // 경매 상태 처리
+    const processedAuctions = auctions.map((auction) => ({
+      ...auction,
+      status: auction.status === 'ACTIVE' ? '경매중' : '경매종료',
+    }));
+
     // 응답 데이터 구성
     const response: AuctionListResponse = {
-      data: auctions,
+      data: processedAuctions,
       total,
     };
 
