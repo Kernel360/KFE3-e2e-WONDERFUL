@@ -7,7 +7,7 @@ import Notice from '../common/notice';
 
 const colClass = 'space-y-2 [&_label]:text-base [&_label]:text-neutral-900 [&_label]:font-medium';
 
-const AddAcutionForm = () => {
+const AddAuctionForm = () => {
   return (
     <div className="space-y-8">
       <div className={`${colClass}`}>
@@ -70,4 +70,4 @@ const AddAcutionForm = () => {
   );
 };
 
-export default AddAcutionForm;
+export default AddAuctionForm;

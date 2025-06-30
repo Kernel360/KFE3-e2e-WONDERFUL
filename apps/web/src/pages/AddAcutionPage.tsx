@@ -1,7 +1,7 @@
 'use client';
 
 import { CircleAlert } from 'lucide-react';
-import AddAcutionForm from '@/components/add-auction/add-auction-form';
+import AddAuctionForm from '@/components/add-auction/add-auction-form';
 import Notice from '../components/common/notice';
 import { Button } from '../components/ui';
 
@@ -18,7 +18,7 @@ const AddAuctionPage = () => {
   return (
     <form onSubmit={submitHandler} className="relative mt-2.5">
       <section className="px-[15px]">
-        <AddAcutionForm />
+        <AddAuctionForm />
         <Notice status="caution" className="mt-11">
           <li>
             <CircleAlert />
