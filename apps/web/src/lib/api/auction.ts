@@ -1,4 +1,8 @@
+
 import { AuctionDetailResponse, AuctionListResponse } from '@/types/auction';
+
+import { AuctionListResponse } from '@/types/auction-prisma';
+
 import apiClient from './client';
 
 // 경매 목록 조회

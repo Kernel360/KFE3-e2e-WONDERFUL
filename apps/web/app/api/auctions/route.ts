@@ -1,4 +1,4 @@
-import { AuctionListResponse, SortOption } from '@/lib/types/auction';
+import { AuctionListResponse, SortOption } from '@/types/auction-prisma';
 import { prisma } from '@repo/db';
 import { NextRequest, NextResponse } from 'next/server';
 

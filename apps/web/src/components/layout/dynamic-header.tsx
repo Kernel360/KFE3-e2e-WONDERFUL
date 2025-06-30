@@ -2,6 +2,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { BellRing, ChevronLeft, EllipsisVertical } from 'lucide-react';
 
+import { useSortStore } from '@/lib/zustand/store/sort-store';
+
 import Header from './header';
 import HomeSelectBox from './home-selectbox';
 
@@ -14,16 +16,18 @@ const DynamicHeader = () => {
   }
 
   // 헤더 숨김 페이지들
-  const hiddenPages = ['/auth', '/login', '/signup', '/onboarding', '/search', '/chat'];
+  const hiddenPages = ['/auth', '/login', '/signup', '/onboarding', '/search'];
   if (hiddenPages.some((page) => pathname.startsWith(page))) {
     return null;
   }
 
   // 메인 홈 페이지(경매리스트) - (좌)셀렉트박스 + (우)알림
   if (pathname === '/') {
+    // Zustand 스토어에서 정렬 함수 가져오기
+    const setSortOption = useSortStore((state) => state.setSortOption);
     return (
       <Header
-        leftContent={<HomeSelectBox />}
+        leftContent={<HomeSelectBox onSortChange={setSortOption} />}
         rightIcon={BellRing}
         onRightClick={() => {
           // 알림 페이지로 이동
@@ -52,43 +56,41 @@ const DynamicHeader = () => {
       <Header
         leftIcon={ChevronLeft}
         rightIcon={EllipsisVertical}
-        onLeftClick={() => router.back()}
+        onLeftClick={() => router.push('/')}
         onRightClick={() => {
           console.log('설정 더 보기 메뉴 클릭');
         }}
-        className="bg-white"
+        className="absolute left-0 top-auto z-10 w-full"
       />
     );
   }
 
   // 채팅 페이지들
-  // if (pathname.startsWith('/chat')) {
-  //   if (pathname === '/chat') {
-  //     return (
-  //       <Header
-  //         title="채팅"
-  //         leftIcon={ChevronLeft}
-  //         onLeftClick={() => router.back()}
-  //         className="bg-white"
-  //       />
-  //     );
-  //   } else {
-  //     // 개별 채팅방
-  //     return (
-  //       <Header
-  //         title="거래자 닉네임" // 실제 닉네임은 서버에서 받아와야 함
-  //         leftIcon={ChevronLeft}
-  //         onLeftClick={() => router.back()}
-  //         rightIcon={EllipsisVertical}
-  //         onRightClick={() => {
-  //           // 채팅방 설정 더보기 메뉴 클릭: 삭제, 신고 등
-  //           console.log('채팅방 메뉴 더보기');
-  //         }}
-  //         className="bg-white"
-  //       />
-  //     );
-  //   }
-  // }
+  if (pathname.startsWith('/chat') && pathname === '/chat') {
+    return (
+      <Header
+        title="채팅"
+        // leftContent={<span className="text-[20px]">채팅</span>}
+        rightIcon={BellRing}
+        className="bg-white"
+      />
+    );
+  } else if (pathname.startsWith('/chat/') && pathname !== '/chat') {
+    // 개별 채팅방
+    return (
+      <Header
+        title="거래자 닉네임" // 실제 채팅방 이름으로 변경 필요
+        leftIcon={ChevronLeft}
+        onLeftClick={() => router.back()}
+        rightIcon={EllipsisVertical}
+        onRightClick={() => {
+          // 채팅방 설정 더보기 메뉴 클릭: 삭제, 신고 등
+          console.log('채팅방 메뉴 더보기');
+        }}
+        className="bg-white"
+      />
+    );
+  }
 
   // 프로필 페이지 - 제목 + 설정 버튼
   if (pathname === '/profile') {
