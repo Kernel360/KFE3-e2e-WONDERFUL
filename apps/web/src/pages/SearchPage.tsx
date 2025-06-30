@@ -18,10 +18,12 @@ const dummy: Log[] = [
 
 const SearchPage = () => {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
+    <>
       <HeaderSearch />
-      <SearchLog logs={dummy} />
-    </div>
+      <main className="flex flex-col items-center justify-start pt-3">
+        <SearchLog logs={dummy} />
+      </main>
+    </>
   );
 };
 
