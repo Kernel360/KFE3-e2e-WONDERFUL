@@ -5,6 +5,7 @@ import { useState } from 'react';
 import AuctionItemCard from '@/components/common/auction-item-card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
+
 import { SortOption } from '@/lib/types/auction-prisma';
 import { AuctionItemProps } from '@/types/auction';
 
@@ -66,30 +67,12 @@ const AuctionItemList = ({
   }
 
   return (
-    <section className="px-4 py-6">
-      {/* 총 경매 개수만 표시 (정렬은 헤더에서 처리) */}
-      <div className="mb-6 flex items-center justify-end">
-        <div className="text-sm text-neutral-600">
-          총 <span className="text-primary-600 font-semibold">{auctionsData?.total || 0}</span>개의
-          경매
-        </div>
-      </div>
-
-      {/* 경매 목록 */}
+    <div className="flex flex-col gap-3">
       {auctionsData?.data && auctionsData.data.length > 0 ? (
-        <div className="space-y-4">
-          {auctionsData.data.map((auction) => {
-            const auctionItemProps = convertToAuctionItemProps(auction);
-            return (
-              <div
-                key={auction.id}
-                className="rounded-lg border border-neutral-200 bg-white p-4 transition-shadow hover:shadow-md"
-              >
-                <AuctionItemCard {...auctionItemProps} />
-              </div>
-            );
-          })}
-        </div>
+        auctionsData.data.map((auction) => {
+          const auctionItemProps = convertToAuctionItemProps(auction);
+          return <AuctionItemCard key={auction.id} {...auctionItemProps} />;
+        })
       ) : (
         // 데이터 없음 상태
         <div className="flex flex-col items-center justify-center py-16">
@@ -106,7 +89,7 @@ const AuctionItemList = ({
           <p className="text-neutral-600">현재 진행 중인 경매가 없습니다.</p>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
