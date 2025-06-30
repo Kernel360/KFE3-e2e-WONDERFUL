@@ -2,6 +2,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { BellRing, ChevronLeft, EllipsisVertical } from 'lucide-react';
 
+import { useSortStore } from '@/lib/zustand/store/sort-store';
+
 import Header from './header';
 import HomeSelectBox from './home-selectbox';
 
@@ -21,9 +23,11 @@ const DynamicHeader = () => {
 
   // 메인 홈 페이지(경매리스트) - (좌)셀렉트박스 + (우)알림
   if (pathname === '/') {
+    // Zustand 스토어에서 정렬 함수 가져오기
+    const setSortOption = useSortStore((state) => state.setSortOption);
     return (
       <Header
-        leftContent={<HomeSelectBox />}
+        leftContent={<HomeSelectBox onSortChange={setSortOption} />}
         rightIcon={BellRing}
         onRightClick={() => {
           // 알림 페이지로 이동
