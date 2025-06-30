@@ -7,7 +7,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId'); // 사용자 ID (찜한 상태 확인용)
-    const auctionId = params.id;
+    const auctionId = (await params).id;
 
     // 경매아이템 상세 정보조회
     const auctionItem = await prisma.auctionItem.findUnique({

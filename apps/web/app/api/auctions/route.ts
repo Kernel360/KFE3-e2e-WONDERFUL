@@ -4,12 +4,16 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🚀 경매 목록 API 호출');
+
     const { searchParams } = new URL(request.url);
 
     // 쿼리 파라미터 추출
     const location_id = searchParams.get('location_id');
     const category_id = searchParams.get('category_id');
     const sort = (searchParams.get('sort') as SortOption) || 'latest';
+
+    console.log('📋 파라미터:', { location_id, category_id, sort });
 
     // 필터 조건 구성
     const where: any = {
@@ -52,7 +56,6 @@ export async function GET(request: NextRequest) {
     const total = await prisma.auctionItem.count({ where });
 
     // 경매 목록 조회 (전체)
-    // 화면에 보여질 필드들: 카테고리, 아이템 썸네일, 타이틀, 경매상태, 시작가, 시작시간, 마감시간, 현재 가격
     const auctions = await prisma.auctionItem.findMany({
       where,
       include: {
@@ -64,15 +67,14 @@ export async function GET(request: NextRequest) {
         },
         auctionPrice: {
           select: {
-            startPrice: true, // 시작가 (start_price)
-            currentPrice: true, // 현재 가격 (current_price)
-            instantPrice: true, // 즉시구매가 (instant_price)
-            minBidUnit: true, // 최소 입찰 단위 (min_bid_unit)
-            isInstantBuyEnabled: true, // 즉시구매 가능 여부 (is_instant_buy_enabled)
-            isExtendedAuction: true, // 연장 경매 여부 (is_extended_auction)
+            startPrice: true, // 시작가
+            currentPrice: true, // 현재 가격
+            instantPrice: true, // 즉시구매가
+            minBidUnit: true, // 최소 입찰 단위
+            isInstantBuyEnabled: true, // 즉시구매 가능 여부
+            isExtendedAuction: true, // 연장 경매 여부
           },
         },
-        // 이미지 관계 추가
         auctionImages: {
           select: {
             id: true,
@@ -101,13 +103,16 @@ export async function GET(request: NextRequest) {
       total,
     };
 
+    console.log(`✅ 성공: 총 ${total}개 중 ${processedAuctions.length}개 반환`);
+
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching auctions:', error);
+    console.error('🚨 경매 목록 조회 에러:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error',
+        message: '경매 목록을 불러오는 중 오류가 발생했습니다.',
       },
       { status: 500 }
     );

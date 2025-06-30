@@ -6,8 +6,8 @@ import AuctionItemCard from '@/components/common/auction-item-card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
-import { SortOption } from '@/lib/types/auction';
-import { AuctionItemProps } from '@/lib/types/auction';
+import { SortOption } from '@/lib/types/auction-prisma';
+import { AuctionItemProps } from '@/types/auction';
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;

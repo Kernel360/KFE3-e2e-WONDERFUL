@@ -1,6 +1,6 @@
 // HTTP 클라이언트 설정 (업데이트된 버전)
 // API 요청을 처리하는 Axios 클라이언트를 설정하는 파일
-
+// apps/web/src/lib/api/client.ts
 import axios, {
   AxiosError,
   AxiosInstance,

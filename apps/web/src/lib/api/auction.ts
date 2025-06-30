@@ -1,7 +1,4 @@
-
-import { AuctionDetailResponse, AuctionListResponse } from '@/types/auction';
-
-import { AuctionListResponse } from '@/types/auction-prisma';
+import { AuctionDetailResponse, AuctionListResponse } from '@/types/auction-prisma';
 
 import apiClient from './client';
 
