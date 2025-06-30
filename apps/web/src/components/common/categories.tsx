@@ -6,15 +6,24 @@ import { TabItem } from '@/lib/constants/tabs';
 
 interface CategoriesProps {
   items: TabItem[];
+  selectedCategoryId?: string;
+  onCategoryChange?: (categoryId: string) => void;
 }
 
-const Categories = ({ items }: CategoriesProps) => {
+const Categories = ({ items, selectedCategoryId = '', onCategoryChange }: CategoriesProps) => {
   if (!items || items.length === 0) {
     return <div>카테고리가 없습니다.</div>;
   }
 
+  // 탭 값 변경 핸들러
+  const handleTabsValueChange = (value: string) => {
+    if (onCategoryChange) {
+      onCategoryChange(value);
+    }
+  };
+
   return (
-    <Tabs defaultValue={items[0]!.id}>
+    <Tabs value={selectedCategoryId || items[0]!.id} onValueChange={handleTabsValueChange}>
       <TabsList className="my-3">
         {items.map(({ id, name }) => {
           return (

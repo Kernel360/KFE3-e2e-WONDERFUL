@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import AuthForm from '@/components/auth/authForm';
+import AuthForm from '@/components/auth/auth-form';
 
 import { SignupFormData } from '@/lib/types/auth';
 interface SignupFormProps {

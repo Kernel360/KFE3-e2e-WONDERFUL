@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 
+import LocationDisplay from '@/components/auth/location-display';
 import { Button } from '@/components/ui/button';
 
 interface LocationSetupProps {
@@ -8,6 +11,12 @@ interface LocationSetupProps {
 }
 
 const LocationSetup = ({ onSaveLocation, onSkipLocation }: LocationSetupProps) => {
+  // 위치 저장 시 처리
+  const handleSaveLocation = () => {
+    // 실제 저장 로직 추가 가능
+    onSaveLocation();
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <div className="flex-1 px-6">
@@ -24,18 +33,14 @@ const LocationSetup = ({ onSaveLocation, onSkipLocation }: LocationSetupProps) =
             설정해야합니다.
           </p>
 
-          <div className="bg-primary-500 mx-auto flex min-h-[90px] w-[327px] flex-col items-start gap-2 overflow-hidden rounded-2xl p-2 pb-3">
-            <div className="flex h-full w-full flex-1 items-center justify-center">
-              <span className="text-xl font-medium text-white">지도 API</span>
-            </div>
-          </div>
+          <LocationDisplay showAddressText={true} mapHeight="130px" />
         </div>
       </div>
 
       <div className="mb-[137px] px-6">
         <div className="space-y-3">
           <Button
-            onClick={onSaveLocation}
+            onClick={handleSaveLocation}
             size="lg"
             color="primary"
             fullWidth={true}
