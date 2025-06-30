@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import BottomModal from '@/components/auth/Bottommodal';
-import LocationSetup from '@/components/auth/LocationSetup';
-import SignupForm from '@/components/auth/SignupForm';
-import StartInfo from '@/components/auth/StartInfo';
+import BottomModal from '@/components/auth/bottom-modal';
+import LocationSetup from '@/components/auth/location-setup';
+import SignupDone from '@/components/auth/signup-done';
+import SignupForm from '@/components/auth/signup-form';
 
 import { SignupFormData } from '@/lib/types/auth';
 
@@ -17,7 +17,7 @@ interface SignupProps {
 const Signup = ({ onLocationComplete }: SignupProps) => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<'signup' | 'modal' | 'location' | 'start'>(
-    'signup'
+    'location'
   );
 
   const handleSignup = (data: SignupFormData) => {
@@ -44,7 +44,7 @@ const Signup = ({ onLocationComplete }: SignupProps) => {
   };
 
   if (currentStep === 'start') {
-    return <StartInfo onStartActivity={handleStartActivity} />;
+    return <SignupDone onStartActivity={handleStartActivity} />;
   }
 
   if (currentStep === 'location') {

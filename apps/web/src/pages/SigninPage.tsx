@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import SigninForm from '@/components/auth/SigninForm';
+import SigninForm from '@/components/auth/signin-form';
 
 import { SigninFormData } from '@/lib/types/auth';
 const ChatPage = () => {

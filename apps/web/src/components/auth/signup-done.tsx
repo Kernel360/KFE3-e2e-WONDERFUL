@@ -4,11 +4,11 @@ import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 
-interface StartInfoProps {
+interface SignupDoneProps {
   onStartActivity: () => void;
 }
 
-const StartInfo = ({ onStartActivity }: StartInfoProps) => {
+const SignupDone = ({ onStartActivity }: SignupDoneProps) => {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <div className="flex-1 px-6">
@@ -49,4 +49,4 @@ const StartInfo = ({ onStartActivity }: StartInfoProps) => {
   );
 };
 
-export default StartInfo;
+export default SignupDone;
