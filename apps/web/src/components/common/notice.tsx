@@ -1,16 +1,20 @@
 'use client';
 
-interface statusClasses {}
+interface NoticeClasses {
+  children: React.ReactNode;
+  status: string;
+  className?: string;
+}
 
-const Notice = ({ children, status }: { children: React.ReactNode; status: string }) => {
+const Notice = ({ children, status, className }: NoticeClasses) => {
   const typeClasses: Record<string, string> = {
-    notice: 'bg-neutral-100',
+    notice: 'bg-neutral-100 text-neutral-600',
     caution: 'bg-danger-50 text-danger-600',
   };
 
   return (
     <ul
-      className={`[&_svg]:size-4.5 my-3 flex flex-col gap-1 rounded-md px-4 pb-3 pt-3.5 text-sm font-medium [&_li]:flex [&_li]:items-center [&_li]:gap-1 ${typeClasses[status] ?? typeClasses['info']}`}
+      className={`[&_svg]:size-4.5 flex flex-col gap-1 rounded-sm px-4 pb-2 pt-2.5 text-sm font-medium [&_li]:flex [&_li]:items-center [&_li]:gap-1 ${typeClasses[status] ?? typeClasses['notice']} ${className}`}
     >
       {children}
     </ul>

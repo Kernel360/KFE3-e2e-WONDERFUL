@@ -5,3 +5,4 @@ export { Input } from './input';
 export { Label } from './label';
 export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from './popover';
 export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
+export { Textarea } from './textarea';
