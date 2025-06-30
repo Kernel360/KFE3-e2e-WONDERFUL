@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import AttacedAuctionPreview from '@/components/add-auction/add-auction-thumbnail';
 import AttachImageInput from '@/components/add-auction/attache-image-input';
 
-import deletePreviewImage from '@/hooks/add-auction/useDeletePreview';
-import useOnChagePreview from '@/hooks/add-auction/useOnChangePreview';
+import deletePreviewImage from '@/hooks/auction/useDeletePreview';
+import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
 
 const ImagesUploader = () => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
