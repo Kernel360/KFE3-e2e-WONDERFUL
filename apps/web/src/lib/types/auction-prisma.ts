@@ -20,6 +20,12 @@ export type AuctionListItem = Prisma.AuctionItemGetPayload<{
         isExtendedAuction: true; // 연장 경매 여부
       };
     };
+    auctionImages: {
+      select: {
+        id: true; // 이미지 ID
+        urls: true; // 이미지 URL 배열
+      };
+    };
     _count: {
       select: {
         bids: true;
@@ -29,10 +35,73 @@ export type AuctionListItem = Prisma.AuctionItemGetPayload<{
   };
 }>;
 
+// 경매 상세 페이지
+export type AuctionDetailItem = Prisma.AuctionItemGetPayload<{
+  include: {
+    // 판매자
+    seller: {
+      select: {
+        id: true;
+        nickname: true;
+        profileImg: true;
+        isVerified: true;
+      };
+    };
+    // 카테고리
+    category: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+    // 가격
+    auctionPrice: {
+      select: {
+        startPrice: true;
+        currentPrice: true;
+        instantPrice: true;
+        minBidUnit: true;
+        isInstantBuyEnabled: true;
+        isExtendedAuction: true;
+      };
+    };
+    auctionImages: {
+      select: {
+        id: true; // 이미지 ID
+        urls: true; // 이미지 URL 배열
+      };
+    };
+    // 통계
+    _count: {
+      select: {
+        bids: true;
+        favoriteItems: true;
+      };
+    };
+  };
+}>;
+// 찜하기 여부
+export interface UserFavoriteStatus {
+  isFavorite: boolean;
+}
+
+// 이미지 배열 처리 헬퍼 함수 타입
+export interface ProcessedImages {
+  allImages: string[]; // 모든 이미지 URL 배열
+  thumbnailUrl: string; // 대표 이미지 (첫 번째 이미지 또는 기본값)
+}
+
 // API 응답 타입들
+// 경매 목록 응답
 export interface AuctionListResponse {
   data: AuctionListItem[];
   total: number;
+}
+
+// 경매 상세페이지 응답
+export interface AuctionDetailResponse {
+  data: AuctionDetailItem;
+  userFavorite: UserFavoriteStatus;
 }
 
 // 필터 및 정렬 타입들

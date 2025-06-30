@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { SortOption } from '@/lib/types/auction';
+import { SortOption } from '@/lib/types/auction-prisma';
 
 import { SelectBox } from '../common/select-box';
 
@@ -12,12 +12,14 @@ const HomeSelectBox = ({ onSortChange }: HomeSelectBoxProps) => {
   const [selectedSort, setSelectedSort] = useState<SortOption>('latest');
 
   const sortOptions = [
-    { value: 'latest', label: '최신순' },
-    { value: 'ending_soon', label: '마감임박순' },
-    { value: 'price_low', label: '낮은가격순' },
-    { value: 'price_high', label: '높은가격순' },
-    { value: 'popular', label: '인기순' },
-    { value: 'title_asc', label: '제목순' },
+    // { value: 'latest', label: '최신순' },
+    // { value: 'ending_soon', label: '마감임박순' },
+    // { value: 'price_low', label: '낮은가격순' },
+    // { value: 'price_high', label: '높은가격순' },
+    // { value: 'popular', label: '인기순' },
+    // { value: 'title_asc', label: '제목순' },
+    { value: 'yeoksamdong', label: '역삼동' },
+    { value: 'setting-neighborhood', label: '동네 설정하기' },
   ];
 
   const handleSortChange = (value: string) => {

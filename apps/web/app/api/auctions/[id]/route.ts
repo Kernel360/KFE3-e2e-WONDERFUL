@@ -1,4 +1,4 @@
-import { AuctionDetailResponse } from '@/lib/types/auction';
+import { AuctionDetailResponse } from '@/lib/types/auction-prisma';
 import { prisma } from '@repo/db';
 import { NextRequest, NextResponse } from 'next/server';
 
