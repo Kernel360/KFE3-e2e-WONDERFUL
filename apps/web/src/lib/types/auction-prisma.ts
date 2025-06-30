@@ -36,10 +36,20 @@ export interface AuctionListResponse {
 }
 
 // 필터 및 정렬 타입들
-
 export interface AuctionFilters {
   location_id?: string;
   category_id?: string;
 }
 
 export type SortOption = 'latest' | 'ending_soon' | 'price_low' | 'price_high' | 'popular';
+
+export interface AttacedAuctionImageProps {
+  url: string;
+  handleDelete: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+//경매 게시글 등록 스토리지 이미지
+export interface AttachImageInputProps {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imgLength: number;
+}
