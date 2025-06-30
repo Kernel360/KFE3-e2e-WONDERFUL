@@ -40,7 +40,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   return (
-    <div className="mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col">
+    <div
+      className="relative mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col"
+      style={{ position: 'relative' }}
+    >
       {/* 동적 헤더 */}
       <DynamicHeader />
 

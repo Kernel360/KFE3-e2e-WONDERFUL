@@ -1,21 +1,41 @@
 import { useState } from 'react';
 
+import { SortOption } from '@/lib/types/auction-prisma';
+
 import { SelectBox } from '../common/select-box';
 
-const HomeSelectBox = () => {
-  const [selectedState, setSelectedState] = useState('all');
-  const stateOptions = [
-    { value: 'all', label: '전체' },
-    { value: 'active', label: '진행중' },
-    { value: 'completed', label: '완료' },
-    { value: 'pending', label: '대기' },
+interface HomeSelectBoxProps {
+  onSortChange?: (sortOption: SortOption) => void;
+}
+
+const HomeSelectBox = ({ onSortChange }: HomeSelectBoxProps) => {
+  const [selectedSort, setSelectedSort] = useState<SortOption>('latest');
+
+  const sortOptions = [
+    { value: 'latest', label: '최신순' },
+    { value: 'ending_soon', label: '마감임박순' },
+    { value: 'price_low', label: '낮은가격순' },
+    { value: 'price_high', label: '높은가격순' },
+    { value: 'popular', label: '인기순' },
+    { value: 'title_asc', label: '제목순' },
   ];
+
+  const handleSortChange = (value: string) => {
+    const sortValue = value as SortOption;
+    setSelectedSort(sortValue);
+
+    // 부모 컴포넌트에 정렬 변경 알림
+    if (onSortChange) {
+      onSortChange(sortValue);
+    }
+  };
+
   return (
     <SelectBox
-      options={stateOptions}
-      placeholder="상태"
-      value={selectedState}
-      onValueChange={setSelectedState}
+      options={sortOptions}
+      placeholder="정렬"
+      value={selectedSort}
+      onValueChange={handleSortChange}
     />
   );
 };

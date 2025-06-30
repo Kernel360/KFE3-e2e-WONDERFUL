@@ -74,6 +74,7 @@ model FavoriteItem {
   user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, itemId]) // 복합 유니크 제약조건(찜하기는 한 아이템에 대해 한 사용자당 하나만 가능)
   @@map("favorite_items")
 }
 
@@ -151,7 +152,7 @@ model Bid {
 model AuctionImage {
   id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   itemId String @map("item_id") @db.Uuid
-  url    String @db.Text
+  urls   String[] @db.Text // 이미지 URL 배열
 
   // Relations
   item AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)

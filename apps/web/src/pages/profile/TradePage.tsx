@@ -3,7 +3,8 @@
 import React from 'react';
 
 import AuctionItemList from '@/components/common/auction-item-List';
-import Categories from '@/components/categories/categories';
+import Categories from '@/components/common/categories';
+
 import { CATEGORIES } from '@/lib/constants/tabs';
 
 const TradeListPage = () => {
