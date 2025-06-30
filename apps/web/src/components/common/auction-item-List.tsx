@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import AuctionItemCard from '@/components/common/auction-item-card';
 
+import { AuctionItemProps } from '@/types/auction';
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
-
 import { SortOption } from '@/lib/types/auction';
-import { AuctionItemProps } from '@/lib/types/auction';
+
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;
