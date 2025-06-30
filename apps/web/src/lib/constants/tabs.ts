@@ -29,3 +29,4 @@ export const CATEGORIES: TabItem[] = [
     label: '가구',
   },
 ];
+
