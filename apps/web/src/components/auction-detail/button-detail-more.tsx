@@ -11,8 +11,6 @@ const ButtonDetailMore = () => {
   const itemId = params?.id as string;
 
   const handleDelete = async () => {
-    console.log(itemId);
-
     try {
       await deleteAuction(itemId);
       alert('삭제되었습니다!');
