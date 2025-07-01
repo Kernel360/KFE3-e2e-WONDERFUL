@@ -3,9 +3,14 @@
 import { useState } from 'react';
 
 import { SelectBox } from '@/components/common/select-box';
-import { CATEGORIES } from '@/lib/constants/tabs';
 
-const stateOptions = CATEGORIES.slice(1);
+import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
+
+// const stateOptions = CATEGORIES.slice(1);
+const stateOptions = FALLBACK_CATEGORIES.slice(1).map((category) => ({
+  value: category.id,
+  label: category.name,
+}));
 
 const CategorySelectBox = ({ className }: { className: string }) => {
   const [selectedState, setSelectedState] = useState(stateOptions[0]?.value);

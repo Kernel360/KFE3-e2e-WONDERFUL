@@ -1,8 +1,10 @@
 import React from 'react';
-import { Input, Label, Textarea } from '@/components/ui';
+
 import CategorySelectBox from '@/components/add-auction/category-select';
 import ImagesUploader from '@/components/add-auction/images-uploader';
 import MinUnitSelectBox from '@/components/add-auction/min-unit-select';
+import { Input, Label, Textarea } from '@/components/ui';
+
 import Notice from '../common/notice';
 
 const colClass = 'space-y-2 [&_label]:text-base [&_label]:text-neutral-900 [&_label]:font-medium';
