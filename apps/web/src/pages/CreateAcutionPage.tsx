@@ -2,21 +2,15 @@
 
 import { CircleAlert } from 'lucide-react';
 import AddAuctionForm from '@/components/add-auction/add-auction-form';
-import Notice from '../components/common/notice';
-import { Button } from '../components/ui';
+import Notice from '@/components/common/notice';
+import { Button } from '@/components/ui';
+import useCreateAuction from '@/hooks/auction/useCreateAuction';
 
-const AddAuctionPage = () => {
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // 기본 제출 동작 방지
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    console.log(formData);
-  };
+const CreateAuctionPage = () => {
+  const submitHandler = useCreateAuction();
 
   return (
-    <form onSubmit={submitHandler} className="relative mt-2.5">
+    <form onSubmit={useCreateAuction} className="relative mt-2.5">
       <section className="px-[15px]">
         <AddAuctionForm />
         <Notice status="caution" className="mt-11">
@@ -37,4 +31,4 @@ const AddAuctionPage = () => {
   );
 };
 
-export default AddAuctionPage;
+export default CreateAuctionPage;
