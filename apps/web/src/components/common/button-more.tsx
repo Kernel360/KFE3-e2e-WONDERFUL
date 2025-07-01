@@ -14,7 +14,7 @@ const ButtonMore = ({ items }: ButtonMoreProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button>
+        <button aria-label="More options">
           <EllipsisVertical />
         </button>
       </PopoverTrigger>
