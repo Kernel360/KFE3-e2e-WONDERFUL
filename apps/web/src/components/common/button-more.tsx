@@ -20,8 +20,8 @@ const ButtonMore = ({ items }: ButtonMoreProps) => {
       </PopoverTrigger>
       <PopoverContent className="w-25 py-2">
         <ul className="space-y-2">
-          {items.map((item) => (
-            <li key={item.title} onClick={item.onClick} className="cursor-pointer text-center">
+          {items.map((item, idx) => (
+            <li key={item.id ?? idx} onClick={item.onClick} className="cursor-pointer text-center">
               {item.title}
             </li>
           ))}
