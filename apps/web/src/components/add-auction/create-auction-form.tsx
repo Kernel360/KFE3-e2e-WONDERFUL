@@ -5,9 +5,9 @@ import ImagesUploader from '@/components/add-auction/images-uploader';
 import MinUnitSelectBox from '@/components/add-auction/min-unit-select';
 import Notice from '../common/notice';
 
-const colClass = 'space-y-2 [&_label]:text-base [&_label]:text-neutral-900 [&_label]:font-medium';
+const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
 
-const AddAuctionForm = () => {
+const CreateAuctionForm = () => {
   return (
     <div className="space-y-8">
       <div className={`${colClass}`}>
@@ -27,7 +27,7 @@ const AddAuctionForm = () => {
 
       <div className={`${colClass}`}>
         <Label htmlFor="category_id">상품 카테고리</Label>
-        <CategorySelectBox className="w-full" />
+        <CategorySelectBox name="category_id" className="w-full" />
       </div>
 
       <div className={`${colClass}`}>
@@ -48,7 +48,9 @@ const AddAuctionForm = () => {
         </div>
         <div className={`${colClass}`}>
           <Label htmlFor="min_bid_unit">최소 입찰 금액</Label>
-          <MinUnitSelectBox className="w-full" />
+          <div className="mr-2 flex items-center gap-3">
+            <MinUnitSelectBox name="min_bid_unit" className="w-full" /> 원
+          </div>
           <Notice status="">
             <li>최소 입찰 금액에 대한 간단한 설명</li>
           </Notice>
@@ -70,4 +72,4 @@ const AddAuctionForm = () => {
   );
 };
 
-export default AddAuctionForm;
+export default CreateAuctionForm;
