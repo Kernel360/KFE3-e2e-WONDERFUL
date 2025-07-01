@@ -1,0 +1,58 @@
+name: PR Preview Cleanup
+
+on:
+  repository_dispatch:
+    types: [pr-preview-cleanup]
+
+jobs:
+  cleanup-preview-branch:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Extract cleanup info
+        id: cleanup
+        run: |
+          echo "pr_number=${{ github.event.client_payload.pr_number }}" >> $GITHUB_OUTPUT
+          echo "pr_author=${{ github.event.client_payload.pr_author }}" >> $GITHUB_OUTPUT
+
+      - name: Delete preview branch
+        run: |
+          PREVIEW_BRANCH="preview/pr-${{ steps.cleanup.outputs.pr_number }}-${{ steps.cleanup.outputs.pr_author }}"
+
+          # 로컬 브랜치 삭제
+          git branch -D ${PREVIEW_BRANCH} 2>/dev/null || echo "로컬 브랜치 없음"
+
+          # 원격 브랜치 삭제
+          git push origin --delete ${PREVIEW_BRANCH} 2>/dev/null || echo "원격 브랜치 없음"
+
+          echo "🧹 프리뷰 브랜치 정리 완료: ${PREVIEW_BRANCH}"
+
+      - name: Clean up old preview branches
+        run: |
+          echo "🧹 30일 이상 된 프리뷰 브랜치들 정리 중..."
+
+          # 30일 이상 된 preview 브랜치들 찾아서 삭제
+          git for-each-ref --format='%(refname:short) %(committerdate:unix)' refs/origin/preview/ | \
+          while read branch timestamp; do
+            current_time=$(date +%s)
+            age_days=$(( (current_time - timestamp) / 86400 ))
+            
+            if [ $age_days -gt 30 ]; then
+              branch_name=${branch#origin/}
+              echo "🗑️  오래된 브랜치 삭제: ${branch_name} (${age_days}일 전)"
+              git push origin --delete ${branch_name} 2>/dev/null || true
+            fi
+          done
+
+          echo "✅ 오래된 프리뷰 브랜치 정리 완료"
