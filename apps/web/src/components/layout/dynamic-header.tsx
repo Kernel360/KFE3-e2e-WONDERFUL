@@ -4,6 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import Header from './header';
 import HomeSelectBox from './home-selectbox';
+import { ReactNode } from 'react';
+import ButtonMore, { ButtonMoreItem } from '@/components/common/button-more';
 
 const DynamicHeader = () => {
   const pathname: string | null = usePathname();
@@ -48,6 +50,11 @@ const DynamicHeader = () => {
   //   );
   // }
 
+  const AUCTION_DETAILS: ButtonMoreItem[] = [
+    { title: '수정하기', onClick: () => router.push('/auction/edit') },
+    { title: '삭제하기', onClick: () => {} },
+  ];
+
   // 경매 상세 페이지 - (좌)뒤로가기 + (우) 케밥
   if (pathname.includes('/auction/') && pathname !== '/auction') {
     return (
@@ -55,9 +62,7 @@ const DynamicHeader = () => {
         leftIcon={ChevronLeft}
         rightIcon={EllipsisVertical}
         onLeftClick={() => router.push('/')}
-        onRightClick={() => {
-          console.log('설정 더 보기 메뉴 클릭');
-        }}
+        rightContent={<ButtonMore items={AUCTION_DETAILS} />}
         className="absolute left-0 top-auto z-10 w-full"
       />
     );
