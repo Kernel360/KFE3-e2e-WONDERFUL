@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import Header from './header';
 import HomeSelectBox from './home-selectbox';
+import ButtonDetailMore from '@/components/auction-detail/button-detail-more';
 
 const DynamicHeader = () => {
   const pathname: string | null = usePathname();
@@ -55,9 +56,7 @@ const DynamicHeader = () => {
         leftIcon={ChevronLeft}
         rightIcon={EllipsisVertical}
         onLeftClick={() => router.push('/')}
-        onRightClick={() => {
-          console.log('설정 더 보기 메뉴 클릭');
-        }}
+        rightContent={<ButtonDetailMore />}
         className="absolute left-0 top-auto z-10 w-full"
       />
     );
