@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   //   serverComponentsExternalPackages: ['@repo/db', '@prisma/client'],
   // },
   // Next.js 15에서 변경된 설정
-  serverExternalPackages: ['@repo/db', '@prisma/client'], // experimental.serverComponentsExternalPackages 대신
+  serverExternalPackages: ['@prisma/client'], // experimental.serverComponentsExternalPackages 대신
 
   // Turborepo 모노레포에서 workspace 패키지 transpile
   transpilePackages: ['@repo/db', '@repo/ui'],
