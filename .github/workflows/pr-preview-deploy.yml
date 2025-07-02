@@ -44,10 +44,11 @@ jobs:
       - name: Add PR author's fork as remote
         env:
           PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           # PR 작성자의 포크 레포를 remote로 추가
-          PR_FORK_URL="https://github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
-          echo "🔗 PR 작성자 포크 추가: $PR_FORK_URL"
+          PR_FORK_URL="https://$GITHUB_TOKEN@github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
+          echo "🔗 PR 작성자 포크 추가: https://github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
 
           git remote add pr-fork "$PR_FORK_URL" || true
           git fetch pr-fork
