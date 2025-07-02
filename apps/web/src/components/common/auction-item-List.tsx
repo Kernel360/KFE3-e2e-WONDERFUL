@@ -7,16 +7,19 @@ import AuctionItemCard from '@/components/common/auction-item-card';
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
 import { SortOption } from '@/lib/types/auction-prisma';
+
 import { AuctionItemProps } from '@/types/auction';
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;
   sortOption?: SortOption;
+  selectedLocationId?: string | null;
 }
 
 const AuctionItemList = ({
   selectedCategoryId = '',
   sortOption = 'latest',
+  selectedLocationId,
 }: AuctionItemListProps) => {
   // 필터 상태 (추후 확장 가능)
   const [locationId, setLocationId] = useState<string>('');
@@ -27,7 +30,7 @@ const AuctionItemList = ({
     isLoading,
     error,
     refetch,
-  } = useAuctions(locationId, selectedCategoryId || undefined, sortOption);
+  } = useAuctions(selectedLocationId || undefined, selectedCategoryId || undefined, sortOption);
 
   // 데이터를 AuctionItemCard에서 사용할 수 있는 형태로 변환
   const convertToAuctionItemProps = (auction: any): AuctionItemProps => {

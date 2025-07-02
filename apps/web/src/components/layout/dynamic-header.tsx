@@ -1,14 +1,19 @@
-import { useSortStore } from '@/lib/zustand/store/sort-store';
-import { BellRing, ChevronLeft, EllipsisVertical } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
+
+import { BellRing, ChevronLeft, EllipsisVertical } from 'lucide-react';
+
+import ButtonDetailMore from '@/components/auction-detail/button-detail-more';
+
+import { useLocationStore } from '@/lib/zustand/store/location-store';
 
 import Header from './header';
 import HomeSelectBox from './home-selectbox';
-import ButtonDetailMore from '@/components/auction-detail/button-detail-more';
 
 const DynamicHeader = () => {
   const pathname: string | null = usePathname();
   const router = useRouter();
+
+  const setLocation = useLocationStore((state) => state.setLocation);
 
   if (!pathname) {
     return null;
@@ -22,11 +27,15 @@ const DynamicHeader = () => {
 
   // 메인 홈 페이지(경매리스트) - (좌)셀렉트박스 + (우)알림
   if (pathname === '/') {
-    // Zustand 스토어에서 정렬 함수 가져오기
-    const setSortOption = useSortStore((state) => state.setSortOption);
     return (
       <Header
-        leftContent={<HomeSelectBox onSortChange={setSortOption} />}
+        leftContent={
+          <HomeSelectBox
+            onLocationChange={(locationId, locationName) => {
+              setLocation(locationId, locationName);
+            }}
+          />
+        }
         rightIcon={BellRing}
         onRightClick={() => {
           // 알림 페이지로 이동
