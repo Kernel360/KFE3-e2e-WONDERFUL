@@ -5,13 +5,8 @@ export interface TabItem {
 
 // 폴백용 카테고리 (API 에러시나 데이터 없을 때 사용)
 export const FALLBACK_CATEGORIES: TabItem[] = [
-  { id: '', name: '전체' },
-  { id: 'auto', name: '자동차/오토바이' },
-  { id: 'clothes', name: '의류/액세서리' },
-  { id: 'camera', name: '카메라/영상' },
-  { id: 'household', name: '생활용품' },
-  { id: 'electronics', name: '전자제품' },
-  { id: 'sports', name: '스포츠/레저' },
-  { id: 'books', name: '도서/음반' },
-  { id: 'parts', name: '부품/소모품' },
+  { id: 'all', name: '전체' },
+  { id: '06ab1238-e817-4faf-9652-8dfa6eead9d4', name: '자동차/오토바이' },
+  { id: '0920045d-c662-48b0-a503-c2e1eea0ac22', name: '의류/액세서리' },
+  { id: '25052d9f-c32d-4206-88da-6130cedc0666', name: '카메라/영상' },
 ];

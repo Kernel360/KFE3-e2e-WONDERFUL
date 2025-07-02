@@ -11,27 +11,20 @@ export interface AuctionItemProps {
 // 필터 및 정렬 타입들
 export interface AuctionPriceInput {
   start_price: number;
-  instant_price: number;
+  instant_price?: number;
   min_bid_unit: number;
 }
 
 export interface AuctionFormData {
   title: string;
   description: string;
-  category_id: string | null;
-  location_id: string | null;
+  category_id: string;
+  location_id?: string | null;
   prices: AuctionPriceInput;
-  start_time: string | null;
+  start_time?: string | null;
   end_time: string;
   auction_type?: 'normal' | 'flash';
   images: string[];
-}
-
-//경매 게시글 등록 스토리지 이미지
-export interface AttachImageInputProps {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  imgLength: number;
-  id: string;
 }
 
 export interface Auction extends AuctionFormData {
@@ -52,3 +45,22 @@ export type AuctionStatus =
   | 'live'
   | 'paused'
   | 'closed';
+
+//경매 게시글 등록 폼 타입들
+//이미지 등록 타입
+export interface AttachImageInputProps {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imgLength: number;
+  id: string;
+}
+
+//경매 폼 select 타입
+export interface AuctionFormSelectProps {
+  name: string;
+  className: string;
+}
+
+//경매 폼 errormessage 타입
+export interface FormErrorMessageType {
+  [key: string]: string;
+}
