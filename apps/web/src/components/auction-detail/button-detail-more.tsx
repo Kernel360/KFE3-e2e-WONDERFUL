@@ -14,7 +14,7 @@ const ButtonDetailMore = () => {
     try {
       await deleteAuction(itemId);
       alert('삭제되었습니다!');
-      router.push('/'); // 홈 또는 리스트로 이동
+      router.push(`/`); // 홈 또는 리스트로 이동
     } catch (error) {
       alert('삭제 중 오류 발생!');
       console.error(error);
@@ -22,7 +22,7 @@ const ButtonDetailMore = () => {
   };
 
   const AUCTION_DETAILS: ButtonMoreItem[] = [
-    { id: 'update', title: '수정하기', onClick: () => router.push('/auction/edit') },
+    { id: 'update', title: '수정하기', onClick: () => router.push(`/auction/${itemId}/edit`) },
     { id: 'delete', title: '삭제하기', onClick: handleDelete },
   ];
   return <ButtonMore items={AUCTION_DETAILS} />;
