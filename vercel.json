@@ -3,5 +3,10 @@
   "buildCommand": "cd ../.. && pnpm install --prod=false && turbo build --filter=web",
   "installCommand": "cd ../.. && pnpm install --prod=false",
   "outputDirectory": ".next",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "functions": {
+    "app/api/**/*.ts": {
+      "includeFiles": "../../packages/db/src/generated/**"
+    }
+  }
 }

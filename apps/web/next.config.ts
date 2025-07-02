@@ -8,8 +8,16 @@ const nextConfig: NextConfig = {
   // Next.js 15에서 변경된 설정
   serverExternalPackages: ['@repo/db', '@prisma/client'], // experimental.serverComponentsExternalPackages 대신
 
+  // Turborepo 모노레포에서 workspace 패키지 transpile
+  transpilePackages: ['@repo/db', '@repo/ui'],
+
   // Vercel 배포를 위한 standalone 출력 설정 추가
   output: 'standalone',
+
+  // Vercel에서 Prisma 바이너리 파일 포함 보장
+  outputFileTracingIncludes: {
+    '/api/**/*': ['../../packages/db/src/generated/**'],
+  },
 
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
   webpack: (config, { isServer }) => {
