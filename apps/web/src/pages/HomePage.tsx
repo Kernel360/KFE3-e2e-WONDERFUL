@@ -6,6 +6,7 @@ import AuctionItemList from '@/components/common/auction-item-List';
 import Categories from '@/components/common/categories';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
+
 import { FALLBACK_CATEGORIES, TabItem } from '@/lib/constants/tabs';
 import { useSortStore } from '@/lib/zustand/store/sort-store';
 
@@ -59,5 +60,11 @@ const HomePage = () => {
     </section>
   );
 };
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
+export const dynamic = 'force-dynamic';
 export default HomePage;

@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 
-import { AttacedAuctionImageProps } from '@/lib/types/auction';
+import { AttacedAuctionImageProps } from '@/lib/types/auction-prisma';
 
 import Thumbnail from '../common/thumbnail';
 
