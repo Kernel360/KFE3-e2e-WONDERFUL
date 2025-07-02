@@ -1,3 +1,4 @@
+// 260652 18:52 금영 수정 ::FormField 맞춰 type 수정
 'use server';
 
 import { createServerComponentClient } from '@/lib/supabase/server';
@@ -16,12 +17,13 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       title: data.title,
       description: data.description,
       category_id: data.category_id,
-      location_id: data.location_id,
-      start_time: data.start_time,
+      location_id: data.location_id ?? null, // 현재 데이터 없음 : undefined = null
+      start_time: data.start_time ?? null, // 현재 데이터 없음 : undefined = null
       end_time: end_time,
-      auction_type: data.auction_type || 'normal',
+      auction_type: data.auction_type || 'normal', // 현재 데이터 없음 : normal
       thumbnail_url: data.images[0] || '',
-      status: 'pending',
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(), // 추가
     })
     .select('id') // 새로 생성된 item_id 추출
     .single();
