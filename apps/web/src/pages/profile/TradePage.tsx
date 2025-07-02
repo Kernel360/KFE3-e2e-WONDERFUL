@@ -5,10 +5,10 @@ import React from 'react';
 import AuctionItemList from '@/components/common/auction-item-List';
 import Categories from '@/components/common/categories';
 
-import { CATEGORIES } from '@/lib/constants/tabs';
+import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
 
 const TradeListPage = () => {
-  console.log(CATEGORIES);
+  console.log(FALLBACK_CATEGORIES);
 
   return (
     <div>
@@ -17,10 +17,16 @@ const TradeListPage = () => {
         <Header title="판매 내역" />
       </div> */}
 
-      <Categories items={CATEGORIES} />
+      <Categories items={FALLBACK_CATEGORIES} />
       <AuctionItemList />
     </div>
   );
 };
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
+export const dynamic = 'force-dynamic';
 export default TradeListPage;

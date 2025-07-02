@@ -1,5 +1,6 @@
-import { getCategories } from '@/lib/api/category';
 import { useQuery } from '@tanstack/react-query';
+
+import { getCategories } from '@/lib/api/category';
 
 // 카테고리 쿼리 키
 export const categoryKeys = {
@@ -12,6 +13,7 @@ export const useCategories = () => {
   return useQuery({
     queryKey: categoryKeys.lists(),
     queryFn: getCategories,
+    enabled: typeof window !== 'undefined', // 클라이언트에서만 실행
     staleTime: 1000 * 60 * 10, // 10분 (카테고리는 자주 변경되지 않음)
     gcTime: 1000 * 60 * 60, // 1시간간 캐시
   });

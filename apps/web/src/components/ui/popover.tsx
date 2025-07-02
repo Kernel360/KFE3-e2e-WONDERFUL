@@ -14,7 +14,7 @@ const PopoverTrigger = ({ ...props }: React.ComponentProps<typeof PopoverPrimiti
 
 const PopoverContent = ({
   className,
-  align = 'center',
+  align = 'end',
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) => {

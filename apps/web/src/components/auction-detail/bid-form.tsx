@@ -50,7 +50,7 @@ const BidForm = () => {
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ButtonFavorite itemId="123" />
+          <ButtonFavorite auctionId="123" />
           <div className="flex flex-col">
             <span className="text-sm font-medium text-neutral-600">현재 입찰가</span>
             <span className="text-xl font-bold text-indigo-500">{currentPrice}</span>

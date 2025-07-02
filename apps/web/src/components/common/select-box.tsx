@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/select';
 
 interface SelectOption {
-  id: string;
-  name: string;
+  value: string;
+  label: string;
 }
 
 interface SelectBoxProps {
@@ -40,8 +40,8 @@ export const SelectBox = ({
         <SelectContent>
           <SelectGroup>
             {options.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name}
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
               </SelectItem>
             ))}
           </SelectGroup>

@@ -6,15 +6,16 @@ import AuctionItemList from '@/components/common/auction-item-List';
 import Categories from '@/components/common/categories';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
+
 import { FALLBACK_CATEGORIES, TabItem } from '@/lib/constants/tabs';
-import { useSortStore } from '@/lib/zustand/store/sort-store';
+import { useLocationStore } from '@/lib/zustand/store/location-store';
 
 const HomePage = () => {
   // 카테고리 필터링은 로컬 상태로 관리 (ID 직접 사용)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(''); // 전체
 
   // 정렬은 Zustand 전역 상태로 관리 (헤더와 공유)
-  const sortOption = useSortStore((state) => state.sortOption);
+  const selectedLocationId = useLocationStore((state) => state.selectedLocationId);
 
   // 카테고리 목록 조회 (분리된 API)
   const {
@@ -55,9 +56,18 @@ const HomePage = () => {
       />
 
       {/* 경매 목록 (필터링 + 정렬) */}
-      <AuctionItemList selectedCategoryId={selectedCategoryId} sortOption={sortOption} />
+      <AuctionItemList
+        selectedCategoryId={selectedCategoryId}
+        selectedLocationId={selectedLocationId}
+      />
     </section>
   );
 };
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
+export const dynamic = 'force-dynamic';
 export default HomePage;

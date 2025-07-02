@@ -1,7 +1,7 @@
 // apps/web/src/lib/zustand/store/sortStore.ts
 import { create } from 'zustand';
 
-import { SortOption } from '@/lib/types/auction';
+import { SortOption } from '@/lib/types/auction-prisma';
 
 interface SortState {
   sortOption: SortOption;

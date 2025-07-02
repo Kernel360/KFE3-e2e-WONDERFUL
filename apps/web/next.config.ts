@@ -6,7 +6,13 @@ const nextConfig: NextConfig = {
   //   serverComponentsExternalPackages: ['@repo/db', '@prisma/client'],
   // },
   // Next.js 15에서 변경된 설정
-  serverExternalPackages: ['@repo/db', '@prisma/client'], // experimental.serverComponentsExternalPackages 대신
+  serverExternalPackages: ['@prisma/client'], // experimental.serverComponentsExternalPackages 대신
+
+  // Turborepo 모노레포에서 workspace 패키지 transpile
+  transpilePackages: ['@repo/db', '@repo/ui'],
+
+  // Vercel 배포를 위한 standalone 출력 설정 추가
+  output: 'standalone',
 
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
   webpack: (config, { isServer }) => {
@@ -18,6 +24,18 @@ const nextConfig: NextConfig = {
         tls: false,
       };
     }
+    // 서버 사이드에서 Prisma 바이너리 처리 추가
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        '@prisma/client': 'commonjs @prisma/client',
+      });
+
+      // Prisma 모노레포 워크어라운드 플러그인 추가 (require 방식)
+      const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+
     return config;
   },
 };
