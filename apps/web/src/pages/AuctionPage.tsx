@@ -125,7 +125,7 @@ const AuctionPage = () => {
         <Tab tabs={tabItems} />
       </section>
       <footer className="sticky bottom-0 z-50 w-full bg-white">
-        <BidForm />
+        <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
       </footer>
     </main>
   );
