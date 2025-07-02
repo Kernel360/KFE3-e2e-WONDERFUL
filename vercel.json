@@ -1,13 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install --prod=false && turbo build --filter=web",
+  "buildCommand": "cd ../.. && pnpm install --prod=false && pnpm --filter=@repo/db db:generate && turbo build --filter=web",
   "installCommand": "cd ../.. && pnpm install --prod=false",
   "outputDirectory": ".next",
-  "framework": "nextjs",
-  "functions": {
-    "apps/web/app/api/**/*.ts": {
-      "includeFiles": "../../packages/db/src/generated/**",
-      "memory": 1024
-    }
-  }
+  "framework": "nextjs"
 }

@@ -14,17 +14,6 @@ const nextConfig: NextConfig = {
   // Vercel 배포를 위한 standalone 출력 설정 추가
   output: 'standalone',
 
-  // Vercel에서 Prisma 바이너리 파일 포함 보장
-  outputFileTracingIncludes: {
-    '/api/**/*': [
-      '../../packages/db/src/generated/**',
-      '../../packages/db/src/generated/libquery_engine-*',
-      '../../packages/db/src/generated/query_engine-*',
-    ],
-  },
-  // 서버리스 함수에서 바이너리 처리 개선
-  serverComponentsExternalPackages: ['@prisma/engines'],
-
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -41,6 +30,10 @@ const nextConfig: NextConfig = {
       config.externals.push({
         '@prisma/client': 'commonjs @prisma/client',
       });
+
+      // Prisma 모노레포 워크어라운드 플러그인 추가 (require 방식)
+      const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
+      config.plugins = [...config.plugins, new PrismaPlugin()];
     }
 
     return config;
