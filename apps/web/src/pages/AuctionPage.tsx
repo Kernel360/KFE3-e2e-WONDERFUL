@@ -65,10 +65,8 @@ const AuctionPage = () => {
   // 이미지 배열 처리 함수
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
-    console.log('Auction Images:', auction.auctionImages);
     // 모든 레코드의 urls를 하나의 배열로 합치기
     const allUrls = auction.auctionImages.flatMap((image) => image.urls || []);
-    console.log('Processed Image URLs:', allUrls);
     return allUrls.length > 0 ? allUrls : ['/no-image.png'];
   };
 
