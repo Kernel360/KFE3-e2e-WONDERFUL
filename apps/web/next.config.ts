@@ -16,8 +16,14 @@ const nextConfig: NextConfig = {
 
   // Vercel에서 Prisma 바이너리 파일 포함 보장
   outputFileTracingIncludes: {
-    '/api/**/*': ['../../packages/db/src/generated/**'],
+    '/api/**/*': [
+      '../../packages/db/src/generated/**',
+      '../../packages/db/src/generated/libquery_engine-*',
+      '../../packages/db/src/generated/query_engine-*',
+    ],
   },
+  // 서버리스 함수에서 바이너리 처리 개선
+  serverComponentsExternalPackages: ['@prisma/engines'],
 
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
   webpack: (config, { isServer }) => {

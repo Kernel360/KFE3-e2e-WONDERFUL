@@ -5,8 +5,9 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "functions": {
-    "app/api/**/*.ts": {
-      "includeFiles": "../../packages/db/src/generated/**"
+    "apps/web/app/api/**/*.ts": {
+      "includeFiles": "../../packages/db/src/generated/**",
+      "memory": 1024
     }
   }
 }

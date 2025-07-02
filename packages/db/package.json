@@ -9,6 +9,7 @@
   },
   "scripts": {
     "db:generate": "npx prisma generate",
+    "db:generate:force": "prisma generate --force-deployment",
     "db:push": "dotenv -e ../../.env -- prisma db push",
     "db:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
     "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
