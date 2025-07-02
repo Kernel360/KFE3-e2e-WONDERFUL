@@ -6,7 +6,8 @@ import apiClient from './client';
 export const getAuctions = async (
   location_id?: string,
   category_id?: string,
-  sort?: string
+  sort?: string,
+  includeCompleted?: boolean
 ): Promise<AuctionListResponse> => {
   const params: Record<string, any> = {};
 
@@ -20,6 +21,10 @@ export const getAuctions = async (
 
   if (sort) {
     params.sort = sort;
+  }
+
+  if (includeCompleted !== undefined) {
+    params.includeCompleted = includeCompleted.toString();
   }
 
   const response = await apiClient.get('/auctions', { params });

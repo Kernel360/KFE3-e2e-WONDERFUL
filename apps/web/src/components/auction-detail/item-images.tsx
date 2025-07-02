@@ -11,14 +11,11 @@ interface ItemImagesProps {
   urls?: string[];
 }
 
-// import { dummyUrls } from '../../lib/constants/dummy-urls';
-
 const ItemImages = ({ urls }: ItemImagesProps) => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
 
-  console.log('ItemImages urls:', urls);
   React.useEffect(() => {
     if (!api) {
       return;
