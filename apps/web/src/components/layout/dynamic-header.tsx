@@ -58,6 +58,18 @@ const DynamicHeader = () => {
   //   );
   // }
 
+  // 경매 수정 페이지
+  if (pathname.startsWith('/auction/') && pathname.includes('/edit')) {
+    return (
+      <Header
+        title="경매 수정"
+        leftIcon={ChevronLeft}
+        onLeftClick={() => router.back()}
+        className="bg-white"
+      />
+    );
+  }
+
   // 경매 상세 페이지 - (좌)뒤로가기 + (우) 케밥
   if (pathname.includes('/auction/') && pathname !== '/auction') {
     return (
