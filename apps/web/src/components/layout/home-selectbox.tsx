@@ -1,41 +1,40 @@
 import { useState } from 'react';
 
-import { SortOption } from '@/lib/types/auction-prisma';
-
 import { SelectBox } from '../common/select-box';
 
 interface HomeSelectBoxProps {
-  onSortChange?: (sortOption: SortOption) => void;
+  onLocationChange?: (locationId: string | null, locationName: string) => void;
 }
 
-const HomeSelectBox = ({ onSortChange }: HomeSelectBoxProps) => {
-  const [selectedSort, setSelectedSort] = useState<SortOption>('latest');
+const HomeSelectBox = ({ onLocationChange }: HomeSelectBoxProps) => {
+  const [selectedLocation, setSelectedLocation] = useState<string>('all');
 
-  const sortOptions = [
-    { value: 'latest', label: '최신순' },
-    { value: 'ending_soon', label: '마감임박순' },
-    { value: 'price_low', label: '낮은가격순' },
-    { value: 'price_high', label: '높은가격순' },
-    { value: 'popular', label: '인기순' },
-    { value: 'title_asc', label: '제목순' },
+  const locationOptions = [
+    { value: 'all', label: '전체' },
+    { value: '4630ffa8-c333-43f7-b0b6-8b6226a3e96c', label: '서울 강남구 논현동' },
+    { value: '475173a9-eaa3-4913-91f9-73c585aa307f', label: '서울 강남구 반포동' },
+    { value: '815fc07e-9099-4ac2-8ca5-8df4e6715567', label: '서울 강남구 역삼동' },
+    { value: '817be727-4b8c-40a8-bdc8-7e6c64bd25cf', label: '서울 강남구 양재동' },
   ];
 
-  const handleSortChange = (value: string) => {
-    const sortValue = value as SortOption;
-    setSelectedSort(sortValue);
+  const handleLocationChange = (value: string) => {
+    setSelectedLocation(value);
+    const selectedOption = locationOptions.find((option) => option.value === value);
+    const locationId = value === 'all' ? null : value;
+    const locationName = selectedOption?.label || '전체';
 
-    // 부모 컴포넌트에 정렬 변경 알림
-    if (onSortChange) {
-      onSortChange(sortValue);
+    // 부모 컴포넌트에 위치 변경 알림
+    if (onLocationChange) {
+      onLocationChange(locationId, locationName);
     }
   };
 
   return (
     <SelectBox
-      options={sortOptions}
-      placeholder="정렬"
-      value={selectedSort}
-      onValueChange={handleSortChange}
+      options={locationOptions}
+      placeholder="지역"
+      value={selectedLocation}
+      onValueChange={handleLocationChange}
     />
   );
 };
