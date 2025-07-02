@@ -6,6 +6,10 @@ on:
     types: [opened, synchronize, reopened]
     branches: [develop]
 
+  # 개인 레포에서 repository_dispatch 이벤트 처리
+  repository_dispatch:
+    types: [pr-preview-requested, pr-preview-cleanup]
+
 jobs:
   # 팀 레포에서 개인 레포로 PR 브랜치 동기화
   sync-pr-branch:
@@ -14,33 +18,44 @@ jobs:
     steps:
       - name: Get PR info
         id: pr-info
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
-          echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
-          echo "pr_branch=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
-          echo "pr_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
-          echo "pr_author=${{ github.event.pull_request.user.login }}" >> $GITHUB_OUTPUT
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_branch=$PR_BRANCH" >> $GITHUB_OUTPUT
+          echo "pr_sha=$PR_SHA" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
 
       - name: Trigger personal repo PR sync
+        env:
+          PERSONAL_REPO_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          PR_BRANCH: ${{ steps.pr-info.outputs.pr_branch }}
+          PR_SHA: ${{ steps.pr-info.outputs.pr_sha }}
+          PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.PERSONAL_REPO_TOKEN }}" \
+            -H "Authorization: token $PERSONAL_REPO_TOKEN" \
             https://api.github.com/repos/miniseung/KFE3-e2e-WONDERFUL/dispatches \
-            -d '{
-              "event_type": "pr-preview-requested",
-              "client_payload": {
-                "pr_number": "${{ steps.pr-info.outputs.pr_number }}",
-                "pr_branch": "${{ steps.pr-info.outputs.pr_branch }}",
-                "pr_sha": "${{ steps.pr-info.outputs.pr_sha }}",
-                "pr_author": "${{ steps.pr-info.outputs.pr_author }}"
+            -d "{
+              \"event_type\": \"pr-preview-requested\",
+              \"client_payload\": {
+                \"pr_number\": \"$PR_NUMBER\",
+                \"pr_branch\": \"$PR_BRANCH\",
+                \"pr_sha\": \"$PR_SHA\",
+                \"pr_author\": \"$PR_AUTHOR\"
               }
-            }'
+            }"
           echo "✅ 개인 레포에 PR 프리뷰 배포 요청을 보냈습니다!"
-          echo "📦 PR #${{ steps.pr-info.outputs.pr_number }} (${{ steps.pr-info.outputs.pr_branch }}) 프리뷰 배포 시작"
+          echo "📦 PR #$PR_NUMBER ($PR_BRANCH) 프리뷰 배포 시작"
 
   # 개인 레포에서 PR 브랜치 동기화 및 프리뷰 배포
   create-pr-preview:
-    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL'
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL' && github.event_name == 'repository_dispatch' && github.event.action == 'pr-preview-requested'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout personal repo
@@ -56,11 +71,16 @@ jobs:
 
       - name: Extract PR info from payload
         id: payload
+        env:
+          PR_NUMBER: ${{ github.event.client_payload.pr_number }}
+          PR_BRANCH: ${{ github.event.client_payload.pr_branch }}
+          PR_SHA: ${{ github.event.client_payload.pr_sha }}
+          PR_AUTHOR: ${{ github.event.client_payload.pr_author }}
         run: |
-          echo "pr_number=${{ github.event.client_payload.pr_number }}" >> $GITHUB_OUTPUT
-          echo "pr_branch=${{ github.event.client_payload.pr_branch }}" >> $GITHUB_OUTPUT
-          echo "pr_sha=${{ github.event.client_payload.pr_sha }}" >> $GITHUB_OUTPUT
-          echo "pr_author=${{ github.event.client_payload.pr_author }}" >> $GITHUB_OUTPUT
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_branch=$PR_BRANCH" >> $GITHUB_OUTPUT
+          echo "pr_sha=$PR_SHA" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
 
       - name: Add team repo as upstream
         run: |
@@ -68,47 +88,127 @@ jobs:
           git fetch upstream
 
       - name: Create preview branch
+        env:
+          PR_NUMBER: ${{ steps.payload.outputs.pr_number }}
+          PR_AUTHOR: ${{ steps.payload.outputs.pr_author }}
+          PR_BRANCH: ${{ steps.payload.outputs.pr_branch }}
         run: |
           # 프리뷰 브랜치명: preview/pr-{number}-{author}
-          PREVIEW_BRANCH="preview/pr-${{ steps.payload.outputs.pr_number }}-${{ steps.payload.outputs.pr_author }}"
-          echo "preview_branch=${PREVIEW_BRANCH}" >> $GITHUB_ENV
+          PREVIEW_BRANCH="preview/pr-$PR_NUMBER-$PR_AUTHOR"
+          echo "preview_branch=$PREVIEW_BRANCH" >> $GITHUB_ENV
 
           # 기존 프리뷰 브랜치가 있으면 삭제
-          git branch -D ${PREVIEW_BRANCH} 2>/dev/null || true
-          git push origin --delete ${PREVIEW_BRANCH} 2>/dev/null || true
+          git branch -D "$PREVIEW_BRANCH" 2>/dev/null || true
+          git push origin --delete "$PREVIEW_BRANCH" 2>/dev/null || true
 
           # 팀 레포의 PR 브랜치에서 새 프리뷰 브랜치 생성
-          git checkout -b ${PREVIEW_BRANCH} upstream/${{ steps.payload.outputs.pr_branch }}
-          git push origin ${PREVIEW_BRANCH}
+          git checkout -b "$PREVIEW_BRANCH" "upstream/$PR_BRANCH"
+          git push origin "$PREVIEW_BRANCH"
 
-          echo "✅ 프리뷰 브랜치 생성 완료: ${PREVIEW_BRANCH}"
+          echo "✅ 프리뷰 브랜치 생성 완료: $PREVIEW_BRANCH"
 
-      - name: Create deployment comment
+      - name: Post initial deployment comment
+        env:
+          PERSONAL_REPO_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          PR_NUMBER: ${{ steps.payload.outputs.pr_number }}
+          PR_BRANCH: ${{ steps.payload.outputs.pr_branch }}
+          PR_AUTHOR: ${{ steps.payload.outputs.pr_author }}
         run: |
           # 프리뷰 URL 생성 (Vercel 패턴 기반)
           PREVIEW_URL="https://kfe3-wonderful-$(echo ${{ env.preview_branch }} | sed 's/\//-/g')-miniseungs-projects.vercel.app"
 
-          echo "🚀 **PR #${{ steps.payload.outputs.pr_number }} 프리뷰 배포 시작!**" >> comment.md
-          echo "" >> comment.md
-          echo "- **브랜치**: \`${{ steps.payload.outputs.pr_branch }}\`" >> comment.md
-          echo "- **작성자**: @${{ steps.payload.outputs.pr_author }}" >> comment.md
-          echo "- **프리뷰 브랜치**: \`${{ env.preview_branch }}\`" >> comment.md
-          echo "- **예상 URL**: ${PREVIEW_URL}" >> comment.md
-          echo "" >> comment.md
-          echo "⏳ 배포 진행 중... 약 2-3분 후 확인 가능합니다." >> comment.md
-          echo "" >> comment.md
-          echo "---" >> comment.md
-          echo "*자동 생성된 프리뷰 배포입니다. 빌드 에러가 있으면 Vercel 로그를 확인하세요.*" >> comment.md
+          cat > comment.md << 'EOF'
+          🚀 **PR #$PR_NUMBER 프리뷰 배포 시작!**
 
-      - name: Post comment to team repo PR
-        run: |
+          - **브랜치**: `$PR_BRANCH`
+          - **작성자**: @$PR_AUTHOR
+          - **프리뷰 브랜치**: `${{ env.preview_branch }}`
+
+          ⏳ 배포 진행 중... 약 2-3분 후 확인 가능합니다.
+
+          ---
+          *자동 생성된 프리뷰 배포입니다. 빌드 에러가 있으면 Vercel 로그를 확인하세요.*
+          EOF
+
+          # 환경 변수를 실제 값으로 치환
+          sed -i "s/\$PR_NUMBER/$PR_NUMBER/g" comment.md
+          sed -i "s/\$PR_BRANCH/$PR_BRANCH/g" comment.md
+          sed -i "s/\$PR_AUTHOR/$PR_AUTHOR/g" comment.md
+
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.PERSONAL_REPO_TOKEN }}" \
-            https://api.github.com/repos/Kernel360/KFE3-e2e-WONDERFUL/issues/${{ steps.payload.outputs.pr_number }}/comments \
-            -d "{\"body\": \"$(cat comment.md | jq -Rs .)\"}"
+            -H "Authorization: token $PERSONAL_REPO_TOKEN" \
+            https://api.github.com/repos/Kernel360/KFE3-e2e-WONDERFUL/issues/"$PR_NUMBER"/comments \
+            -d "{\"body\": $(cat comment.md | jq -Rs .)}"
 
-          echo "✅ 팀 레포 PR에 프리뷰 배포 댓글 작성 완료!"
+          echo "✅ 팀 레포 PR에 초기 배포 댓글 작성 완료!"
+
+      - name: Wait for Preview Deployment to be Live
+        env:
+          PR_NUMBER: ${{ steps.payload.outputs.pr_number }}
+        run: |
+          set -e
+          PREVIEW_URL="https://kfe3-wonderful-$(echo ${{ env.preview_branch }} | sed 's/\//-/g')-miniseungs-projects.vercel.app"
+
+          echo "🔍 프리뷰 배포 완료 대기 중: $PREVIEW_URL"
+
+          for i in {1..30}; do
+            echo "프리뷰 사이트 확인 중... (시도 $i/30)"
+            
+            # HTTP 상태 코드 확인
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$PREVIEW_URL" || echo "000")
+            
+            if [ "$STATUS_CODE" -eq 200 ]; then
+              echo "✅ 프리뷰 배포가 완료되었습니다!"
+              echo "preview_url=$PREVIEW_URL" >> $GITHUB_ENV
+              exit 0
+            elif [ "$STATUS_CODE" -eq 404 ]; then
+              echo "⏳ 아직 배포 중입니다... (404)"
+            else
+              echo "⏳ 배포 확인 중... (상태 코드: $STATUS_CODE)"
+            fi
+            
+            sleep 10
+          done
+
+          echo "⚠️ 배포 완료 확인에 시간이 오래 걸리고 있습니다."
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_ENV
+
+      - name: Update PR Comment with Live Preview URL
+        env:
+          PERSONAL_REPO_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          PR_NUMBER: ${{ steps.payload.outputs.pr_number }}
+          PR_BRANCH: ${{ steps.payload.outputs.pr_branch }}
+          PR_AUTHOR: ${{ steps.payload.outputs.pr_author }}
+          PREVIEW_URL: ${{ env.preview_url }}
+        run: |
+          cat > final_comment.md << 'EOF'
+          🚀 **PR #$PR_NUMBER 프리뷰 배포 완료!**
+
+          - **브랜치**: `$PR_BRANCH`
+          - **작성자**: @$PR_AUTHOR
+          - **프리뷰 브랜치**: `${{ env.preview_branch }}`
+          - **프리뷰 URL**: [$PREVIEW_URL]($PREVIEW_URL)
+
+          ✅ 배포가 완료되었습니다! 위 링크를 클릭하여 변경사항을 확인하세요.
+
+          ---
+          *자동 생성된 프리뷰 배포입니다.*
+          EOF
+
+          # 환경 변수를 실제 값으로 치환
+          sed -i "s/\$PR_NUMBER/$PR_NUMBER/g" final_comment.md
+          sed -i "s/\$PR_BRANCH/$PR_BRANCH/g" final_comment.md
+          sed -i "s/\$PR_AUTHOR/$PR_AUTHOR/g" final_comment.md
+          sed -i "s|\$PREVIEW_URL|$PREVIEW_URL|g" final_comment.md
+
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $PERSONAL_REPO_TOKEN" \
+            https://api.github.com/repos/Kernel360/KFE3-e2e-WONDERFUL/issues/"$PR_NUMBER"/comments \
+            -d "{\"body\": $(cat final_comment.md | jq -Rs .)}"
+
+          echo "✅ 프리뷰 배포 완료 댓글 작성 완료!"
 
   # 프리뷰 브랜치 정리 (PR이 닫히거나 머지될 때)
   cleanup-preview:
@@ -116,16 +216,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger preview cleanup
+        env:
+          PERSONAL_REPO_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.PERSONAL_REPO_TOKEN }}" \
+            -H "Authorization: token $PERSONAL_REPO_TOKEN" \
             https://api.github.com/repos/miniseung/KFE3-e2e-WONDERFUL/dispatches \
-            -d '{
-              "event_type": "pr-preview-cleanup",
-              "client_payload": {
-                "pr_number": "${{ github.event.number }}",
-                "pr_author": "${{ github.event.pull_request.user.login }}"
+            -d "{
+              \"event_type\": \"pr-preview-cleanup\",
+              \"client_payload\": {
+                \"pr_number\": \"$PR_NUMBER\",
+                \"pr_author\": \"$PR_AUTHOR\"
               }
-            }'
-          echo "🧹 PR #${{ github.event.number }} 프리뷰 브랜치 정리 요청 완료"
+            }"
+          echo "🧹 PR #$PR_NUMBER 프리뷰 브랜치 정리 요청 완료"
+
+  # 개인 레포에서 프리뷰 브랜치 정리
+  cleanup-preview-branch:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL' && github.event_name == 'repository_dispatch' && github.event.action == 'pr-preview-cleanup'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout personal repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Extract cleanup info from payload
+        id: cleanup
+        env:
+          PR_NUMBER: ${{ github.event.client_payload.pr_number }}
+          PR_AUTHOR: ${{ github.event.client_payload.pr_author }}
+        run: |
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Delete preview branch
+        env:
+          PR_NUMBER: ${{ steps.cleanup.outputs.pr_number }}
+          PR_AUTHOR: ${{ steps.cleanup.outputs.pr_author }}
+        run: |
+          PREVIEW_BRANCH="preview/pr-$PR_NUMBER-$PR_AUTHOR"
+
+          # 로컬 브랜치 삭제
+          git branch -D "$PREVIEW_BRANCH" 2>/dev/null || echo "로컬 브랜치가 없습니다: $PREVIEW_BRANCH"
+
+          # 원격 브랜치 삭제
+          git push origin --delete "$PREVIEW_BRANCH" 2>/dev/null || echo "원격 브랜치가 없습니다: $PREVIEW_BRANCH"
+
+          echo "🧹 프리뷰 브랜치 정리 완료: $PREVIEW_BRANCH"
