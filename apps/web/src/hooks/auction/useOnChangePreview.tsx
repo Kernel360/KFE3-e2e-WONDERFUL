@@ -3,7 +3,8 @@ import { SetStateAction } from 'react';
 const useOnChagePreview =
   (
     setImgLength: React.Dispatch<SetStateAction<number>>,
-    setPreviewImages: React.Dispatch<SetStateAction<string[]>>
+    setPreviewImages: React.Dispatch<SetStateAction<string[]>>,
+    setFiles: React.Dispatch<SetStateAction<File[]>>
   ) =>
   (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -21,6 +22,7 @@ const useOnChagePreview =
 
     setPreviewImages((prev) => [...prev, ...newUrls]);
     setImgLength((prev) => prev + newUrls.length);
+    setFiles((prev) => [...prev, ...imageFiles]);
 
     e.target.value = '';
   };

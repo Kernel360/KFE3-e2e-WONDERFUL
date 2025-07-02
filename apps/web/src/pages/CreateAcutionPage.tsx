@@ -1,18 +1,18 @@
 'use client';
 
 import { CircleAlert } from 'lucide-react';
-import AddAuctionForm from '@/components/add-auction/add-auction-form';
+import CreateAuctionForm from '@/components/create-auction/create-auction-form';
 import Notice from '@/components/common/notice';
 import { Button } from '@/components/ui';
 import useCreateAuction from '@/hooks/auction/useCreateAuction';
 
 const CreateAuctionPage = () => {
-  const submitHandler = useCreateAuction();
+  const { handleSubmit, errors, setFiles } = useCreateAuction();
 
   return (
-    <form onSubmit={useCreateAuction} className="relative mt-2.5">
+    <form onSubmit={handleSubmit} className="relative mt-2.5">
       <section className="px-[15px]">
-        <AddAuctionForm />
+        <CreateAuctionForm errors={errors} setFiles={setFiles} />
         <Notice status="caution" className="mt-11">
           <li>
             <CircleAlert />

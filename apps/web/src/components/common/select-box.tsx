@@ -19,6 +19,7 @@ interface SelectBoxProps {
   placeholder?: string;
   className?: string;
   value?: string;
+  name?: string;
   onValueChange?: (value: string) => void;
 }
 
@@ -27,23 +28,28 @@ export const SelectBox = ({
   placeholder = 'Select an option',
   className,
   value,
+  name,
   onValueChange,
 }: SelectBoxProps) => {
   return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={className}>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          {options.map((option) => (
-            <SelectItem key={option.id} value={option.name}>
-              {option.name}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <>
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className={className}>
+          <SelectValue defaultValue={value} placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {options.map((option) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      {/* 선택된 값을 FormData로 넘기기 위한 hidden input */}
+      <input type="hidden" name={name} value={value ?? ''} />
+    </>
   );
 };
 
@@ -64,6 +70,7 @@ export const SelectBox = ({
 //       options={fruitOptions}
 //       placeholder="Select a fruit"
 //       value={selectedValue}
+//       id={selectedValue}
 //       onValueChange={setSelectedValue}
 //     />
 //   );
