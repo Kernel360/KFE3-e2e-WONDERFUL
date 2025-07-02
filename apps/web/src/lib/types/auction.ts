@@ -52,3 +52,27 @@ export type AuctionStatus =
   | 'live'
   | 'paused'
   | 'closed';
+
+// ItemInformation 컴포넌트에서 사용
+export interface Item {
+  title: string;
+  status: string;
+  endTime: string;
+}
+// AuctionPage 컴포넌트에서 사용할 Item 인터페이스 확장
+export interface ItemInfo extends Item {
+  // 가격 정보
+  startPrice: number;
+  currentPrice: number;
+  instantPrice?: number | null;
+  minBidUnit: number;
+  isInstantBuyEnabled: boolean;
+
+  // 통계 정보
+  bidCount: number;
+  favoriteCount: number;
+  isFavorite: boolean;
+
+  // 카테고리
+  category: string;
+}
