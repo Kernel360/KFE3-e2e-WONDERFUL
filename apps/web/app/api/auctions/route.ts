@@ -12,13 +12,20 @@ export async function GET(request: NextRequest) {
     const location_id = searchParams.get('location_id');
     const category_id = searchParams.get('category_id');
     const sort = (searchParams.get('sort') as SortOption) || 'latest';
+    const includeCompleted = searchParams.get('includeCompleted') === 'true'; // 종료된 경매 포함 여부
 
     console.log('📋 파라미터:', { location_id, category_id, sort });
 
+    // 만료된 경매들의 상태를 먼저 업데이트
+    await updateExpiredAuctions();
+
     // 필터 조건 구성
-    const where: any = {
-      status: 'ACTIVE',
-    };
+    const where: any = {};
+
+    // 상태 필터 (기본적으로는 활성 경매만, 옵션으로 전체 포함 가능)
+    if (!includeCompleted) {
+      where.status = 'ACTIVE';
+    }
 
     // 지역 필터 추가
     if (location_id) {
@@ -91,19 +98,13 @@ export async function GET(request: NextRequest) {
       orderBy,
     });
 
-    // 경매 상태 처리
-    const processedAuctions = auctions.map((auction) => ({
-      ...auction,
-      status: auction.status === 'ACTIVE' ? '경매중' : '경매종료',
-    }));
-
-    // 응답 데이터 구성
+    // 응답 데이터 구성 (상태 변환 제거 - 프론트엔드에서 처리)
     const response: AuctionListResponse = {
-      data: processedAuctions,
+      data: auctions,
       total,
     };
 
-    console.log(`✅ 성공: 총 ${total}개 중 ${processedAuctions.length}개 반환`);
+    console.log(`✅ 성공: 총 ${total}개 중 ${auctions.length}개 반환`);
 
     return NextResponse.json(response);
   } catch (error) {
@@ -116,5 +117,31 @@ export async function GET(request: NextRequest) {
       },
       { status: 500 }
     );
+  }
+}
+
+// 만료된 경매들의 상태를 업데이트하는 함수
+async function updateExpiredAuctions() {
+  try {
+    const now = new Date();
+
+    // 현재 시간보다 종료 시간이 이전이면서 상태가 ACTIVE인 경매들을 찾아서 업데이트
+    const updatedAuctions = await prisma.auctionItem.updateMany({
+      where: {
+        endTime: {
+          lt: now, // 종료 시간이 현재 시간보다 이전
+        },
+        status: 'ACTIVE', // 상태가 아직 ACTIVE인 것들만
+      },
+      data: {
+        status: 'COMPLETED', // 상태를 COMPLETED로 변경
+      },
+    });
+
+    if (updatedAuctions.count > 0) {
+      console.log(`🔄 만료된 경매 ${updatedAuctions.count}개의 상태를 업데이트했습니다.`);
+    }
+  } catch (error) {
+    console.error('🚨 만료된 경매 상태 업데이트 에러:', error);
   }
 }

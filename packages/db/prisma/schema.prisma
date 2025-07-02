@@ -92,21 +92,21 @@ model Category {
 model AuctionItem {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   sellerId    String    @map("seller_id") @db.Uuid
-  auctionType String    @map("auction_type") @db.VarChar(20)
+  auctionType String    @map("auction_type") @db.VarChar(20) // 경매 유형: 'NORMAL', 'FlASH'
   title       String    @db.VarChar(255)
   description String?   @db.Text
   categoryId  String    @map("category_id") @db.Uuid
-  locationId  String    @map("location_id") @db.Uuid
-  startTime   DateTime? @map("start_time") @db.Timestamp(6)
+  locationId  String?   @map("location_id") @db.Uuid
+  startTime   DateTime? @map("start_time") @db.Timestamp(6) // FlASH 경매 경우
   endTime     DateTime  @map("end_time") @db.Timestamp(6)
-  status      String    @db.VarChar(50)
+  status      String    @default("ACTIVE") @db.VarChar(20) // 상태: 'ACTIVE', 'COMPLETED', 'CANCELLED', 'EXPIRED'
   thumbnailUrl String?  @map("thumbnail_url") @db.Text // 썸네일이미지 URL
   createdAt   DateTime  @map("created_at") @db.Timestamp(6)
 
   // Relations
   seller        User           @relation("SellerItems", fields: [sellerId], references: [id], onDelete: Cascade)
   category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  location      Location       @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  location      Location?       @relation(fields: [locationId], references: [id], onDelete: Restrict)
   auctionPrice  AuctionPrice?
   bids          Bid[]
   auctionImages AuctionImage[]
@@ -123,7 +123,7 @@ model AuctionPrice {
   startPrice   Int    @map("start_price")
   instantPrice Int?   @map("instant_price") // 즉시 구매 가격
   minBidUnit   Int    @map("min_bid_unit")
-  currentPrice Int    @map("current_price")
+  currentPrice Int    @map("current_price") // 최종 입찰가(실시간 갱신)
 
   // 즉시 구매 여부
   isInstantBuyEnabled Boolean @default(false) @map("is_instant_buy_enabled")

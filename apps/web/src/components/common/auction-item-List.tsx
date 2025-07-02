@@ -12,12 +12,14 @@ interface AuctionItemListProps {
   selectedCategoryId?: string;
   sortOption?: SortOption;
   selectedLocationId?: string | null;
+  includeCompleted?: boolean; // 종료된 경매 포함 여부
 }
 
 const AuctionItemList = ({
   selectedCategoryId = '',
   sortOption = 'latest',
   selectedLocationId,
+  includeCompleted = false, // 기본값은 종료된 경매 미포함
 }: AuctionItemListProps) => {
   // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
   const {
@@ -25,14 +27,27 @@ const AuctionItemList = ({
     isLoading,
     error,
     refetch,
-  } = useAuctions(selectedLocationId || undefined, selectedCategoryId || undefined, sortOption);
+  } = useAuctions(
+    selectedLocationId || undefined,
+    selectedCategoryId || undefined,
+    sortOption,
+    includeCompleted
+  );
 
   // 데이터를 AuctionItemCard에서 사용할 수 있는 형태로 변환
   const convertToAuctionItemProps = (auction: any): AuctionItemProps => {
+    // 현재 시간과 경매 종료 시간 비교
+    const now = new Date();
+    const endTime = new Date(auction.endTime);
+
+    // 실제 경매 상태 결정 로직
+    const isAuctionActive = auction.status === 'ACTIVE' && now < endTime;
+    const auctionStatus = isAuctionActive ? '경매중' : '경매종료';
+
     return {
       id: auction.id,
       title: auction.title,
-      status: auction.status === 'ACTIVE' ? '경매중' : '경매종료',
+      status: auctionStatus,
       originalPrice: auction.auctionPrice?.startPrice || 0,
       currentPrice: auction.auctionPrice?.currentPrice || 0,
       deadline: auction.endTime || new Date().toISOString(),
