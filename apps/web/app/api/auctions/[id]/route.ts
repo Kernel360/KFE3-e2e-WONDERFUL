@@ -1,13 +1,17 @@
-import { AuctionDetailResponse } from '@/lib/types/auction-prisma';
-import { prisma } from '@repo/db';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@repo/db';
+
+import { AuctionDetailResponse } from '@/lib/types/auction-prisma';
+
 // 경매 상세페이지 조회 api
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+// export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId'); // 사용자 ID (찜한 상태 확인용)
-    const auctionId = (await params).id;
+    // const auctionId = (await params).id;
+    const { id: auctionId } = await context.params;
 
     // 경매아이템 상세 정보조회
     const auctionItem = await prisma.auctionItem.findUnique({

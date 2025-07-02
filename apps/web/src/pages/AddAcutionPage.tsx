@@ -1,7 +1,9 @@
 'use client';
 
 import { CircleAlert } from 'lucide-react';
+
 import AddAuctionForm from '@/components/add-auction/add-auction-form';
+
 import Notice from '../components/common/notice';
 import { Button } from '../components/ui';
 
@@ -36,5 +38,11 @@ const AddAuctionPage = () => {
     </form>
   );
 };
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
+export const dynamic = 'force-dynamic';
 export default AddAuctionPage;
