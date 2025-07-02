@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import AuctionItemCard from '@/components/common/auction-item-card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
@@ -21,9 +19,6 @@ const AuctionItemList = ({
   sortOption = 'latest',
   selectedLocationId,
 }: AuctionItemListProps) => {
-  // 필터 상태 (추후 확장 가능)
-  const [locationId, setLocationId] = useState<string>('');
-
   // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
   const {
     data: auctionsData,
