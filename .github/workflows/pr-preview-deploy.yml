@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: miniseung/KFE3-e2e-WONDERFUL
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.PERSONAL_REPO_TOKEN }}
           fetch-depth: 0
 
       - name: Setup Git
@@ -44,7 +44,7 @@ jobs:
       - name: Add PR author's fork as remote
         env:
           PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
         run: |
           # PR 작성자의 포크 레포를 remote로 추가
           PR_FORK_URL="https://$GITHUB_TOKEN@github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
@@ -183,7 +183,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: miniseung/KFE3-e2e-WONDERFUL
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.PERSONAL_REPO_TOKEN }}
           fetch-depth: 0
 
       - name: Get PR info for cleanup
