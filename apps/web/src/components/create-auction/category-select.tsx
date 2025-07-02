@@ -3,16 +3,16 @@
 import { useState } from 'react';
 
 import { SelectBox } from '@/components/common/select-box';
-
 import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
+import { AuctionFormSelectProps } from '@/types/auction';
 
-// const stateOptions = CATEGORIES.slice(1);
+// const stateOptions = FALLBACK_CATEGORIES.slice(1);
 const stateOptions = FALLBACK_CATEGORIES.slice(1).map((category) => ({
   value: category.id,
   label: category.name,
 }));
 
-const CategorySelectBox = ({ className }: { className: string }) => {
+const CategorySelectBox = ({ className, name }: AuctionFormSelectProps) => {
   const [selectedState, setSelectedState] = useState(stateOptions[0]?.value);
 
   return (
@@ -22,6 +22,7 @@ const CategorySelectBox = ({ className }: { className: string }) => {
       value={selectedState}
       onValueChange={setSelectedState}
       className={className}
+      name={name}
     />
   );
 };

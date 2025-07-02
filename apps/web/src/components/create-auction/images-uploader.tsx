@@ -2,17 +2,22 @@
 
 import { useEffect, useState } from 'react';
 
-import AttacedAuctionPreview from '@/components/add-auction/add-auction-thumbnail';
-import AttachImageInput from '@/components/add-auction/attache-image-input';
+import AttacedAuctionPreview from '@/components/create-auction/create-auction-thumbnail';
+import AttachImageInput from '@/components/create-auction/attache-image-input';
 
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
 
-const ImagesUploader = ({ id }: { id: string }) => {
+interface ImagesUploaderProps {
+  id: string;
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+const ImagesUploader = ({ id, setFiles }: ImagesUploaderProps) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imgLength, setImgLength] = useState<number>(0);
 
-  const attachImageHandler = useOnChagePreview(setImgLength, setPreviewImages);
+  const attachImageHandler = useOnChagePreview(setImgLength, setPreviewImages, setFiles);
 
   useEffect(() => {
     if (previewImages.length > 8) {
@@ -33,7 +38,9 @@ const ImagesUploader = ({ id }: { id: string }) => {
                 <AttacedAuctionPreview
                   key={index}
                   url={item}
-                  handleDelete={() => deletePreviewImage({ setImgLength, setPreviewImages, index })}
+                  handleDelete={() =>
+                    deletePreviewImage({ setImgLength, setPreviewImages, setFiles, index })
+                  }
                 />
               );
             })}

@@ -24,6 +24,7 @@ const AttachImageInput = ({ onChange, imgLength, id }: AttachImageInputProps) =>
         accept="image/*"
       />
       <button
+        type="button"
         onClick={handleButtonClick}
         className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-md border border-neutral-200 text-neutral-600"
       >
