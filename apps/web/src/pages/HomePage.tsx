@@ -67,11 +67,5 @@ const HomePage = () => {
     </section>
   );
 };
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}
 
-export const dynamic = 'force-dynamic';
 export default HomePage;

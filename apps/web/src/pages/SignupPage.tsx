@@ -61,11 +61,5 @@ const Signup = ({ onLocationComplete }: SignupProps) => {
     </>
   );
 };
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}
 
-export const dynamic = 'force-dynamic';
 export default Signup;

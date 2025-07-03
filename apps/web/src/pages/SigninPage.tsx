@@ -18,11 +18,5 @@ const ChatPage = () => {
     </div>
   );
 };
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}
 
-export const dynamic = 'force-dynamic';
 export default ChatPage;
