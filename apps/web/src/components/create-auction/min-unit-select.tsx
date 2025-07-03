@@ -3,17 +3,17 @@
 import { useState } from 'react';
 
 import { SelectBox } from '@/components/common/select-box';
-import { AuctionFormSelectProps } from '../../lib/types/auction';
+import { AuctionFormSelectProps } from '@/lib/types/auction';
 
 const stateOptions = [
-  { id: '500', name: '500' },
-  { id: '1000', name: '1000' },
-  { id: '5000', name: '5000' },
-  { id: '10000', name: '10,000' },
+  { value: '500', label: '500' },
+  { value: '1000', label: '1,000' },
+  { value: '5000', label: '5,000' },
+  { value: '10000', label: '10,000' },
 ];
 
 const MinUnitSelectBox = ({ className, name }: AuctionFormSelectProps) => {
-  const [selectedState, setSelectedState] = useState(stateOptions[0]?.name);
+  const [selectedState, setSelectedState] = useState(stateOptions[0]?.label);
 
   return (
     <SelectBox

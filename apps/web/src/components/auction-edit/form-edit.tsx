@@ -1,24 +1,26 @@
 'use client';
 
-import AddAuctionForm from '@/components/add-auction/add-auction-form';
-import ButtonBox from '@/components/auction-edit/button-box';
+import CreateAuctionForm from '@/components/create-auction/create-auction-form';
+import useEditAuction from '@/hooks/auction/useEditAuction';
+import { Button } from '@/components/ui';
 
-const FormEdit = () => {
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // 기본 제출 동작 방지
+interface FormEditProps {
+  itemId: string;
+}
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    console.log(formData);
-  };
+const FormEdit = ({ itemId }: FormEditProps) => {
+  const { handleSubmit, errors, setFiles } = useEditAuction(itemId);
 
   return (
-    <form onSubmit={submitHandler} className="relative mt-2.5">
+    <form onSubmit={handleSubmit} className="relative mt-2.5">
       <section className="px-[15px]">
-        <AddAuctionForm />
+        <CreateAuctionForm errors={errors} setFiles={setFiles} />
       </section>
-      <ButtonBox />
+      <section className="backdrop-blur-xs sticky bottom-0 bg-white/70 px-[15px] pb-9 pt-4">
+        <Button size="lg" className="flex w-full">
+          제출하기
+        </Button>
+      </section>
     </form>
   );
 };
