@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { MessageSquareMore } from 'lucide-react';
 
@@ -34,6 +34,10 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
     error,
     refetch,
   } = useAuctionDetail(auctionId, userId);
+
+  useEffect(() => {
+    if (refetch) refetch();
+  }, []);
 
   // 로딩 상태 처리
   if (isLoading) {
