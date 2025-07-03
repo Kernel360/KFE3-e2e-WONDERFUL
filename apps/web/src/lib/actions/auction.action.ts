@@ -61,7 +61,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
 };
 
 // Update
-export const updateAuction = async (itemId: string, data: AuctionFormData) => {
+export const updateAuction = async (data: AuctionFormData, itemId: string) => {
   const supabase = await createServerComponentClient();
   const end_time = convertHoursToTimestamp(data.end_time);
 
@@ -71,7 +71,7 @@ export const updateAuction = async (itemId: string, data: AuctionFormData) => {
       title: data.title,
       description: data.description,
       category_id: data.category_id,
-      location_id: data.location_id,
+      location_id: data.location_id ?? null,
       end_time: end_time,
       thumbnail_url: data.images[0] || '',
     })
@@ -95,6 +95,13 @@ export const updateAuction = async (itemId: string, data: AuctionFormData) => {
   }
 
   if (data.images.length > 0) {
+    const { error: imageDeleteError } = await supabase
+      .from('auction_images')
+      .delete()
+      .eq('item_id', itemId);
+
+    if (imageDeleteError) throw new Error(`auction_image 초기화 실패: ${imageDeleteError.message}`);
+
     const { error: imageInsertError } = await supabase.from('auction_images').insert({
       item_id: itemId,
       urls: data.images,
