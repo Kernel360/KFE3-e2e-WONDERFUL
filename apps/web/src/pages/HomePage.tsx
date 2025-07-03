@@ -59,6 +59,7 @@ const HomePage = () => {
       <AuctionItemList
         selectedCategoryId={selectedCategoryId}
         selectedLocationId={selectedLocationId}
+        includeCompleted={true} // 종료된 경매 포함 (true: 포함, false: 미포함)
       />
     </section>
   );

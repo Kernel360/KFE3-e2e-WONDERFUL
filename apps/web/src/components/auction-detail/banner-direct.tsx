@@ -6,7 +6,7 @@ interface BannerDirectProps {
 
 const BannerDirect = ({ directPrice }: BannerDirectProps) => {
   return (
-    <div className="flex h-auto w-full items-center justify-between rounded-sm bg-indigo-50 pl-3 pr-1">
+    <button className="relative flex h-auto w-full cursor-pointer items-center justify-between rounded-sm bg-indigo-50 pl-3 pr-1">
       <div className="flex items-center gap-2 pl-1.5">
         <AlarmClock className="text-indigo-500" strokeWidth={2.5} size={20} />
         <div className="flex items-center font-medium text-neutral-900">
@@ -17,14 +17,10 @@ const BannerDirect = ({ directPrice }: BannerDirectProps) => {
           </span>
         </div>
       </div>
-      <button
-        type="button"
-        className="flex h-10 w-10 items-center justify-center"
-        onClick={() => {}}
-      >
+      <span className="flex h-10 w-10 items-center justify-center">
         <ChevronRight className="text-neutral-600" />
-      </button>
-    </div>
+      </span>
+    </button>
   );
 };
 
