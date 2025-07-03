@@ -85,7 +85,6 @@ export const deleteFolder = async (
   try {
     // 폴더 내 모든 파일 목록 조회
     const { data: files, error: listError } = await supabase.storage.from(bucket).list(folderPath, {
-      limit: 1000,
       offset: 0,
     });
 
@@ -99,7 +98,20 @@ export const deleteFolder = async (
     }
 
     // 파일 경로 생성
-    const filePaths = files.map((file) => `${folderPath}/${file.name}`);
+    const filePaths = files.map((file) => {
+      // 절대 경로인지 확인 (/ 로 시작)
+      if (file.name.startsWith('/')) {
+        return file.name.substring(1); // 맨 앞 / 제거
+      }
+
+      // 이미 folderPath가 포함되어 있는지 확인
+      if (file.name.startsWith(folderPath + '/')) {
+        return file.name;
+      }
+
+      // 일반적인 경우: 폴더 경로 추가
+      return `${folderPath}/${file.name}`;
+    });
 
     // 모든 파일 삭제
     const { error: deleteError } = await supabase.storage.from(bucket).remove(filePaths);
