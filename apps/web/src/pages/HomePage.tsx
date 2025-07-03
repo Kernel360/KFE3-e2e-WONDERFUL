@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import AuctionItemList from '@/components/common/auction-item-List';
 import Categories from '@/components/common/categories';
-import CreateAuctionButton from '@/components/common/craete-auction-button';
+import CreateAuctionButton from '@/components/common/create-auction-button';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
 
