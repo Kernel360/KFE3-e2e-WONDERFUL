@@ -2,8 +2,6 @@
 
 import React from 'react';
 
-import { useParams } from 'next/navigation';
-
 import { MessageSquareMore } from 'lucide-react';
 
 import BidForm from '@/components/auction-detail/bid-form';
@@ -22,10 +20,11 @@ interface AuctionTabItem {
   content: React.ReactNode;
 }
 
-const AuctionPage = () => {
-  const param = useParams();
-  const auctionId = param?.id as string;
+interface AuctionPageProps {
+  auctionId: string;
+}
 
+const AuctionPage = ({ auctionId }: AuctionPageProps) => {
   // 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
   const userId = undefined;
 

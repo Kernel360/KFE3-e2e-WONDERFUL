@@ -1,13 +1,9 @@
 import FormEdit from '@/components/auction-edit/form-edit';
 
-interface EditAuctionPageProps {
-  params: {
-    id: string;
-  };
-}
+const EditAuctionPage = ({ itemId }: { itemId: string }) => {
+  console.log(itemId);
 
-const EditAuctionPage = ({ params }: EditAuctionPageProps) => {
-  return <FormEdit itemId={params.id} />;
+  return <FormEdit itemId={itemId} />;
 };
 
 export default EditAuctionPage;
