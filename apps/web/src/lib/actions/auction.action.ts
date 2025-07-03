@@ -87,6 +87,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       start_price: data.prices.start_price,
       instant_price: data.prices.instant_price,
       min_bid_unit: data.prices.min_bid_unit,
+      current_price: data.prices.start_price,
     })
     .eq('item_id', itemId);
 
@@ -94,21 +95,43 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
     throw new Error(`auction_prices 수정 실패: ${priceError.message}`);
   }
 
-  if (data.images.length > 0) {
+  if (Array.isArray(data.images) && data.images.length > 0 && data.images[0]) {
+    // 1. 기존 이미지 백업
+    const { data: backupImages, error: backupError } = await supabase
+      .from('auction_images')
+      .select('urls')
+      .eq('item_id', itemId);
+
+    if (backupError) {
+      throw new Error(`기존 이미지 백업 실패: ${backupError.message}`);
+    }
+
+    // 2. 기존 이미지 삭제
     const { error: imageDeleteError } = await supabase
       .from('auction_images')
       .delete()
       .eq('item_id', itemId);
 
-    if (imageDeleteError) throw new Error(`auction_image 초기화 실패: ${imageDeleteError.message}`);
+    if (imageDeleteError) {
+      throw new Error(`auction_image 삭제 실패: ${imageDeleteError.message}`);
+    }
 
+    // 3. 새 이미지 삽입
     const { error: imageInsertError } = await supabase.from('auction_images').insert({
       item_id: itemId,
       urls: data.images,
     });
 
     if (imageInsertError) {
-      throw new Error(`auction_images 삽입 실패: ${imageInsertError.message}`);
+      // 4. 삽입 실패 → 백업 이미지로 복원
+      if (backupImages?.length > 0) {
+        await supabase.from('auction_images').insert({
+          item_id: itemId,
+          urls: backupImages[0]?.urls,
+        });
+      }
+
+      throw new Error(`auction_images 삽입 실패 및 복원됨: ${imageInsertError.message}`);
     }
   }
 

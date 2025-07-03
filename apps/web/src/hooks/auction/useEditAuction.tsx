@@ -28,7 +28,7 @@ const useEditAuction = (itemId: string) => {
           min_bid_unit: Number(formData.get('min_bid_unit') ?? 0),
         },
         end_time: String(formData.get('end_time') ?? ''),
-        images: [''],
+        images: [],
       };
 
       const result = createAuctionSchema.safeParse(rawData);
