@@ -3,7 +3,7 @@ import { FormErrorMessageType } from '@/types/auction';
 import { useRouter } from 'next/navigation';
 import { CreateAuctionFormData, createAuctionSchema } from '@/lib/schema/auction.schema';
 import { updateAuction } from '@/lib/actions/auction.action';
-import { deleteImage, uploadMultipleImages } from '@/lib/supabase/storage';
+import { deleteFolder, uploadMultipleImages } from '@/lib/supabase/storage';
 
 const useEditAuction = (itemId: string) => {
   const [errors, setErrors] = useState<FormErrorMessageType>({});
@@ -63,7 +63,7 @@ const useEditAuction = (itemId: string) => {
         const auctionId = await updateAuction(phasedData, itemId);
         if (!auctionId) throw new Error('게시글 수정에 실패했습니다.');
 
-        const deleteImages = await deleteImage('auction-images', auctionId);
+        const deleteImages = await deleteFolder('auction-images', auctionId);
         if (!deleteImages) throw new Error('이미지 초기화에 실패했습니다.');
 
         const uploadedUrls = await uploadMultipleImages(files, 'auction-images', auctionId);
