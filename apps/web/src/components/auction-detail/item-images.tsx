@@ -17,15 +17,19 @@ const ItemImages = ({ urls }: ItemImagesProps) => {
   const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
+    if (!api) return;
+
+    const timer = setTimeout(() => {
+      setCount(api.scrollSnapList().length);
+      setCurrent(api.selectedScrollSnap() + 1);
+    }, 50);
+
     api.on('select', () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
-  }, [api]);
+
+    return () => clearTimeout(timer);
+  }, [api, urls]);
 
   return (
     <Carousel className="relative w-full" setApi={setApi}>

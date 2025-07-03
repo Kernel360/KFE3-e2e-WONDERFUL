@@ -7,6 +7,7 @@ import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 import { SortOption } from '@/lib/types/auction-prisma';
 
 import { AuctionItemProps } from '@/types/auction';
+import { useEffect } from 'react';
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;
@@ -33,6 +34,10 @@ const AuctionItemList = ({
     sortOption,
     includeCompleted
   );
+
+  useEffect(() => {
+    if (refetch) refetch();
+  }, []);
 
   // 데이터를 AuctionItemCard에서 사용할 수 있는 형태로 변환
   const convertToAuctionItemProps = (auction: any): AuctionItemProps => {
