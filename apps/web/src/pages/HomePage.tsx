@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 
 import AuctionItemList from '@/components/common/auction-item-List';
 import Categories from '@/components/common/categories';
+import CreateAuctionButton from '@/components/common/craete-auction-button';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
 
@@ -61,6 +62,8 @@ const HomePage = () => {
         selectedLocationId={selectedLocationId}
         includeCompleted={true} // 종료된 경매 포함 (true: 포함, false: 미포함)
       />
+
+      <CreateAuctionButton />
     </section>
   );
 };
