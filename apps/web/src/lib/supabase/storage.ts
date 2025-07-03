@@ -77,6 +77,48 @@ export const deleteImage = async (
   }
 };
 
+// 폴더 전체 삭제
+export const deleteFolder = async (
+  bucket: StorageBucket,
+  folderPath: string
+): Promise<{ success: boolean; error?: string; deletedCount?: number }> => {
+  try {
+    // 폴더 내 모든 파일 목록 조회
+    const { data: files, error: listError } = await supabase.storage.from(bucket).list(folderPath, {
+      limit: 1000,
+      offset: 0,
+    });
+
+    if (listError) {
+      console.error('List folder error:', listError);
+      return { success: false, error: listError.message };
+    }
+
+    if (!files || files.length === 0) {
+      return { success: true, deletedCount: 0 };
+    }
+
+    // 파일 경로 생성
+    const filePaths = files.map((file) => `${folderPath}/${file.name}`);
+
+    // 모든 파일 삭제
+    const { error: deleteError } = await supabase.storage.from(bucket).remove(filePaths);
+
+    if (deleteError) {
+      console.error('Delete folder error:', deleteError);
+      return { success: false, error: deleteError.message };
+    }
+
+    return { success: true, deletedCount: filePaths.length };
+  } catch (error) {
+    console.error('Delete folder exception:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Delete folder failed',
+    };
+  }
+};
+
 //이미지 URL 가져오기
 export const getImageUrl = (bucket: StorageBucket, path: string): string => {
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
