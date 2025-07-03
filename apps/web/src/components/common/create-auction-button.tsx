@@ -1,18 +1,14 @@
-// apps/web/src/components/common/add-auction-button.tsx
-
 'use client';
 
 import { useRouter } from 'next/navigation';
-
 import { Plus } from 'lucide-react';
-
 import { FloatButton } from '@/components/ui/float-button';
 
-const AddAuctionButton = () => {
+const CreateAuctionButton = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/auction/addAuction');
+    router.push('/auction/createAuction');
   };
 
   return (
@@ -20,7 +16,7 @@ const AddAuctionButton = () => {
       <FloatButton
         onClick={handleClick}
         size="medium"
-        className="bg-indigo-500 text-white shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)]"
+        className="bg-indigo-500 text-white shadow-[0px_4px_8px_0px_rgba(0,0,0,0.2)]"
       >
         <Plus className="size-7" />
       </FloatButton>
@@ -28,4 +24,4 @@ const AddAuctionButton = () => {
   );
 };
 
-export default AddAuctionButton;
+export default CreateAuctionButton;
