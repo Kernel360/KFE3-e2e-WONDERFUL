@@ -1,4 +1,4 @@
-import TradeListPage from '@/pages/profile/TradePage';
+import TradeListPage from '@/views/profile/TradePage';
 
 const Page = () => {
   return <TradeListPage />;

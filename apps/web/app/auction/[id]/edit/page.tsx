@@ -1,4 +1,4 @@
-import EditAuctionPage from '@/pages/EditAuctionPage';
+import EditAuctionPage from '@/views/EditAuctionPage';
 
 const Page = ({ params }: { params: { id: string } }) => {
   return <EditAuctionPage itemId={params.id} />;

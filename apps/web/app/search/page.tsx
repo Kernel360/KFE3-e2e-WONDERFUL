@@ -1,6 +1,6 @@
 'use client';
 
-import SearchPage from '@/pages/SearchPage';
+import SearchPage from '@/views/SearchPage';
 
 const Page = () => {
   return <SearchPage />;

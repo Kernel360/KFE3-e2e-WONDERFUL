@@ -1,6 +1,6 @@
 'use client';
 
-import ProfilePage from '@/pages/ProfilePage';
+import ProfilePage from '@/views/ProfilePage';
 
 const Page = () => {
   return <ProfilePage />;

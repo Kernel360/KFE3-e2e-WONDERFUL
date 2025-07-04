@@ -1,4 +1,4 @@
-import AuctionPage from '@/pages/AuctionPage';
+import AuctionPage from '@/views/AuctionPage';
 
 const Page = ({ params }: { params: { id: string } }) => {
   return <AuctionPage auctionId={params.id} />;
