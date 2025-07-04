@@ -70,6 +70,18 @@ const DynamicHeader = () => {
     );
   }
 
+  // 경매 등록 페이지
+  if (pathname.startsWith('/auction/') && pathname.includes('/createAuction')) {
+    return (
+      <Header
+        title="경매 등록"
+        leftIcon={ChevronLeft}
+        onLeftClick={() => router.back()}
+        className="bg-white"
+      />
+    );
+  }
+
   // 경매 상세 페이지 - (좌)뒤로가기 + (우) 케밥
   if (pathname.includes('/auction/') && pathname !== '/auction') {
     return (
