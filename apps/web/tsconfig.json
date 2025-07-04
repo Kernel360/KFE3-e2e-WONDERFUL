@@ -12,7 +12,7 @@
       "@/app/*": ["./app/*"],
       "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/components/*"],
-      "@/pages/*": ["./src/pages/*"],
+      "@/pages/*": ["src/views/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/types/*": ["./src/lib/types/*"],
       "@/api/*": ["./src/api/*"],
