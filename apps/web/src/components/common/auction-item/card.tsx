@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import BadgeBidStatus from '@/components/common/badge-bid-status';
-import Thumbnail from '@/components/common/thumbnail';
+import Thumbnail from '@/components/ui/thumbnail';
 import { Badge } from '@/components/ui/badge';
 
 import useCountdown from '@/hooks/common/useCountdown';
