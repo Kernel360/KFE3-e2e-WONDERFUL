@@ -1,7 +1,7 @@
 'use client';
 import { Pen } from 'lucide-react';
 
-import { MenuList } from '@/components/common/menu-list';
+import { MenuList } from '@/components/common/profile/menu-list';
 import { ProfileCard } from '@/components/common/profile/card';
 import { Button } from '@/components/ui/button';
 
