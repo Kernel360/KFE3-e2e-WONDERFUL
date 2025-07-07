@@ -1,6 +1,6 @@
 'use client';
 
-import ButtonMore, { ButtonMoreItem } from '@/components/common/button-more';
+import ButtonMore, { ButtonMoreItem } from '@/components/common/button/more';
 import { deleteAuction } from '@/lib/actions/auction.action';
 import { useParams, useRouter } from 'next/navigation';
 
