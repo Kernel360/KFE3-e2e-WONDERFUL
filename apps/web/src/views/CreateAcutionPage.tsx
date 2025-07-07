@@ -2,7 +2,7 @@
 
 import { CircleAlert } from 'lucide-react';
 import CreateAuctionForm from '@/components/create-auction/create-auction-form';
-import Notice from '@/components/common/notice';
+import Notice from '@/components/auction-form/notice';
 import { Button } from '@/components/ui';
 import useCreateAuction from '@/hooks/auction/useCreateAuction';
 

@@ -2,7 +2,7 @@ import { Input, Label, Textarea } from '@/components/ui';
 import CategorySelectBox from '@/components/auction-form/category-select';
 import AttachImages from '@/components/auction-form/attach-images';
 import MinUnitSelectBox from '@/components/auction-form/min-unit-select';
-import Notice from '../common/notice';
+import Notice from './notice';
 import FormErrorMessage from './error-msg';
 
 const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
