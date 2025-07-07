@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import AttacedImagesThumbnail from '@/components/common/auction-form/attach-images-thumbnail';
-import AttachImagesInput from '@/components/common/auction-form/attach-images-input';
+import AttacedImagesThumbnail from '@/components/common/attach-images/attach-images-thumbnail';
+import AttachImagesInput from '@/components/common/attach-images/attach-images-input';
 
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import AuctionItemCard from '@/components/common/auction-item/card';
+import AuctionItemCard from '@/components/common/auction-card/card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 

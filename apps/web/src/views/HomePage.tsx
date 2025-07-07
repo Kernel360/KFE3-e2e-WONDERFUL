@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
-import AuctionItemList from '@/components/common/auction-item/card-list';
+import AuctionItemList from '@/components/common/auction-card/list';
 import Categories from '@/components/common/tab/list-filter';
 import CreateAuctionButton from '@/components/common/button/create-auction';
 

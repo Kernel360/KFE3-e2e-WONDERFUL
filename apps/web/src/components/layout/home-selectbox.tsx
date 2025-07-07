@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { SelectBox } from '../common/select-box';
+import { SelectBox } from '../common/select/basic';
 
 interface HomeSelectBoxProps {
   onLocationChange?: (locationId: string | null, locationName: string) => void;

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { SelectBox } from '@/components/common/select-box';
+import { SelectBox } from '@/components/common/select/basic';
 import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
 import { AuctionFormSelectProps } from '@/types/auction';
 

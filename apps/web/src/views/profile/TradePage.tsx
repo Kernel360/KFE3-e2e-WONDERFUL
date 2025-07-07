@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import AuctionItemList from '@/components/common/auction-item/card-list';
+import AuctionItemList from '@/components/common/auction-card/list';
 import Categories from '@/components/common/tab/list-filter';
 
 import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
