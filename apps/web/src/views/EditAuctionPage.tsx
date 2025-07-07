@@ -1,8 +1,6 @@
-import FormEdit from '@/components/auction-edit/form-edit';
+import FormEdit from '@/components/auction-form/form-edit';
 
 const EditAuctionPage = ({ itemId }: { itemId: string }) => {
-  console.log(itemId);
-
   return <FormEdit itemId={itemId} />;
 };
 

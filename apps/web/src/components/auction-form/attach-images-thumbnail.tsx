@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import Thumbnail from '../common/thumbnail';
 import { AttacedAuctionImageProps } from '@/lib/types/auction-prisma';
 
-const AttacedAuctionPreview = ({ url, handleDelete }: AttacedAuctionImageProps) => {
+const AttacedImagesThumbnail = ({ url, handleDelete }: AttacedAuctionImageProps) => {
   if (!url) return null;
 
   return (
@@ -21,4 +21,4 @@ const AttacedAuctionPreview = ({ url, handleDelete }: AttacedAuctionImageProps) 
   );
 };
 
-export default AttacedAuctionPreview;
+export default AttacedImagesThumbnail;

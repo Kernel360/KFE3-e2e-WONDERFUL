@@ -1,9 +1,9 @@
 import { Input, Label, Textarea } from '@/components/ui';
-import CategorySelectBox from '@/components/create-auction/category-select';
-import ImagesUploader from '@/components/create-auction/images-uploader';
-import MinUnitSelectBox from '@/components/create-auction/min-unit-select';
+import CategorySelectBox from '@/components/auction-form/category-select';
+import AttachImages from '@/components/auction-form/attach-images';
+import MinUnitSelectBox from '@/components/auction-form/min-unit-select';
 import Notice from '../common/notice';
-import FormErrorMessage from './form-error-msg';
+import FormErrorMessage from './error-msg';
 
 const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
 
@@ -39,7 +39,7 @@ const CreateAuctionForm = ({ errors, setFiles }: CreateAuctionFormProps) => {
 
       <div className={`${colClass}`}>
         <Label htmlFor="images">상품 이미지</Label>
-        <ImagesUploader id="images" setFiles={setFiles} />
+        <AttachImages id="images" setFiles={setFiles} />
         {errors['images'] && <FormErrorMessage>{errors['images']}</FormErrorMessage>}
       </div>
 
