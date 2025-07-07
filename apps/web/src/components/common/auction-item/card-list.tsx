@@ -1,13 +1,13 @@
 'use client';
 
-import AuctionItemCard from '@/components/common/auction-item-card';
+import { useEffect } from 'react';
+
+import AuctionItemCard from '@/components/common/auction-item/card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
 import { SortOption } from '@/lib/types/auction-prisma';
-
 import { AuctionItemProps } from '@/types/auction';
-import { useEffect } from 'react';
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;
