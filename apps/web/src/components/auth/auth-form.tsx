@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
-import InputIcon from '@/components/common/input-icon';
+import InputIcon from '@/components/common/input/icon';
 import { Button } from '@/components/ui/button';
 
 import { AuthErrorType, AuthFormData, FormType } from '@/lib/types/auth';

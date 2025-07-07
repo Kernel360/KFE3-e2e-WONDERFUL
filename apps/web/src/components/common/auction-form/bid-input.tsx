@@ -1,6 +1,6 @@
 import { UserRound } from 'lucide-react';
 
-import InputIcon from '@/components/common/input-icon';
+import InputIcon from '@/components/common/input/icon';
 import { Button } from '@/components/ui/button';
 
 import { formatCurrencyWithUnit } from '@/lib/utils/price';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { tv } from 'tailwind-variants';
 
 import BannerDirect from '@/components/auction-detail/banner-direct';
-import BidInput from '@/components/auction-detail/bid-input';
+import BidInput from '@/components/common/auction-form/bid-input';
 import ButtonFavorite from '@/components/auction-detail/button-favorite';
 import { Button } from '@/components/ui/button';
 
