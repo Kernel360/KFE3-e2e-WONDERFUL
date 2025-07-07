@@ -1,6 +1,6 @@
 'use client';
 
-import CreateAuctionForm from '@/components/create-auction/create-auction-form';
+import CreateAuctionForm from '@/components/auction-create/form-create';
 import useEditAuction from '@/hooks/auction/useEditAuction';
 import { Button } from '@/components/ui';
 

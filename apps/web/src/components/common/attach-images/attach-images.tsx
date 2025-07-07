@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import AttacedAuctionPreview from '@/components/create-auction/create-auction-thumbnail';
-import AttachImageInput from '@/components/create-auction/attache-image-input';
+import AttacedImagesThumbnail from '@/components/common/attach-images/attach-images-thumbnail';
+import AttachImagesInput from '@/components/common/attach-images/attach-images-input';
 
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
@@ -13,7 +13,7 @@ interface ImagesUploaderProps {
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-const ImagesUploader = ({ id, setFiles }: ImagesUploaderProps) => {
+const AttachImages = ({ id, setFiles }: ImagesUploaderProps) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imgLength, setImgLength] = useState<number>(0);
 
@@ -29,13 +29,13 @@ const ImagesUploader = ({ id, setFiles }: ImagesUploaderProps) => {
 
   return (
     <div className="flex h-20 items-center gap-2">
-      <AttachImageInput onChange={attachImageHandler} imgLength={imgLength} id={id} />
+      <AttachImagesInput onChange={attachImageHandler} imgLength={imgLength} id={id} />
       <div className="scrollbar-hide-x flex w-full gap-1">
         {previewImages.length < 1
           ? ''
           : previewImages!.map((item, index) => {
               return (
-                <AttacedAuctionPreview
+                <AttacedImagesThumbnail
                   key={index}
                   url={item}
                   handleDelete={() =>
@@ -49,4 +49,4 @@ const ImagesUploader = ({ id, setFiles }: ImagesUploaderProps) => {
   );
 };
 
-export default ImagesUploader;
+export default AttachImages;

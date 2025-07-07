@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { EllipsisVertical } from 'lucide-react';
 
-import Thumbnail from '@/components/common/thumbnail';
+import Thumbnail from '@/components/ui/thumbnail';
 import { Button } from '@/components/ui/button';
 
 import { PREVIEWCHATS } from '@/lib/constants/chat';

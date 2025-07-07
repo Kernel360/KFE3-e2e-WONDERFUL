@@ -1,4 +1,4 @@
-import Countdown from '@/components/common/countdown';
+import Countdown from '@/components/auction-detail/countdown';
 import { Badge } from '@/components/ui/badge';
 
 import useCountdown from '@/hooks/common/useCountdown';

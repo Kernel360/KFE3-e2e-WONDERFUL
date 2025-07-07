@@ -1,9 +1,8 @@
 'use client';
 import { Pen } from 'lucide-react';
 
-import { LogoutButton } from '@/components/common/logout-button';
-import { MenuList } from '@/components/common/menu-list';
-import { ProfileCard } from '@/components/common/profile-card';
+import { MenuList } from '@/components/common/profile/menu-list';
+import { ProfileCard } from '@/components/common/profile/card';
 import { Button } from '@/components/ui/button';
 
 const ProfilePage = () => {
@@ -24,8 +23,9 @@ const ProfilePage = () => {
         <MenuList />
       </div>
 
-      {/* Logout Button */}
-      <LogoutButton />
+      <Button variant={'outline'} color={'secondary'}>
+        로그아웃
+      </Button>
     </div>
   );
 };

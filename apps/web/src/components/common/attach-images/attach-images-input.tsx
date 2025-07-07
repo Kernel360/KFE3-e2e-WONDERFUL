@@ -4,7 +4,7 @@ import { ImageUp } from 'lucide-react';
 
 import { AttachImageInputProps } from '@/lib/types/auction';
 
-const AttachImageInput = ({ onChange, imgLength, id }: AttachImageInputProps) => {
+const AttachImagesInput = ({ onChange, imgLength, id }: AttachImageInputProps) => {
   const handleButtonClick = () => {
     const fileInput = document.getElementById(id) as HTMLInputElement;
     if (fileInput) {
@@ -35,4 +35,4 @@ const AttachImageInput = ({ onChange, imgLength, id }: AttachImageInputProps) =>
   );
 };
 
-export default AttachImageInput;
+export default AttachImagesInput;

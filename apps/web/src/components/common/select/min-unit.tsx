@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { SelectBox } from '@/components/common/select-box';
+import { SelectBox } from '@/components/common/select/basic';
 import { AuctionFormSelectProps } from '@/lib/types/auction';
 
 const stateOptions = [
