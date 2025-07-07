@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import BadgeBidStatus from '@/components/common/badge-bid-status';
+import BadgeBidStatus from '@/components/common/auction-item/badge-bid-status';
 import Thumbnail from '@/components/ui/thumbnail';
 import { Badge } from '@/components/ui/badge';
 

@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs-categories';
+import { FilterTabs, FilterTabsList, FilterTabsTrigger } from '@/components/ui/tab-filter';
 
 import { TabItem } from '@/lib/constants/tabs';
 
@@ -8,7 +8,7 @@ interface CategoriesProps {
   onCategoryChange?: (categoryId: string) => void;
 }
 
-const Categories = ({ items, selectedCategoryId, onCategoryChange }: CategoriesProps) => {
+const TabListFilter = ({ items, selectedCategoryId, onCategoryChange }: CategoriesProps) => {
   if (!items || items.length === 0) {
     return <div>카테고리가 없습니다.</div>;
   }
@@ -24,18 +24,18 @@ const Categories = ({ items, selectedCategoryId, onCategoryChange }: CategoriesP
   // 기본값: 선택된 카테고리 ID 또는 첫 번째 아이템의 id
   const defaultValue = selectedCategoryId !== undefined ? selectedCategoryId : items[0]?.id || '';
   return (
-    <Tabs value={defaultValue} onValueChange={handleTabsValueChange}>
-      <TabsList className="my-3">
+    <FilterTabs value={defaultValue} onValueChange={handleTabsValueChange}>
+      <FilterTabsList className="my-3">
         {items.map(({ id, name }) => {
           return (
-            <TabsTrigger key={id} value={id}>
+            <FilterTabsTrigger key={id} value={id}>
               {name}
-            </TabsTrigger>
+            </FilterTabsTrigger>
           );
         })}
-      </TabsList>
-    </Tabs>
+      </FilterTabsList>
+    </FilterTabs>
   );
 };
 
-export default Categories;
+export default TabListFilter;
