@@ -27,7 +27,7 @@
     "lint": {
       "dependsOn": ["^lint"],
       "inputs": ["src/**/*.{ts,tsx}", "!src/generated/**"],
-      "env": ["DATABASE_URL", "DIRECT_URL"]
+      "env": ["DATABASE_URL", "DIRECT_URL", "NODE_ENV"]
     },
     "check-types": {
       "dependsOn": ["^check-types", "@repo/db#db:generate"]

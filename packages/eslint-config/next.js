@@ -52,6 +52,9 @@ export const nextJsConfig = [
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
+      globals: {
+        ...globals.node,
+      },
     },
     plugins: {
       import: importPlugin,
@@ -64,7 +67,7 @@ export const nextJsConfig = [
         },
       ],
       // 팀 컨벤션 규칙들
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
