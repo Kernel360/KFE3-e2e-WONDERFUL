@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import SigninForm from '@/components/auth/signin-form';
 
 import { SigninFormData } from '@/lib/types/auth';
-const ChatPage = () => {
+const SigninPage = () => {
   const router = useRouter();
   const handleLogin = (data: SigninFormData) => {
     console.log('로그인 성공:', data);
-    router.push('/');
+    // router.push('/');
   };
 
   return (
@@ -19,4 +19,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default SigninPage;

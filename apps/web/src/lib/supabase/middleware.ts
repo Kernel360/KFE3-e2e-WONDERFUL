@@ -66,7 +66,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   //로그인 안된 사용자는 auth 페이지로 리다이렉트
-  if (!user && !pathname.startsWith('/auth') && !pathname.startsWith('/api/auth') && !error) {
+  if (!user && !pathname.startsWith('/auth') && !pathname.startsWith('/api/auth')) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/signin';
 
