@@ -1,12 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import InputIcon from '@/components/common/input/icon';
 import { Button } from '@/components/ui/button';
 
-import { AuthErrorType, AuthFormData, FormType } from '@/lib/types/auth';
+import { AuthErrorType, AuthFormData, FormType, ServerErrorInfo } from '@/lib/types/auth';
 import {
   getAuthErrorMessage,
   getFormConfig,
@@ -15,7 +15,6 @@ import {
   validatePassword,
   validateSignin,
   validateSignup,
-  validateUsername,
 } from '@/lib/utils/auth';
 
 interface AuthFormProps<T extends AuthFormData = AuthFormData> {
@@ -23,6 +22,8 @@ interface AuthFormProps<T extends AuthFormData = AuthFormData> {
   onSubmit?: (data: T) => void;
   onToggleForm?: () => void;
   initialData?: Partial<T>;
+  isSubmitting?: boolean;
+  serverError?: ServerErrorInfo | null;
 }
 
 const AuthForm = <T extends AuthFormData>({
@@ -30,6 +31,8 @@ const AuthForm = <T extends AuthFormData>({
   onSubmit,
   onToggleForm,
   initialData,
+  isSubmitting = false,
+  serverError = null,
 }: AuthFormProps<T>) => {
   const config = getFormConfig(formType);
   const [formData, setFormData] = useState(() => ({
@@ -40,8 +43,26 @@ const AuthForm = <T extends AuthFormData>({
   const [error, setError] = useState<AuthErrorType>(null);
   const [fieldError, setFieldError] = useState<string>('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  // 서버 에러 처리
+  useEffect(() => {
+    if (serverError) {
+      setError(serverError.type);
+      setFieldError(serverError.message);
+
+      // 필드별 에러 설정
+      if (serverError.field) {
+        setFieldErrors({
+          [serverError.field]: serverError.message,
+        });
+      }
+    } else {
+      setError(null);
+      setFieldError('');
+      setFieldErrors({});
+    }
+  }, [serverError]);
 
   const handleInputChange = (fieldId: string, value: string | boolean) => {
     if (fieldId === 'agreeToTerms') {
@@ -77,9 +98,6 @@ const AuthForm = <T extends AuthFormData>({
         case 'password':
           errorMessage = validatePassword(value) || '';
           break;
-        case 'username':
-          errorMessage = validateUsername(value) || '';
-          break;
       }
 
       if (errorMessage) {
@@ -101,37 +119,29 @@ const AuthForm = <T extends AuthFormData>({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setIsLoading(true);
-    setError(null);
-    setFieldError('');
-    setFieldErrors({});
-    setTimeout(() => {
-      let validationResult;
+    // 클라이언트 유효성 검사
+    let validationResult;
 
-      if (formType === 'signin') {
-        validationResult = validateSignin(formData as any);
-      } else {
-        if (!agreeToTerms) {
-          setError('validation_error');
-          setFieldError('서비스 약관에 동의해주세요.');
-          setIsLoading(false);
-          return;
-        }
-        validationResult = validateSignup(formData as any);
-      }
-
-      if (!validationResult.isValid) {
-        setError(validationResult.error);
-        setFieldError(validationResult.fieldError || '');
-        setIndividualFieldErrors();
-        setIsLoading(false);
+    if (formType === 'signin') {
+      validationResult = validateSignin(formData as any);
+    } else {
+      if (!agreeToTerms) {
+        setError('validation_error');
+        setFieldError('서비스 약관에 동의해주세요.');
         return;
       }
+      validationResult = validateSignup(formData as any);
+    }
 
-      console.log(`${formType} 성공!`, formData);
-      onSubmit?.(formData as T);
-      setIsLoading(false);
-    }, 1000);
+    if (!validationResult.isValid) {
+      setError(validationResult.error);
+      setFieldError(validationResult.fieldError || '');
+      setIndividualFieldErrors();
+      return;
+    }
+
+    // 유효성 검사 통과 시 부모 컴포넌트로 데이터 전달
+    onSubmit?.(formData as T);
   };
 
   const renderIcon = (iconType: string) => {
@@ -160,10 +170,9 @@ const AuthForm = <T extends AuthFormData>({
 
   const hasFieldError = (fieldId: string) => {
     if (fieldErrors[fieldId]) return true;
+    if (serverError?.field === fieldId) return true;
     if (formType === 'signin') {
-      if (fieldId === 'email') return error === 'invalid_account';
-      if (fieldId === 'password')
-        return error === 'invalid_account' || error === 'password_mismatch';
+      if (fieldId === 'password') return error === 'invalid_password';
     } else {
       if (fieldId === 'email') return error === 'email_exists';
     }
@@ -288,10 +297,10 @@ const AuthForm = <T extends AuthFormData>({
             size="lg"
             color={isFormValid() ? 'primary' : 'secondary'}
             fullWidth={false}
-            disabled={isLoading || !isFormValid()}
+            disabled={isSubmitting || !isFormValid()}
             className="h-[60px] w-[326px]"
           >
-            {isLoading ? 'Loading...' : config.submitText}
+            {isSubmitting ? 'Loading...' : config.submitText}
           </Button>
         </div>
       </form>

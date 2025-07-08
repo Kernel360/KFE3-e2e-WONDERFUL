@@ -19,13 +19,14 @@ export type AuthFormData = SigninFormData | SignupFormData;
 export type FormType = 'signin' | 'signup';
 
 // 에러 타입
-export type AuthErrorType =
-  | 'invalid_account'
-  | 'password_mismatch'
-  | 'email_exists'
-  | 'validation_error'
-  | null;
+export type AuthErrorType = 'invalid_password' | 'email_exists' | 'validation_error' | null;
 
+// 서버 에러 타입
+export interface ServerErrorInfo {
+  type: AuthErrorType;
+  message: string;
+  field?: 'email' | 'password';
+}
 // 폼 Props 타입
 export interface AuthFormProps<T extends AuthFormData = AuthFormData> {
   formType: FormType;
@@ -33,6 +34,8 @@ export interface AuthFormProps<T extends AuthFormData = AuthFormData> {
   onToggleForm?: () => void;
   initialData?: Partial<T>;
   isLoading?: boolean;
+  isSubmitting?: boolean;
+  serverError?: ServerErrorInfo | null;
 }
 
 // 개별 폼 Props
@@ -41,6 +44,8 @@ export interface SigninFormProps {
   onToggleForm?: () => void;
   initialData?: Partial<SigninFormData>;
   isLoading?: boolean;
+  isSubmitting?: boolean;
+  serverError?: ServerErrorInfo | null;
 }
 
 export interface SignupFormProps {
@@ -48,6 +53,8 @@ export interface SignupFormProps {
   onToggleForm?: () => void;
   initialData?: Partial<SignupFormData>;
   isLoading?: boolean;
+  isSubmitting?: boolean;
+  serverError?: ServerErrorInfo | null;
 }
 
 // 폼 필드 설정 타입

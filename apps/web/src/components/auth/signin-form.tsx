@@ -6,14 +6,16 @@ import { useRouter } from 'next/navigation';
 import AuthForm from '@/components/auth/auth-form';
 import { FloatButton } from '@/components/ui/float-button';
 
-import { SigninFormData } from '@/lib/types/auth';
+import { SigninFormData, ServerErrorInfo } from '@/lib/types/auth';
 
 interface SigninFormProps {
   onLogin?: (data: SigninFormData) => void;
   initialData?: Partial<SigninFormData>;
+  isSubmitting?: boolean;
+  serverError?: ServerErrorInfo | null;
 }
 
-const SigninForm = ({ onLogin, initialData }: SigninFormProps) => {
+const SigninForm = ({ onLogin, initialData, isSubmitting, serverError }: SigninFormProps) => {
   const router = useRouter();
 
   const handleSubmit = (data: SigninFormData) => {
@@ -35,7 +37,13 @@ const SigninForm = ({ onLogin, initialData }: SigninFormProps) => {
       </h1>
 
       <div className="mt-[80px]">
-        <AuthForm formType="signin" onSubmit={handleSubmit} initialData={initialData} />
+        <AuthForm
+          formType="signin"
+          onSubmit={handleSubmit}
+          initialData={initialData}
+          isSubmitting={isSubmitting}
+          serverError={serverError}
+        />
       </div>
 
       <div className="mt-[40px] flex items-center justify-center gap-6 px-[98px]">
