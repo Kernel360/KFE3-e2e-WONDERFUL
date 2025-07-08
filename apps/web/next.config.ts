@@ -25,6 +25,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_FIREBASE_VAPID_KEY: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
   },
 
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
   webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
@@ -74,6 +78,11 @@ const nextConfig: NextConfig = {
       const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
       config.plugins = [...config.plugins, new PrismaPlugin()];
     }
+    // watchOptions 설정 추가
+    // Supabase Functions와 node_modules 디렉토리를 무시하여 불필요한 파일 변경 감지를 방지
+    config.watchOptions = {
+      ignored: ['**/supabase/functions/**', '**/node_modules'],
+    };
 
     return config;
   },
