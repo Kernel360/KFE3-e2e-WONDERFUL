@@ -46,11 +46,14 @@ self.addEventListener('push', function (event) {
 // 알림 클릭 처리 (최상단에서 등록)
 self.addEventListener('notificationclick', function (event) {
   console.log('🔔 알림 클릭:', event.notification.data);
-
   event.notification.close();
-
+  // context-specific URL deep linking
+  let targetUrl = '/';
+  if (event.notification && event.notification.data && event.notification.data.url) {
+    targetUrl = event.notification.data.url;
+  }
   if (event.action === 'open' || !event.action) {
-    event.waitUntil(clients.openWindow('/'));
+    event.waitUntil(clients.openWindow(targetUrl));
   }
 });
 

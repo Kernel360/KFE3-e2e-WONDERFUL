@@ -48,12 +48,24 @@ const registerServiceWorkerAndSendConfig = async () => {
       await navigator.serviceWorker.ready;
 
       // Firebase 설정을 서비스 워커에 전달
-      if (registration.active) {
-        registration.active.postMessage({
+      const sendConfigToSW = (sw: ServiceWorker) => {
+        sw.postMessage({
           type: 'FIREBASE_CONFIG',
           config: firebaseConfig,
         });
         console.log('✅ Firebase 설정을 서비스 워커에 전달 완료');
+      };
+      if (registration.active) {
+        sendConfigToSW(registration.active);
+      } else {
+        // registration.active가 없으면 controllerchange 이벤트를 기다림
+        const onControllerChange = () => {
+          if (navigator.serviceWorker.controller) {
+            sendConfigToSW(navigator.serviceWorker.controller);
+            navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+          }
+        };
+        navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
       }
 
       return registration;
