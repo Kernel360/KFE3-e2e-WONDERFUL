@@ -1,4 +1,4 @@
-import HeaderSearch from '@/components/search/header-search';
+// import HeaderSearch from '@/components/search/header-search';
 import SearchLog, { Log } from '@/components/search/search-log';
 
 const dummy: Log[] = [
@@ -19,10 +19,10 @@ const dummy: Log[] = [
 const SearchPage = () => {
   return (
     <>
-      <HeaderSearch />
-      <main className="flex flex-col items-center justify-start pt-3">
-        <SearchLog logs={dummy} />
-      </main>
+      {/* <HeaderSearch /> */}
+      {/* <main className="flex flex-col items-center justify-start pt-3"> */}
+      <SearchLog logs={dummy} />
+      {/* </main> */}
     </>
   );
 };
