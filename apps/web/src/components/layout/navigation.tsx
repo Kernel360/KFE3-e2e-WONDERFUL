@@ -19,9 +19,7 @@ const Navigation = () => {
   const pathname = usePathname();
   const showNavigation = ['/', '/auction', '/search', '/chat', '/profile'].includes(pathname || '');
 
-  if (!showNavigation) {
-    return;
-  }
+  if (!showNavigation) return null;
 
   return (
     <nav className="mx-auto w-full min-w-[320px] max-w-[480px] bg-white shadow-[var(--shadow-nav)]">

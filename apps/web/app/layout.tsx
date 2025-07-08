@@ -6,7 +6,6 @@ import QueryProvider from '@/providers/query-provider';
 import Navigation from '@/components/layout/navigation';
 
 import './globals.css';
-import HeaderBasic from '@/components/layout/header/chat';
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
