@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@repo/db', '@repo/ui'],
   output: 'standalone',
 
-  // 환경변수는 여기서만 관리
+  // Firebase 환경변수 관리
   env: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
