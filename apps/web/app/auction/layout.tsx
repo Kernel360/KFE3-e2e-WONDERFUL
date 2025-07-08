@@ -1,4 +1,5 @@
 import React from 'react';
+import { AuctionHeader, Container } from '@/components/layout';
 
 // export default function EditLayout({
 export default async function AuctionLayout({
@@ -10,6 +11,10 @@ export default async function AuctionLayout({
   params: Promise<{ id: string }>; //Promise로 변경
 }) {
   const { id } = await params; //await 추가
-
-  return <>{children}</>;
+  return (
+    <>
+      <AuctionHeader />
+      <Container>{children}</Container>
+    </>
+  );
 }

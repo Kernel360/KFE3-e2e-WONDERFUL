@@ -10,6 +10,5 @@ export default async function EditLayout({
   params: Promise<{ id: string }>; //Promise로 변경
 }) {
   const { id } = await params; //await 추가
-
   return <>{children}</>;
 }

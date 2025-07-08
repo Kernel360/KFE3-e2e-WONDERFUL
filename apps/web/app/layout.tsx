@@ -4,8 +4,10 @@ import type { Metadata, Viewport } from 'next';
 
 import { MainLayout } from '@/components/layout';
 import QueryProvider from '@/providers/query-provider';
+import Navigation from '@/components/layout/navigation';
 
 import './globals.css';
+import HeaderBasic from '@/components/layout/header/chat';
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -69,7 +71,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="ko" className={pretendard.variable}>
       <body className={pretendard.className} suppressHydrationWarning>
         <QueryProvider>
-          <MainLayout>{children}</MainLayout>
+          <div
+            className="relative mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col"
+            style={{ position: 'relative' }}
+          >
+            {children}
+            <Navigation />
+          </div>
         </QueryProvider>
       </body>
     </html>
