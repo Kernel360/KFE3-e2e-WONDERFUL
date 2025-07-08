@@ -153,7 +153,7 @@ const AuthForm = <T extends AuthFormData>({
 
   const isFormValid = () => {
     if (formType === 'signin') {
-      return formData.username && formData.password;
+      return formData.email && formData.password;
     }
     return formData.name && formData.email && formData.password && agreeToTerms;
   };
@@ -161,7 +161,7 @@ const AuthForm = <T extends AuthFormData>({
   const hasFieldError = (fieldId: string) => {
     if (fieldErrors[fieldId]) return true;
     if (formType === 'signin') {
-      if (fieldId === 'username') return error === 'invalid_account';
+      if (fieldId === 'email') return error === 'invalid_account';
       if (fieldId === 'password')
         return error === 'invalid_account' || error === 'password_mismatch';
     } else {

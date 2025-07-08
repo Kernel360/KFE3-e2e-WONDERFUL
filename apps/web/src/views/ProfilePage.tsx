@@ -1,11 +1,27 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { Pen } from 'lucide-react';
 
 import { MenuList } from '@/components/common/profile/menu-list';
 import { ProfileCard } from '@/components/common/profile/card';
 import { Button } from '@/components/ui/button';
+import { signOutAction } from '@/lib/actions/auth.action';
 
 const ProfilePage = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const result = await signOutAction();
+      // 성공 시 로그인 페이지로 이동
+      if (result && result.success) {
+        router.push('/auth/signin');
+      }
+    } catch (err) {
+      console.error('로그아웃 오류:', err);
+    }
+  };
+
   return (
     <div className="height-auto w-full bg-white">
       {/* Profile Card */}
@@ -23,7 +39,7 @@ const ProfilePage = () => {
         <MenuList />
       </div>
 
-      <Button variant={'outline'} color={'secondary'}>
+      <Button variant={'outline'} color={'secondary'} onClick={handleLogout}>
         로그아웃
       </Button>
     </div>

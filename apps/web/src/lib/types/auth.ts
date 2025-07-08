@@ -1,6 +1,6 @@
 // 로그인 관련 타입 정의
 export interface SigninFormData {
-  username: string;
+  email: string;
   password: string;
   rememberMe?: boolean;
 }

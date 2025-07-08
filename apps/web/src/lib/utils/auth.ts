@@ -6,18 +6,6 @@ import {
   SignupFormData,
 } from '@/lib/types/auth';
 
-// 임시 로그인 정보
-export const TEMP_SIGNIN_DATA = {
-  username: 'user123',
-  password: '123456',
-};
-
-// 임시 회원 정보 (이메일 중복 체크용)
-export const EXISTING_USERS = [
-  { email: 'test@example.com', name: 'Test User' },
-  { email: 'user@gmail.com', name: 'Gmail User' },
-];
-
 // 유효성 검사 함수들
 export const validateEmail = (email: string): string | null => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,16 +30,16 @@ export const validateUsername = (username: string): string | null => {
 export const validateSignin = (
   data: SigninFormData
 ): { isValid: boolean; error: AuthErrorType; fieldError?: string } => {
-  if (data.username !== TEMP_SIGNIN_DATA.username) {
-    return { isValid: false, error: 'invalid_account', fieldError: '존재하지 않는 계정입니다.' };
+  // 이메일 유효성 검사
+  const emailError = validateEmail(data.email);
+  if (emailError) {
+    return { isValid: false, error: 'validation_error', fieldError: emailError };
   }
 
-  if (data.password !== TEMP_SIGNIN_DATA.password) {
-    return {
-      isValid: false,
-      error: 'password_mismatch',
-      fieldError: '비밀번호가 일치하지 않습니다.',
-    };
+  // 비밀번호 유효성 검사
+  const passwordError = validatePassword(data.password);
+  if (passwordError) {
+    return { isValid: false, error: 'validation_error', fieldError: passwordError };
   }
 
   return { isValid: true, error: null };
@@ -62,7 +50,7 @@ export const validateSignup = (
   data: SignupFormData
 ): { isValid: boolean; error: AuthErrorType; fieldError?: string } => {
   // 이메일 중복 체크
-  if (EXISTING_USERS.some((user) => user.email === data.email)) {
+  if (!data.name) {
     return { isValid: false, error: 'email_exists', fieldError: '이미 사용 중인 이메일입니다.' };
   }
 
@@ -117,11 +105,11 @@ export const getFormConfig = (formType: FormType): FormConfig => {
       title: '로그인',
       fields: [
         {
-          id: 'username',
-          type: 'text',
-          placeholder: 'Enter Username',
-          icon: 'user',
-          validation: validateUsername,
+          id: 'email',
+          type: 'email',
+          placeholder: 'Enter email',
+          icon: 'email',
+          validation: validateEmail,
         },
         {
           id: 'password',
@@ -175,7 +163,15 @@ export const getFormConfig = (formType: FormType): FormConfig => {
 
 export const getInitialFormData = (formType: FormType) => {
   if (formType === 'signin') {
-    return { username: '', password: '' };
+    return {
+      email: '',
+      password: '',
+      rememberMe: false,
+    };
   }
-  return { name: '', email: '', password: '' };
+  return {
+    name: '',
+    email: '',
+    password: '',
+  };
 };

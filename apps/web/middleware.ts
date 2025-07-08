@@ -2,39 +2,10 @@
 // 들어오는 요청에 따라 응답을 수정하거나 리다이렉트, 헤더 수정, 직접 응답 등을 할 수 있음
 
 import { type NextRequest } from 'next/server';
-
-import { createMiddlewareClient, handleAuthRoutes } from './src/lib/supabase/middleware';
-
-// 보호된 라우트 정의 (예: 프로필, 경매, 채팅 등)
-//const protectedRoutes = ['/profile', '/auction', '/chat'];
-
-// 인증된 사용자가 접근할 수 없는 라우트 (예: 로그인, 회원가입 등)
-const authRoutes = ['/auth/signin', '/auth/signup'];
+import { updateSession } from './src/lib/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
-  // Supabase 클라이언트 생성
-  const { supabase } = createMiddlewareClient(request);
-
-  // 사용자 인증 상태 확인 (예: 로그인 여부)
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
-
-  // 개발 환경 디버깅
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`🔍 [Middleware] ${pathname} | User: ${user?.email || '❌ Anonymous'}`);
-  }
-
-  // 인증 라우트 처리
-  if (!error) {
-    const authRedirect = await handleAuthRoutes(request, user, authRoutes);
-    if (authRedirect) {
-      return authRedirect;
-    }
-  }
+  return await updateSession(request);
 }
 
 export const config = {
