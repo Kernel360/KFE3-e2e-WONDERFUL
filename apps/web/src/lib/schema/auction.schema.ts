@@ -1,5 +1,4 @@
-import { array, z } from 'zod';
-import CreateAuctionForm from '../../components/create-auction/create-auction-form';
+import { z } from 'zod';
 
 export const createAuctionSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.'),
