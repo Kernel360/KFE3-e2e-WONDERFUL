@@ -60,7 +60,7 @@ export const nextJsConfig = [
       '@typescript-eslint/no-empty-object-type': [
         'error',
         {
-          allowInGenericTypeArguments: true, // Prisma 같은 제네릭에서 허용
+          allowWithName: '^(Prisma|.*Props|.*Config)$', // 빈 객체 타입 허용 (Prisma, Props, Config 등)
         },
       ],
       // 팀 컨벤션 규칙들
