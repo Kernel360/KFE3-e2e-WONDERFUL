@@ -14,8 +14,19 @@ const nextConfig: NextConfig = {
   // Vercel 배포를 위한 standalone 출력 설정 추가
   output: 'standalone',
 
+  // Firebase 환경변수를 브라우저에서 접근 가능하게 설정
+  env: {
+    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    NEXT_PUBLIC_FIREBASE_VAPID_KEY: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+  },
+
   // 클라이언트 사이드에서 Prisma 실행 방지를 위한 추가 설정
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -23,7 +34,35 @@ const nextConfig: NextConfig = {
         net: false,
         tls: false,
       };
+
+      // 클라이언트 사이드에서 Firebase 환경변수 접근 가능하도록 설정
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env.NEXT_PUBLIC_FIREBASE_API_KEY': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_APP_ID': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+          ),
+          'process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY': JSON.stringify(
+            process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
+          ),
+        })
+      );
     }
+
     // 서버 사이드에서 Prisma 바이너리 처리 추가
     if (isServer) {
       config.externals = config.externals || [];
