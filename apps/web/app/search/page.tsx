@@ -1,9 +1,33 @@
-'use client';
+import SearchLog, { Log } from '@/components/search/search-log';
+import SearchResult from '@/components/search/search-result';
 
-import SearchPage from '@/views/SearchPage';
+interface SearchPageProps {
+  searchParams: { q?: string };
+}
 
-const Page = () => {
-  return <SearchPage />;
+const dummy: Log[] = [
+  {
+    id: '1',
+    content: '라이즈 손수건',
+  },
+  {
+    id: '2',
+    content: '캣휠',
+  },
+  {
+    id: '3',
+    content: '휘낭시에',
+  },
+];
+
+const Page = ({ searchParams }: SearchPageProps) => {
+  const { q } = searchParams;
+
+  if (!q) {
+    return <SearchResult query={`${q}`} />;
+  }
+
+  return <SearchLog logs={dummy} />;
 };
 
 export default Page;
