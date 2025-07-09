@@ -2,7 +2,7 @@ import SearchLog, { Log } from '@/components/search/search-log';
 import SearchResult from '@/components/search/search-result';
 
 interface SearchPageProps {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }
 
 const dummy: Log[] = [
@@ -20,14 +20,16 @@ const dummy: Log[] = [
   },
 ];
 
-const Page = ({ searchParams }: SearchPageProps) => {
-  const { q } = searchParams;
+const Page = async ({ searchParams }: SearchPageProps) => {
+  const params = await searchParams;
+  const query = params.q;
 
-  if (!q) {
+  if (!query) {
     return <SearchLog logs={dummy} />;
   }
 
-  return <SearchResult query={`${q}`} />;
+  // q 입력하기
+  return <SearchResult query={`${query}`} />;
 };
 
 export default Page;
