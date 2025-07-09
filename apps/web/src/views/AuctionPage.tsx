@@ -117,7 +117,10 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
     <>
       <section className="flex flex-col items-center gap-1 px-0">
         <ItemImages urls={images} />
-        <ProfileCard nickname="user1234" profileImg="/apps/web/public/avatar-female.svg">
+        <ProfileCard
+          nickname="user1234"
+          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg"
+        >
           <Button variant="outline">
             <MessageSquareMore />
             채팅하기
