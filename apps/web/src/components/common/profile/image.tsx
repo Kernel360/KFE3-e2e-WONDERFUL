@@ -8,7 +8,7 @@ interface ProfileImageProps {
 const ProfileImage = ({ src, alt }: ProfileImageProps) => {
   return (
     <Avatar>
-      <AvatarImage src={src} alt={alt} />
+      <AvatarImage src={src} alt={alt} width={40} height={40} />
     </Avatar>
   );
 };

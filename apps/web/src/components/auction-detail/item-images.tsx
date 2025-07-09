@@ -38,7 +38,13 @@ const ItemImages = ({ urls }: ItemImagesProps) => {
       <CarouselContent>
         {urls?.map((url, index) => (
           <CarouselItem key={index}>
-            <Image src={url} alt={`item-${index}`} className="aspect-square w-full object-cover" />
+            <Image
+              src={url}
+              alt={`item-${index}`}
+              className="aspect-square w-full object-cover"
+              width={480}
+              height={480}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
