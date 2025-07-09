@@ -2,10 +2,12 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import AuthForm from '@/components/auth/auth-form';
 import { FloatButton } from '@/components/ui/float-button';
 
+import { signInWithGoogleAction } from '@/lib/actions/auth.action';
 import { SigninFormData, ServerErrorInfo } from '@/lib/types/auth';
 
 interface SigninFormProps {
@@ -17,13 +19,29 @@ interface SigninFormProps {
 
 const SigninForm = ({ onLogin, initialData, isSubmitting, serverError }: SigninFormProps) => {
   const router = useRouter();
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = (data: SigninFormData) => {
     onLogin?.(data);
   };
 
-  const handleSocialLogin = (provider: 'google' | 'facebook' | 'apple') => {
-    console.log(`${provider} 로그인`);
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+
+    try {
+      const result = await signInWithGoogleAction();
+
+      if (result.success && result.redirectUrl) {
+        // 구글 로그인 페이지로 리다이렉트
+        window.location.href = result.redirectUrl;
+      } else {
+        console.error('구글 로그인 실패:', result.error);
+      }
+    } catch (error) {
+      console.error('구글 로그인 예외:', error);
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   const handleSignUp = () => {
@@ -47,12 +65,7 @@ const SigninForm = ({ onLogin, initialData, isSubmitting, serverError }: SigninF
       </div>
 
       <div className="mt-[40px] flex items-center justify-center gap-6 px-[98px]">
-        <FloatButton
-          variant="solid"
-          color="secondary"
-          size="medium"
-          onClick={() => handleSocialLogin('google')}
-        >
+        <FloatButton variant="solid" color="secondary" size="medium" onClick={handleGoogleLogin}>
           <Image
             src="/icon/Google.svg"
             alt="Google 로그인"
@@ -62,27 +75,17 @@ const SigninForm = ({ onLogin, initialData, isSubmitting, serverError }: SigninF
           />
         </FloatButton>
 
-        <FloatButton
-          variant="solid"
-          color="secondary"
-          size="medium"
-          onClick={() => handleSocialLogin('facebook')}
-        >
+        <FloatButton variant="solid" color="secondary" size="medium">
           <Image
-            src="/icon/Facebook.svg"
-            alt="Facebook 로그인"
+            src="/icon/kakao.svg"
+            alt="Kakao 로그인"
             width={20}
             height={20}
             className="h-5 w-5"
           />
         </FloatButton>
 
-        <FloatButton
-          variant="solid"
-          color="secondary"
-          size="medium"
-          onClick={() => handleSocialLogin('apple')}
-        >
+        <FloatButton variant="solid" color="secondary" size="medium">
           <Image
             src="/icon/Apple.svg"
             alt="Apple 로그인"
