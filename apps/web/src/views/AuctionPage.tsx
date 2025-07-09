@@ -112,7 +112,7 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
   const images = processImages();
 
   return (
-    <main className="w-full">
+    <>
       <section className="flex flex-col items-center gap-1 px-0">
         <ItemImages urls={images} />
         <ProfileCard
@@ -130,7 +130,7 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
       <footer className="sticky bottom-0 z-50 w-full bg-white">
         <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
       </footer>
-    </main>
+    </>
   );
 };
 

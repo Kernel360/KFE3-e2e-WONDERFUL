@@ -27,7 +27,7 @@ const ProfilePage = () => {
       {/* Profile Card */}
       <div className="border-b-4 border-neutral-200">
         <ProfileCard nickname="킹갓제너럴판매자" profileImg="/avatar-male.svg">
-          <Button variant="outline">
+          <Button variant="outline" size={'sm'}>
             <Pen />
             프로필수정
           </Button>
