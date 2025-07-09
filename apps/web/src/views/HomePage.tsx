@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from 'react';
 
-import AuctionItemList from '@/components/common/auction-card/list';
-import Categories from '@/components/common/tab/list-filter';
-import CreateAuctionButton from '@/components/common/button/create-auction';
+import { AuctionItemList } from '@/components/common/auction-card';
+import { CreateAuctionButton } from '@/components/common/button';
+import { TabListFilter } from '@/components/common/tab';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
 
@@ -50,7 +50,7 @@ const HomePage = () => {
   return (
     <section>
       {/* 카테고리 필터링 탭 */}
-      <Categories
+      <TabListFilter
         items={categories}
         selectedCategoryId={selectedCategoryId}
         onCategoryChange={handleCategoryChange}

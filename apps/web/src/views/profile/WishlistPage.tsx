@@ -1,13 +1,13 @@
 'use client';
-// 마이페이지 - 판매 내역 페이지
+// 마이페이지 - 관심목록 페이지
 import { useState } from 'react';
 
 import { AuctionItemList } from '@/components/common/auction-card';
 import { TabListFilter } from '@/components/common/tab';
 
-import { AUCTION_TABS, AUCTION_TABS_EXTENDED, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
+import { AUCTION_TABS, AUCTION_TABS_BASIC, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
 
-const TradeListPage = () => {
+const WishlistPage = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>(AUCTION_TABS[0]?.id || 'all');
 
   const handleTabChange = (tabId: string) => {
@@ -22,7 +22,7 @@ const TradeListPage = () => {
       </div> */}
 
       <TabListFilter
-        items={AUCTION_TABS_EXTENDED}
+        items={AUCTION_TABS_BASIC}
         selectedCategoryId={selectedTab}
         onCategoryChange={handleTabChange}
       />
@@ -31,4 +31,4 @@ const TradeListPage = () => {
   );
 };
 
-export default TradeListPage;
+export default WishlistPage;

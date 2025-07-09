@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Link from 'next/link';
 
 interface MenuItem {
@@ -35,7 +33,7 @@ const menuSections: MenuSection[] = [
   },
 ];
 
-export const MenuList = () => {
+const MenuList = () => {
   return (
     <nav aria-label="마이페이지 메뉴 목록">
       {menuSections.map((section) => (
@@ -58,3 +56,5 @@ export const MenuList = () => {
     </nav>
   );
 };
+
+export default MenuList;

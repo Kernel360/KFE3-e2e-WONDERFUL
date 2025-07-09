@@ -1,10 +1,11 @@
 'use client';
 import { useRouter } from 'next/navigation';
+
 import { Pen } from 'lucide-react';
 
-import { MenuList } from '@/components/common/profile/menu-list';
-import { ProfileCard } from '@/components/common/profile/card';
+import { MenuList, ProfileCard } from '@/components/common/profile';
 import { Button } from '@/components/ui/button';
+
 import { signOutAction } from '@/lib/actions/auth.action';
 
 const ProfilePage = () => {
