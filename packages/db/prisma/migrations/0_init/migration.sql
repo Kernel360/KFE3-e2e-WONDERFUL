@@ -33,7 +33,7 @@ CREATE TABLE "alerts" (
     "content" VARCHAR(255),
     "alert_category" VARCHAR(50),
     "is_read" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(6) NOT NULL,
+    "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "alerts_pkey" PRIMARY KEY ("id")
 );
@@ -64,10 +64,10 @@ CREATE TABLE "auction_items" (
     "title" VARCHAR(255) NOT NULL,
     "description" TEXT,
     "category_id" UUID NOT NULL,
-    "location_id" UUID NOT NULL,
+    "location_id" UUID,
     "start_time" TIMESTAMP(6),
     "end_time" TIMESTAMP(6) NOT NULL,
-    "status" VARCHAR(50) NOT NULL,
+    "status" VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     "thumbnail_url" TEXT,
     "created_at" TIMESTAMP(6) NOT NULL,
 
@@ -82,6 +82,8 @@ CREATE TABLE "auction_prices" (
     "instant_price" INTEGER,
     "min_bid_unit" INTEGER NOT NULL,
     "current_price" INTEGER NOT NULL,
+    "is_instant_buy_enabled" BOOLEAN NOT NULL DEFAULT false,
+    "is_extended_auction" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "auction_prices_pkey" PRIMARY KEY ("id")
 );
@@ -101,7 +103,7 @@ CREATE TABLE "bids" (
 CREATE TABLE "auction_images" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "item_id" UUID NOT NULL,
-    "url" TEXT NOT NULL,
+    "urls" TEXT[],
 
     CONSTRAINT "auction_images_pkey" PRIMARY KEY ("id")
 );
@@ -145,6 +147,21 @@ CREATE TABLE "chat_messages" (
     CONSTRAINT "chat_messages_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "user_notifications" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "user_id" UUID NOT NULL,
+    "notification_type" VARCHAR(20) NOT NULL,
+    "token_data" JSONB NOT NULL,
+    "device_info" VARCHAR(255),
+    "platform" VARCHAR(20),
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(6) NOT NULL,
+
+    CONSTRAINT "user_notifications_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -155,10 +172,16 @@ CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 CREATE UNIQUE INDEX "users_nickname_key" ON "users"("nickname");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "favorite_items_user_id_item_id_key" ON "favorite_items"("user_id", "item_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "auction_prices_item_id_key" ON "auction_prices"("item_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_notifications_user_id_notification_type_key" ON "user_notifications"("user_id", "notification_type");
 
 -- AddForeignKey
 ALTER TABLE "locations" ADD CONSTRAINT "locations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -167,13 +190,10 @@ ALTER TABLE "locations" ADD CONSTRAINT "locations_user_id_fkey" FOREIGN KEY ("us
 ALTER TABLE "alerts" ADD CONSTRAINT "alerts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "favorite_items" ADD CONSTRAINT "favorite_items_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "favorite_items" ADD CONSTRAINT "favorite_items_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "auction_items" ADD CONSTRAINT "auction_items_seller_id_fkey" FOREIGN KEY ("seller_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "favorite_items" ADD CONSTRAINT "favorite_items_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "auction_items" ADD CONSTRAINT "auction_items_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -182,35 +202,41 @@ ALTER TABLE "auction_items" ADD CONSTRAINT "auction_items_category_id_fkey" FORE
 ALTER TABLE "auction_items" ADD CONSTRAINT "auction_items_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "locations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "auction_prices" ADD CONSTRAINT "auction_prices_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "auction_items" ADD CONSTRAINT "auction_items_seller_id_fkey" FOREIGN KEY ("seller_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bids" ADD CONSTRAINT "bids_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "auction_prices" ADD CONSTRAINT "auction_prices_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "bids" ADD CONSTRAINT "bids_bidder_id_fkey" FOREIGN KEY ("bidder_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "auction_images" ADD CONSTRAINT "auction_images_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bids" ADD CONSTRAINT "bids_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sales" ADD CONSTRAINT "sales_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "auction_images" ADD CONSTRAINT "auction_images_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sales" ADD CONSTRAINT "sales_buyer_id_fkey" FOREIGN KEY ("buyer_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "sales" ADD CONSTRAINT "sales_item_id_fkey" FOREIGN KEY ("item_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_auction_id_fkey" FOREIGN KEY ("auction_id") REFERENCES "auction_items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_seller_id_fkey" FOREIGN KEY ("seller_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_buyer_id_fkey" FOREIGN KEY ("buyer_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_buyer_id_fkey" FOREIGN KEY ("buyer_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_seller_id_fkey" FOREIGN KEY ("seller_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "chat_messages" ADD CONSTRAINT "chat_messages_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "chat_rooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "chat_messages" ADD CONSTRAINT "chat_messages_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_notifications" ADD CONSTRAINT "user_notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
