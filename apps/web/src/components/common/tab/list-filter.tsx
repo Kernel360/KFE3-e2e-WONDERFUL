@@ -25,7 +25,7 @@ const TabListFilter = ({ items, selectedCategoryId, onCategoryChange }: Categori
   const defaultValue = selectedCategoryId !== undefined ? selectedCategoryId : items[0]?.id || '';
   return (
     <FilterTabs value={defaultValue} onValueChange={handleTabsValueChange}>
-      <FilterTabsList className="my-3">
+      <FilterTabsList className="my-3 w-fit">
         {items.map(({ id, name }) => {
           return (
             <FilterTabsTrigger key={id} value={id}>

@@ -1,5 +1,6 @@
-import { TabBasic, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tab-basic';
 import React from 'react';
+
+import { TabBasic, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tab-basic';
 
 interface TabProps {
   tabs: TabItem[];

@@ -1,14 +1,18 @@
 'use client';
+// 마이페이지 - 판매 내역 페이지
+import { useState } from 'react';
 
-import React from 'react';
+import { AuctionItemList } from '@/components/common/auction-card';
+import { TabListFilter } from '@/components/common/tab';
 
-import AuctionItemList from '@/components/common/auction-card/list';
-import Categories from '@/components/common/tab/list-filter';
-
-import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
+import { AUCTION_TABS, AUCTION_TABS_EXTENDED, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
 
 const TradeListPage = () => {
-  console.log(FALLBACK_CATEGORIES);
+  const [selectedTab, setSelectedTab] = useState<TabId>(AUCTION_TABS[0]?.id || 'all');
+
+  const handleTabChange = (tabId: string) => {
+    setSelectedTab(tabId as TabId);
+  };
 
   return (
     <div>
@@ -17,8 +21,12 @@ const TradeListPage = () => {
         <Header title="판매 내역" />
       </div> */}
 
-      <Categories items={FALLBACK_CATEGORIES} />
-      <AuctionItemList />
+      <TabListFilter
+        items={AUCTION_TABS_EXTENDED}
+        selectedCategoryId={selectedTab}
+        onCategoryChange={handleTabChange}
+      />
+      <AuctionItemList selectedStatuses={TAB_STATUS_MAP[selectedTab]} includeCompleted={true} />
     </div>
   );
 };

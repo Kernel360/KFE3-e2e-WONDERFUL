@@ -1,51 +1,98 @@
 'use server';
 
-import webpush from 'web-push';
+import { createClient } from '@/lib/supabase/server';
 
-const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+// 임시 테스트용 사용자 ID (실제로는 로그인된 사용자 ID 사용)
+const TEMP_USER_ID = '00000000-0000-0000-0000-000000000001';
 
-if (!vapidPublicKey || !vapidPrivateKey) {
-  throw new Error(
-    'VAPID public and private keys must be set in environment variables (NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)'
-  );
-}
-
-webpush.setVapidDetails('mailto:support@yourcompany.com', vapidPublicKey, vapidPrivateKey);
-
-let subscription: webpush.PushSubscription | null = null;
-
-export const subscribeUser = async (sub: webpush.PushSubscription) => {
-  subscription = sub;
-  // 실제 환경에서는 데이터베이스에 저장
-  // 예: await db.subscriptions.create({ data: sub })
-  return { success: true };
-};
-
-export const unsubscribeUser = async () => {
-  subscription = null;
-  // 실제 환경에서는 데이터베이스에서 삭제
-  // 예: await db.subscriptions.delete({ where: { ... } })
-  return { success: true };
-};
-
-export const sendNotification = async (message: string) => {
-  if (!subscription) {
-    throw new Error('구독 정보가 없습니다');
-  }
-
+// FCM 구독 등록 함수
+export const subscribeFCMUser = async (fcmToken: string, deviceInfo?: string) => {
   try {
-    await webpush.sendNotification(
-      subscription,
-      JSON.stringify({
-        title: '경매 알림', // 알림 제목
-        body: message, // 알림 내용
-        icon: '/icon/medium', // 알림 아이콘
-      })
-    );
-    return { success: true };
+    const supabase = await createClient();
+
+    console.log('FCM 토큰 저장 시작:', fcmToken.substring(0, 50) + '...');
+
+    const insertData = {
+      user_id: TEMP_USER_ID,
+      notification_type: 'fcm',
+      token_data: fcmToken,
+      device_info: deviceInfo || 'Test Device - FCM',
+      platform: 'web',
+      is_active: true,
+    };
+
+    const { error: upsertError } = await supabase.from('user_notifications').upsert([insertData], {
+      onConflict: 'user_id,notification_type',
+    });
+
+    if (upsertError) {
+      console.error('FCM 토큰 저장 세부 에러:', upsertError);
+      return { success: false, error: `FCM 토큰 저장에 실패했습니다: ${upsertError.message}` };
+    }
+
+    console.log('✅ FCM 토큰이 user_notifications 테이블에 저장되었습니다.');
+    return { success: true, message: 'FCM 알림 구독이 완료되었습니다.' };
   } catch (error) {
-    console.error('푸시 알림 전송 실패:', error);
-    return { success: false, error: '알림 전송에 실패했습니다' };
+    console.error('subscribeFCMUser 오류:', error);
+    return { success: false, error: 'FCM 구독 처리 중 오류가 발생했습니다.' };
+  }
+};
+
+// FCM 구독 해제
+export const unsubscribeFCMUser = async () => {
+  try {
+    const supabase = await createClient();
+
+    const { error: updateError } = await supabase
+      .from('user_notifications')
+      .update({
+        is_active: false,
+      })
+      .eq('user_id', TEMP_USER_ID)
+      .eq('notification_type', 'fcm');
+
+    if (updateError) {
+      console.error('FCM 구독 해제 실패:', updateError);
+      return { success: false, error: 'FCM 구독 해제에 실패했습니다.' };
+    }
+
+    return { success: true, message: 'FCM 알림 구독이 해제되었습니다.' };
+  } catch (error) {
+    console.error('unsubscribeFCMUser 오류:', error);
+    return { success: false, error: 'FCM 구독 해제 중 오류가 발생했습니다.' };
+  }
+};
+
+// FCM 구독 상태 확인
+export const getFCMSubscriptionStatus = async () => {
+  try {
+    const supabase = await createClient();
+
+    const { data: notification, error } = await supabase
+      .from('user_notifications')
+      .select('is_active, created_at')
+      .eq('user_id', TEMP_USER_ID)
+      .eq('notification_type', 'fcm')
+      .eq('is_active', true)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('FCM 구독 상태 확인 실패:', error);
+      return {
+        fcmSubscribed: false,
+        error: 'FCM 구독 상태 확인에 실패했습니다.',
+      };
+    }
+
+    return {
+      fcmSubscribed: !!notification?.is_active,
+      fcmSubscribedAt: notification?.created_at,
+    };
+  } catch (error) {
+    console.error('getFCMSubscriptionStatus 오류:', error);
+    return {
+      fcmSubscribed: false,
+      error: 'FCM 구독 상태 확인 중 오류가 발생했습니다.',
+    };
   }
 };
