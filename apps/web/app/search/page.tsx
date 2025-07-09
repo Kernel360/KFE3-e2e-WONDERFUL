@@ -24,10 +24,10 @@ const Page = ({ searchParams }: SearchPageProps) => {
   const { q } = searchParams;
 
   if (!q) {
-    return <SearchResult query={`${q}`} />;
+    return <SearchLog logs={dummy} />;
   }
 
-  return <SearchLog logs={dummy} />;
+  return <SearchResult query={`${q}`} />;
 };
 
 export default Page;
