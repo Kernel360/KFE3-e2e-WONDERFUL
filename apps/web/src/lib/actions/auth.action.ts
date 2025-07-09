@@ -4,39 +4,49 @@ import { revalidatePath } from 'next/cache';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-// 로그인 액션
-export const signInAction = async (formData: FormData) => {
+import { AuthActionResult } from '@/lib/types/auth';
+
+//Supabase 클라이언트 생성 헬퍼
+const createAuthClient = async () => {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // Server Action에서는 쿠키 설정 무시
+          }
+        },
+      },
+    }
+  );
+};
+
+//로그인 액션
+export const signInAction = async (formData: FormData): Promise<AuthActionResult> => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    return { success: false, error: '이메일과 비밀번호를 입력해주세요.' };
+    return {
+      success: false,
+      error: '이메일과 비밀번호를 입력해주세요.',
+      field: 'email',
+    };
   }
 
   try {
-    // Server Action용 Supabase 클라이언트 직접 생성
-    const cookieStore = await cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Server Action에서는 쿠키 설정 무시
-            }
-          },
-        },
-      }
-    );
+    const supabase = await createAuthClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -45,64 +55,41 @@ export const signInAction = async (formData: FormData) => {
 
     if (error) {
       console.error('로그인 에러:', error);
-      return { success: false, error: '이메일 또는 비밀번호가 잘못되었습니다.' };
+
+      // 로그인 실패는 주로 비밀번호 필드 에러로 처리
+      return {
+        success: false,
+        error: '이메일 또는 비밀번호가 잘못되었습니다.',
+        field: 'password',
+      };
     }
 
     if (data.user) {
       revalidatePath('/', 'layout');
-      return { success: true };
+      return {
+        success: true,
+        message: '로그인 성공',
+        user: data.user,
+      };
     }
 
-    return { success: false, error: '로그인에 실패했습니다.' };
+    return {
+      success: false,
+      error: '로그인에 실패했습니다.',
+      field: 'password',
+    };
   } catch (error) {
     console.error('로그인 예외:', error);
-    return { success: false, error: '로그인 중 오류가 발생했습니다.' };
+    return {
+      success: false,
+      error: '로그인 중 오류가 발생했습니다.',
+      field: 'email',
+    };
   }
 };
 
-// 로그아웃 액션
-export const signOutAction = async () => {
-  try {
-    const cookieStore = await cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Server Action에서는 쿠키 설정 무시
-            }
-          },
-        },
-      }
-    );
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error('로그아웃 에러:', error);
-      return { success: false, error: '로그아웃에 실패했습니다.' };
-    }
-
-    revalidatePath('/', 'layout');
-    return { success: true };
-  } catch (error) {
-    console.error('로그아웃 예외:', error);
-    return { success: false, error: '로그아웃 중 오류가 발생했습니다.' };
-  }
-};
-
-// 회원가입 액션
-export const signUpAction = async (formData: FormData) => {
+// === 회원가입 액션 ===
+export const signUpAction = async (formData: FormData): Promise<AuthActionResult> => {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -111,43 +98,18 @@ export const signUpAction = async (formData: FormData) => {
     return {
       success: false,
       error: '모든 필드를 입력해주세요.',
-      field: undefined,
+      field: 'name',
     };
   }
 
   try {
-    // Server Action용 Supabase 클라이언트 직접 생성
-    const cookieStore = await cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Server Action에서는 쿠키 설정 무시
-            }
-          },
-        },
-      }
-    );
-
+    const supabase = await createAuthClient();
     // Supabase Auth로 회원가입
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          name: name,
-        },
+        data: { name },
       },
     });
 
@@ -194,14 +156,13 @@ export const signUpAction = async (formData: FormData) => {
 
       return {
         success: false,
-        error: error.message || '회원가입에 실패했습니다. 다시 시도해주세요.',
-        field: undefined,
+        error: error.message || '회원가입에 실패했습니다.',
+        field: 'email',
       };
     }
+
     if (data.user) {
       console.log('회원가입 성공:', data.user.email);
-
-      // 회원가입 성공 - 즉시 로그인 완료
       revalidatePath('/', 'layout');
       return {
         success: true,
@@ -213,41 +174,50 @@ export const signUpAction = async (formData: FormData) => {
     return {
       success: false,
       error: '회원가입에 실패했습니다.',
+      field: 'email',
     };
   } catch (error) {
     console.error('회원가입 예외:', error);
     return {
       success: false,
       error: '회원가입 중 오류가 발생했습니다.',
+      field: 'email',
     };
   }
 };
 
-// 구글 로그인 액션
-export const signInWithGoogleAction = async () => {
+//로그아웃 액션
+export const signOutAction = async (): Promise<AuthActionResult> => {
   try {
-    const cookieStore = await cookies();
+    const supabase = await createAuthClient();
+    const { error } = await supabase.auth.signOut();
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Server Action에서는 쿠키 설정 무시
-            }
-          },
-        },
-      }
-    );
+    if (error) {
+      console.error('로그아웃 에러:', error);
+      return {
+        success: false,
+        error: '로그아웃에 실패했습니다.',
+      };
+    }
+
+    revalidatePath('/', 'layout');
+    return {
+      success: true,
+      message: '로그아웃 성공',
+    };
+  } catch (error) {
+    console.error('로그아웃 예외:', error);
+    return {
+      success: false,
+      error: '로그아웃 중 오류가 발생했습니다.',
+    };
+  }
+};
+
+//구글 로그인 액션
+export const signInWithGoogleAction = async (): Promise<AuthActionResult> => {
+  try {
+    const supabase = await createAuthClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -258,16 +228,28 @@ export const signInWithGoogleAction = async () => {
 
     if (error) {
       console.error('구글 로그인 에러:', error);
-      return { success: false, error: '구글 로그인에 실패했습니다.' };
+      return {
+        success: false,
+        error: '구글 로그인에 실패했습니다.',
+      };
     }
 
     if (data.url) {
-      return { success: true, redirectUrl: data.url };
+      return {
+        success: true,
+        redirectUrl: data.url,
+      };
     }
 
-    return { success: false, error: '구글 로그인 URL 생성에 실패했습니다.' };
+    return {
+      success: false,
+      error: '구글 로그인 URL 생성에 실패했습니다.',
+    };
   } catch (error) {
     console.error('구글 로그인 예외:', error);
-    return { success: false, error: '구글 로그인 중 오류가 발생했습니다.' };
+    return {
+      success: false,
+      error: '구글 로그인 중 오류가 발생했습니다.',
+    };
   }
 };

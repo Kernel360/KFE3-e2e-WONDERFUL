@@ -1,7 +1,6 @@
-import SignupPage from '@/views/SignupPage';
-
+import SignupView from '@/components/auth/signup/signup-view';
 const Page = () => {
-  return <SignupPage />;
+  return <SignupView />;
 };
 
 export default Page;
