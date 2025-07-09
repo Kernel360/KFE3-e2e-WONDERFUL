@@ -56,3 +56,6 @@ supabase/.git/
 **/storage-version
 
 .npmrc
+
+# Sentry Config File
+.env.sentry-build-plugin
