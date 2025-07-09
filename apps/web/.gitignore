@@ -34,3 +34,28 @@ yarn-error.log*
 .vercel
 
 certificates
+
+
+# Firebase 서비스 계정 키
+firebase-service-account.json
+**/firebase-*.json
+**/service-account*.json
+
+# Supabase temp files
+supabase/.temp/
+supabase/.branches/
+supabase/.git/
+
+# Supabase CLI 버전 파일들
+**/cli-latest
+**/gotrue-version
+**/pooler-url
+**/postgres-version
+**/project-ref
+**/rest-version
+**/storage-version
+
+.npmrc
+
+# Sentry Config File
+.env.sentry-build-plugin

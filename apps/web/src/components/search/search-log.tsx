@@ -1,7 +1,8 @@
 'use client';
 
-import { AlarmClock, X } from 'lucide-react';
 import { useState } from 'react';
+
+import { AlarmClock, X } from 'lucide-react';
 
 interface SearchLogProps {
   logs: Log[];
@@ -20,7 +21,7 @@ const SearchLog = ({ logs }: SearchLogProps) => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 py-4 pl-6 pr-4">
+    <div className="flex w-full flex-col gap-4 px-2 py-4">
       <p className="text-lg font-bold text-neutral-900">최근 검색어</p>
       <div>
         {logList.length === 0 ? (

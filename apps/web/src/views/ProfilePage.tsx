@@ -1,10 +1,11 @@
 'use client';
 import { useRouter } from 'next/navigation';
+
 import { Pen } from 'lucide-react';
 
-import { MenuList } from '@/components/common/profile/menu-list';
-import { ProfileCard } from '@/components/common/profile/card';
+import { MenuList, ProfileCard } from '@/components/common/profile';
 import { Button } from '@/components/ui/button';
+
 import { signOutAction } from '@/lib/actions/auth.action';
 
 const ProfilePage = () => {
@@ -27,7 +28,7 @@ const ProfilePage = () => {
       {/* Profile Card */}
       <div className="border-b-4 border-neutral-200">
         <ProfileCard nickname="킹갓제너럴판매자" profileImg="/avatar-male.svg">
-          <Button variant="outline">
+          <Button variant="outline" size={'sm'}>
             <Pen />
             프로필수정
           </Button>

@@ -8,10 +8,12 @@ import BidForm from '@/components/auction-detail/bid-form';
 import BidTable from '@/components/auction-detail/bid-table';
 import ItemImages from '@/components/auction-detail/item-images';
 import ItemInformation from '@/components/auction-detail/item-information';
-import Tab from '@/components/common/tab/basic';
-import { ProfileCard } from '@/components/common/profile/card';
+import { ProfileCard } from '@/components/common/profile';
+import { TabBasic } from '@/components/common/tab';
 import { Button } from '@/components/ui/button';
+
 import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
+
 import { ItemInfo } from '@/lib/types/auction';
 
 interface AuctionTabItem {
@@ -36,8 +38,8 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
   } = useAuctionDetail(auctionId, userId);
 
   useEffect(() => {
-    if (refetch) refetch();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   // 로딩 상태 처리
   if (isLoading) {
@@ -112,7 +114,7 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
   const images = processImages();
 
   return (
-    <main className="w-full">
+    <>
       <section className="flex flex-col items-center gap-1 px-0">
         <ItemImages urls={images} />
         <ProfileCard
@@ -125,12 +127,12 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
           </Button>
         </ProfileCard>
         <ItemInformation item={item} />
-        <Tab tabs={tabItems} />
+        <TabBasic tabs={tabItems} />
       </section>
       <footer className="sticky bottom-0 z-50 w-full bg-white">
         <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
       </footer>
-    </main>
+    </>
   );
 };
 

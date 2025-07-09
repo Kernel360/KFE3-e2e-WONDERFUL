@@ -2,89 +2,144 @@
 
 import { useEffect, useState } from 'react';
 
-import { sendNotification, subscribeUser, unsubscribeUser } from '@/lib/actions/push-notification';
-
-const urlBase64ToUint8Array = (base64String: string) => {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-};
+import {
+  getFCMSubscriptionStatus,
+  subscribeFCMUser,
+  unsubscribeFCMUser,
+} from '@/lib/actions/push-notification';
+import { initializeFCM, onMessageListener } from '@/lib/firebase-config';
 
 const PWATest = () => {
-  const [isSupported, setIsSupported] = useState(false);
-  const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [message, setMessage] = useState('');
-  const [browserInfo, setBrowserInfo] = useState(''); // 사파리 브라우저 감지
+  const [browserInfo, setBrowserInfo] = useState('');
+  const [fcmSubscribed, setFcmSubscribed] = useState(false);
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
+  const [fcmStatus, setFcmStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
   useEffect(() => {
     // 브라우저 감지
     const { userAgent } = navigator;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent); // 사파리 브라우저 감지
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent); // iOS 디바이스 감지
+    const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
 
     setBrowserInfo(isSafari ? 'Safari' : isIOS ? 'iOS' : 'Chrome');
 
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      // 사파리에서는 푸시 알림 지원 확인
-      if (isSafari || isIOS) {
-        // 사파리/iOS는 PWA로 설치된 경우에만 푸시 알림 지원
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-        if (!isStandalone) {
-          console.warn('사파리에서는 홈 화면에 설치 후 푸시 알림 사용 가능');
-          setIsSupported(false);
-          return;
-        }
-      }
-
-      setIsSupported(true);
-      registerServiceWorker();
-    }
+    initializeFirebaseFCM();
   }, []);
 
-  const registerServiceWorker = async () => {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/',
-      updateViaCache: 'none',
-    });
-    const sub = await registration.pushManager.getSubscription();
-    setSubscription(sub);
+  const initializeFirebaseFCM = async () => {
+    try {
+      setFcmStatus('loading');
+
+      // FCM 구독 상태 확인
+      await checkFCMSubscriptionStatus();
+
+      // Firebase FCM 초기화
+      const token = await initializeFCM();
+
+      if (token) {
+        setFcmToken(token);
+        setFcmStatus('ready');
+
+        // FCM 토큰 서버에 저장
+        const result = await subscribeFCMUser(token, 'Web Browser - FCM');
+        if (result.success) {
+          setFcmSubscribed(true);
+          console.log('✅ FCM 토큰이 서버에 저장되었습니다.');
+        } else {
+          console.error('❌ FCM 토큰 저장 실패:', result.error);
+        }
+
+        // 포그라운드 메시지 리스너 설정
+        onMessageListener()
+          .then((payload: any) => {
+            console.log('🔥 포그라운드 Firebase 메시지:', payload);
+            showCustomNotification(payload);
+          })
+          .catch((err: any) => console.log('Firebase 메시지 리스너 실패:', err));
+
+        console.log('🔥 Firebase FCM 초기화 완료!');
+      } else {
+        setFcmStatus('error');
+      }
+    } catch (error) {
+      console.error('❌ Firebase FCM 초기화 실패:', error);
+      setFcmStatus('error');
+    }
   };
 
-  const subscribeToPush = async () => {
-    const registration = await navigator.serviceWorker.ready;
-    const sub = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!),
-    });
-    setSubscription(sub);
-    const serializedSub = JSON.parse(JSON.stringify(sub));
-    await subscribeUser(serializedSub);
+  const checkFCMSubscriptionStatus = async () => {
+    try {
+      const status = await getFCMSubscriptionStatus();
+      setFcmSubscribed(status.fcmSubscribed);
+      console.log('현재 FCM 구독 상태:', status);
+    } catch (error) {
+      console.error('FCM 구독 상태 확인 실패:', error);
+    }
   };
 
-  const unsubscribeFromPush = async () => {
-    await subscription?.unsubscribe();
-    setSubscription(null);
-    await unsubscribeUser();
+  const showCustomNotification = (payload: any) => {
+    console.log('🔍 포그라운드 알림 데이터:', payload);
+
+    const title = payload.notification?.title || '알림';
+    console.log('🔍 알림 제목:', title);
+
+    if (Notification.permission === 'granted' && title !== 'undefined') {
+      new Notification(title, {
+        body: payload.notification?.body || '새로운 메시지입니다.',
+        icon: '/icon/medium',
+      });
+    }
   };
 
-  const sendTestNotification = async () => {
-    if (subscription) {
-      await sendNotification(message);
-      setMessage('');
+  const unsubscribeFromFCM = async () => {
+    try {
+      const result = await unsubscribeFCMUser();
+
+      if (result.success) {
+        setFcmSubscribed(false);
+        console.log('✅ FCM 구독 해제 완료');
+      } else {
+        console.error('❌ FCM 구독 해제 실패:', result.error);
+      }
+    } catch (error) {
+      console.error('FCM 구독 해제 중 오류:', error);
+    }
+  };
+
+  const sendFirebaseTestNotification = async () => {
+    if (fcmToken) {
+      try {
+        const response = await fetch('/api/test-firebase-notification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: '🔥 Firebase 테스트',
+            content: message || 'Firebase Cloud Messaging 테스트 알림입니다!',
+            fcmToken: fcmToken,
+          }),
+        });
+
+        if (response.ok) {
+          console.log('✅ Firebase 테스트 알림 전송 완료');
+          setMessage('');
+        } else {
+          console.error('❌ Firebase 알림 전송 실패');
+        }
+      } catch (error) {
+        console.error('❌ Firebase 알림 API 호출 실패:', error);
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        <h1 className="mb-8 text-center text-3xl font-bold">🧪 PWA 테스트 페이지</h1>
+        <h1 className="mb-8 text-center text-3xl font-bold">🔥 Firebase FCM 테스트</h1>
 
-        {/* ✅ 브라우저 정보 표시 */}
+        {/* 브라우저 정보 */}
         <div className="mx-auto mb-6 max-w-md rounded-lg border bg-white p-6 shadow">
           <h2 className="mb-4 text-lg font-semibold">🌐 브라우저 정보</h2>
           <p className="text-sm text-gray-600">현재 브라우저: {browserInfo}</p>
@@ -95,53 +150,71 @@ const PWATest = () => {
           )}
         </div>
 
+        {/* FCM 구독 상태 */}
+        <div className="mx-auto mb-6 max-w-md rounded-lg border bg-white p-6 shadow">
+          <h2 className="mb-4 text-lg font-semibold">📊 FCM 구독 상태</h2>
+          <p className={`text-sm ${fcmSubscribed ? 'text-green-600' : 'text-gray-500'}`}>
+            Firebase FCM: {fcmSubscribed ? '✅ 구독 중' : '❌ 미구독'}
+          </p>
+        </div>
+
+        {/* Firebase FCM 상태 */}
+        <div className="mx-auto mb-6 max-w-md rounded-lg border bg-white p-6 shadow">
+          <h2 className="mb-4 text-lg font-semibold">🔥 Firebase Cloud Messaging</h2>
+          {fcmStatus === 'loading' && <p className="text-blue-600">⏳ Firebase FCM 초기화 중...</p>}
+          {fcmStatus === 'ready' && (
+            <div className="space-y-2">
+              <p className="text-green-600">✅ Firebase FCM 준비 완료!</p>
+              <p className="break-all text-xs text-gray-500">
+                토큰: {fcmToken?.substring(0, 50)}...
+              </p>
+              {fcmSubscribed && (
+                <button
+                  onClick={unsubscribeFromFCM}
+                  className="w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                >
+                  FCM 구독 해제
+                </button>
+              )}
+            </div>
+          )}
+          {fcmStatus === 'error' && <p className="text-red-600">❌ Firebase FCM 초기화 실패</p>}
+        </div>
+
         {/* PWA 설치 테스트 */}
         <div className="mx-auto mb-6 max-w-md rounded-lg border bg-white p-6 shadow">
           <h2 className="mb-4 text-lg font-semibold">📱 PWA 설치</h2>
           <p className="mb-4 text-sm text-gray-600">Chrome 주소창에서 설치 아이콘을 찾아보세요!</p>
         </div>
 
-        {/* 푸시 알림 테스트 */}
+        {/* Firebase FCM 알림 테스트 */}
         <div className="mx-auto max-w-md rounded-lg border bg-white p-6 shadow">
-          <h2 className="mb-4 text-lg font-semibold">🔔 푸시 알림</h2>
+          <h2 className="mb-4 text-lg font-semibold">🔥 Firebase FCM 알림 테스트</h2>
 
-          {!isSupported ? (
-            <p className="text-red-600">이 브라우저는 푸시 알림을 지원하지 않습니다.</p>
-          ) : subscription ? (
+          {fcmStatus === 'ready' && fcmSubscribed ? (
             <div className="space-y-4">
-              <p className="text-sm text-green-600">✅ 푸시 알림이 활성화되었습니다.</p>
-              <button
-                onClick={unsubscribeFromPush}
-                className="w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-              >
-                구독 해제
-              </button>
+              <p className="text-sm text-green-600">✅ Firebase FCM이 활성화되었습니다.</p>
               <div>
                 <input
                   type="text"
-                  placeholder="테스트 메시지를 입력하세요"
+                  placeholder="Firebase 테스트 메시지"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="mb-2 w-full rounded border border-gray-300 px-3 py-2"
                 />
                 <button
-                  onClick={sendTestNotification}
-                  className="w-full rounded bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+                  onClick={sendFirebaseTestNotification}
+                  className="w-full rounded bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
                 >
-                  🚀 테스트 알림 보내기
+                  🔥 Firebase 테스트 알림
                 </button>
               </div>
+              <p className="text-xs text-gray-500">
+                💡 이 버튼은 Database Webhook을 통해 Firebase 알림을 발송합니다.
+              </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">푸시 알림이 비활성화되어 있습니다.</p>
-              <button
-                onClick={subscribeToPush}
-                className="w-full rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-              >
-                🔔 알림 구독하기
-              </button>
-            </div>
+            <p className="text-gray-600">Firebase FCM 구독을 기다리는 중...</p>
           )}
         </div>
       </div>

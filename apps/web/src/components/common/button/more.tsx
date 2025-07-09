@@ -1,6 +1,7 @@
 'use client';
 
 import { EllipsisVertical } from 'lucide-react';
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 
 interface ButtonMoreProps {
@@ -14,6 +15,11 @@ export interface ButtonMoreItem {
 }
 
 const ButtonMore = ({ items }: ButtonMoreProps) => {
+  const handleItemClick = (item: ButtonMoreItem) => {
+    if (item.onClick) {
+      item.onClick();
+    }
+  };
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,7 +30,11 @@ const ButtonMore = ({ items }: ButtonMoreProps) => {
       <PopoverContent className="w-25 py-2">
         <ul className="space-y-2">
           {items.map((item) => (
-            <li key={item.id} onClick={item.onClick} className="cursor-pointer text-center">
+            <li
+              key={item.id}
+              onClick={() => handleItemClick(item)}
+              className="cursor-pointer text-center"
+            >
               {item.title}
             </li>
           ))}

@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import AuctionItemCard from '@/components/common/auction-card/card';
+import { AuctionItemCard } from '@/components/common/auction-card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
-import { SortOption } from '@/lib/types/auction-prisma';
+import { AuctionStatus } from '@/lib/constants/tabs';
+import { AuctionListItem, SortOption } from '@/lib/types/auction-prisma';
+
 import { AuctionItemProps } from '@/types/auction';
 
 interface AuctionItemListProps {
@@ -14,6 +16,7 @@ interface AuctionItemListProps {
   sortOption?: SortOption;
   selectedLocationId?: string | null;
   includeCompleted?: boolean; // 종료된 경매 포함 여부
+  selectedStatuses?: AuctionStatus[];
 }
 
 const AuctionItemList = ({
@@ -21,7 +24,10 @@ const AuctionItemList = ({
   sortOption = 'latest',
   selectedLocationId,
   includeCompleted = false, // 기본값은 종료된 경매 미포함
+  selectedStatuses,
 }: AuctionItemListProps) => {
+  console.log('selectedStatuses:', selectedStatuses);
+
   // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
   const {
     data: auctionsData,
@@ -35,17 +41,23 @@ const AuctionItemList = ({
     includeCompleted
   );
 
-  useEffect(() => {
-    if (refetch) refetch();
-  }, []);
+  // 상태별 필터링
+  const filteredData = useMemo(() => {
+    if (!selectedStatuses || !auctionsData?.data) return auctionsData?.data;
 
-  // 데이터를 AuctionItemCard에서 사용할 수 있는 형태로 변환
-  const convertToAuctionItemProps = (auction: any): AuctionItemProps => {
-    // 현재 시간과 경매 종료 시간 비교
+    return auctionsData.data.filter((auction) =>
+      selectedStatuses.includes(auction.status as AuctionStatus)
+    );
+  }, [auctionsData?.data, selectedStatuses]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  const convertToAuctionItemProps = (auction: AuctionListItem): AuctionItemProps => {
+    // 기존 코드 동일
     const now = new Date();
     const endTime = new Date(auction.endTime);
-
-    // 실제 경매 상태 결정 로직
     const isAuctionActive = auction.status === 'ACTIVE' && now < endTime;
     const auctionStatus = isAuctionActive ? '경매중' : '경매종료';
 
@@ -55,12 +67,14 @@ const AuctionItemList = ({
       status: auctionStatus,
       originalPrice: auction.auctionPrice?.startPrice || 0,
       currentPrice: auction.auctionPrice?.currentPrice || 0,
-      deadline: auction.endTime || new Date().toISOString(),
+      deadline:
+        auction.endTime instanceof Date
+          ? auction.endTime.toISOString()
+          : auction.endTime || new Date().toISOString(),
       thumbnailUrl: auction.thumbnailUrl || '',
     };
   };
 
-  // 로딩 상태 처리
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -69,7 +83,6 @@ const AuctionItemList = ({
     );
   }
 
-  // 에러 상태 처리
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-16">
@@ -86,13 +99,12 @@ const AuctionItemList = ({
 
   return (
     <div className="flex flex-col gap-3">
-      {auctionsData?.data && auctionsData.data.length > 0 ? (
-        auctionsData.data.map((auction) => {
+      {filteredData && filteredData.length > 0 ? (
+        filteredData.map((auction) => {
           const auctionItemProps = convertToAuctionItemProps(auction);
           return <AuctionItemCard key={auction.id} {...auctionItemProps} />;
         })
       ) : (
-        // 데이터 없음 상태
         <div className="flex flex-col items-center justify-center py-16">
           <div className="mb-2 text-neutral-400">
             <svg className="h-16 w-16" fill="currentColor" viewBox="0 0 20 20">
