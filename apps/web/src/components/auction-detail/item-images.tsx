@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Image from 'next/image';
+
 import {
   Carousel,
   CarouselContent,
@@ -36,7 +38,13 @@ const ItemImages = ({ urls }: ItemImagesProps) => {
       <CarouselContent>
         {urls?.map((url, index) => (
           <CarouselItem key={index}>
-            <img src={url} alt={`item-${index}`} className="aspect-square w-full object-cover" />
+            <Image
+              src={url}
+              alt={`item-${index}`}
+              className="aspect-square w-full object-cover"
+              width={480}
+              height={480}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>

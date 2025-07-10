@@ -1,5 +1,6 @@
-import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
+
+import { createServerClient } from '@supabase/ssr';
 
 export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -49,6 +50,27 @@ export async function updateSession(request: NextRequest) {
     data: { user },
     error,
   } = await supabase.auth.getUser();
+
+
+  // 정적 파일들과 PWA 관련 파일들은 인증 없이 허용
+  const isStaticFile =
+    pathname.includes('manifest') ||
+    pathname.includes('.js') ||
+    pathname.includes('.json') ||
+    pathname.includes('.ico') ||
+    pathname.includes('.png') ||
+    pathname.includes('.svg') ||
+    pathname.includes('.webp') ||
+    pathname.includes('.jpg') ||
+    pathname.includes('.jpeg') ||
+    pathname.includes('.gif');
+
+  if (isStaticFile) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`📁 [Static File] ${pathname} - 인증 없이 허용`);
+    }
+    return supabaseResponse;
+  }
 
   //개발 환경 디버깅
   if (process.env.NODE_ENV === 'development') {
