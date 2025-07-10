@@ -119,7 +119,7 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
         <ItemImages urls={images} />
         <ProfileCard
           nickname="user1234"
-          profileImg="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80"
+          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg"
         >
           <Button variant="outline">
             <MessageSquareMore />
