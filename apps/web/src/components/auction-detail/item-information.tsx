@@ -2,6 +2,7 @@ import Countdown from '@/components/auction-detail/countdown';
 import { Badge } from '@/components/ui/badge';
 
 import useCountdown from '@/hooks/common/useCountdown';
+
 import { formatDate } from '@/lib/utils/date';
 
 interface ItemInformationProps {
