@@ -114,35 +114,52 @@ jobs:
 
           echo "✅ 초기 배포 댓글 작성 완료!"
 
-      - name: Wait for Preview Deployment to be Live
+      - name: Install Vercel CLI
+        run: |
+          npm install -g vercel@latest
+
+      - name: Wait and Get Actual Vercel URL
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
         run: |
           set -e
-          PREVIEW_URL="https://kfe3-wonderful-$(echo ${{ env.preview_branch }} | sed 's/\//-/g')-miniseungs-projects.vercel.app"
 
-          echo "🔍 프리뷰 배포 완료 대기 중: $PREVIEW_URL"
+          echo "🔍 Vercel 배포 완료 대기 중..."
 
+          # 최대 5분 대기
           for i in {1..30}; do
-            echo "프리뷰 사이트 확인 중... (시도 $i/30)"
+            echo "Vercel 배포 확인 중... (시도 $i/30)"
             
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$PREVIEW_URL" || echo "000")
+            # Vercel CLI로 최신 배포 목록 가져오기
+            DEPLOYMENTS=$(vercel ls --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" 2>/dev/null || echo "")
             
-            if [ "$STATUS_CODE" -eq 200 ]; then
-              echo "✅ 프리뷰 배포가 완료되었습니다!"
-              echo "preview_url=$PREVIEW_URL" >> $GITHUB_ENV
-              exit 0
-            elif [ "$STATUS_CODE" -eq 404 ]; then
-              echo "⏳ 아직 배포 중입니다... (404)"
-            else
-              echo "⏳ 배포 확인 중... (상태 코드: $STATUS_CODE)"
+            if [ -n "$DEPLOYMENTS" ]; then
+              # 가장 최근 배포 중에서 Ready 상태인 것 찾기
+              LATEST_URL=$(echo "$DEPLOYMENTS" | grep -E "kfe3-wonderful.*Ready" | head -1 | awk '{print $2}' || echo "")
+              
+              if [ -n "$LATEST_URL" ] && [[ "$LATEST_URL" =~ ^https?:// ]]; then
+                echo "✅ Vercel 배포 URL 발견: $LATEST_URL"
+                
+                # URL이 실제로 접근 가능한지 확인
+                STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$LATEST_URL" || echo "000")
+                
+                if [ "$STATUS_CODE" -eq 200 ] || [ "$STATUS_CODE" -eq 404 ]; then
+                  echo "✅ 프리뷰 배포가 활성화되었습니다!"
+                  echo "preview_url=$LATEST_URL" >> $GITHUB_ENV
+                  exit 0
+                fi
+              fi
             fi
             
+            echo "⏳ 아직 배포 중입니다..."
             sleep 10
           done
 
-          echo "⚠️ 배포 완료 확인에 시간이 오래 걸리고 있습니다."
-          echo "preview_url=$PREVIEW_URL" >> $GITHUB_ENV
+          echo "⚠️ 배포 URL을 자동으로 찾지 못했습니다."
+          echo "preview_url=https://vercel.com/miniseungs-projects/kfe3-wonderful" >> $GITHUB_ENV
 
       - name: Update PR Comment with Live Preview URL
         env:
@@ -152,7 +169,22 @@ jobs:
           PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
           PREVIEW_URL: ${{ env.preview_url }}
         run: |
-          cat > final_comment.md << EOF
+          if [[ "$PREVIEW_URL" == *"vercel.com"* ]] && [[ "$PREVIEW_URL" != *"kfe3-wonderful"*".vercel.app"* ]]; then
+            cat > final_comment.md << EOF
+          🚀 **PR #$PR_NUMBER 프리뷰 배포 완료!**
+
+          - **브랜치**: \`$PR_BRANCH\`
+          - **작성자**: @$PR_AUTHOR
+          - **프리뷰 브랜치**: \`${{ env.preview_branch }}\`
+          - **Vercel 대시보드**: [$PREVIEW_URL]($PREVIEW_URL)
+
+          ✅ 배포가 완료되었습니다! Vercel 대시보드에서 최신 배포 URL을 확인하세요.
+
+          ---
+          *자동 생성된 프리뷰 배포입니다.*
+          EOF
+          else
+            cat > final_comment.md << EOF
           🚀 **PR #$PR_NUMBER 프리뷰 배포 완료!**
 
           - **브랜치**: \`$PR_BRANCH\`
@@ -165,6 +197,7 @@ jobs:
           ---
           *자동 생성된 프리뷰 배포입니다.*
           EOF
+          fi
 
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
