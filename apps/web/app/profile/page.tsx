@@ -1,7 +1,8 @@
 'use client';
 
-import ProfilePage from '@/views/ProfilePage';
 import { Container } from '@/components/layout';
+
+import ProfilePage from '@/views/ProfilePage';
 
 const Page = () => {
   return (

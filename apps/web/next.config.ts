@@ -4,7 +4,19 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
   transpilePackages: ['@repo/db', '@repo/ui'],
-  output: 'standalone',
+  output: 'standalone', // 배포용
+
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      // Supabase Storage
+      {
+        protocol: 'https',
+        hostname: 'autkdwezfwdduoqiadsc.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
 
   // Firebase 환경변수 관리
   env: {
@@ -42,7 +54,7 @@ const nextConfig: NextConfig = {
     }
 
     config.watchOptions = {
-      ignored: ['**/supabase/functions/**', '**/node_modules'],
+      ignored: ['**/supabase/functions/**', '**/node_modules/**', '**/.next/**'],
     };
 
     return config;
