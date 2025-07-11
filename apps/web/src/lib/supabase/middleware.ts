@@ -3,6 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
 export async function updateSession(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (
+    pathname.startsWith('/auth/callback') || // 소셜 로그인 콜백
+    pathname.startsWith('/api/auth') // API 인증 경로
+  ) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`🔓 [Middleware] ${pathname} | 인증 검사 제외 (콜백)`);
+    }
+    return NextResponse.next();
+  }
+
   // supabaseResponse 변수로 관리
   let supabaseResponse = NextResponse.next({
     request,
@@ -38,8 +50,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
     error,
   } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
 
   // 정적 파일들과 PWA 관련 파일들은 인증 없이 허용
   const isStaticFile =
