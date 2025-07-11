@@ -1,4 +1,3 @@
-// export { default as Header } from './header/header';
 export { default as HeaderWrapper } from './header/wrapper';
 export { default as MainHeader } from './header/main';
 export { default as AuctionHeader } from './header/auction';
