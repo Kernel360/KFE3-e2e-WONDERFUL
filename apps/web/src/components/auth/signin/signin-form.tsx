@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import ErrorMessage from '@/components/auth/error-message';
 import SigninFields from '@/components/auth/signin/signin-fields';
 import SubmitButton from '@/components/auth/submit-button';
-import ErrorMessage from '@/components/auth/error-message';
 
 import { signInAction } from '@/lib/actions/auth.action';
 import { validateEmail, validatePassword } from '@/lib/utils/auth';
@@ -14,6 +16,7 @@ interface SigninFormProps {
 }
 
 const SigninForm = ({ onSuccess }: SigninFormProps) => {
+  const router = useRouter();
   // Form state
   const [formData, setFormData] = useState({
     email: '',
@@ -46,7 +49,7 @@ const SigninForm = ({ onSuccess }: SigninFormProps) => {
   };
 
   const handleForgotPassword = () => {
-    console.log('비밀번호 찾기');
+    router.push('/auth/reset-password');
   };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

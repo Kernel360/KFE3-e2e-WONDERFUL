@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import FindEmailForm from '@/components/auth/find-email/find-email-form';
@@ -23,6 +24,10 @@ const FindEmailView = () => {
     router.push('/auth/signup');
   };
 
+  const handleGoToResetPW = () => {
+    router.push('/auth/reset-password');
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center overflow-hidden bg-white px-[154px] pt-[131px]">
       <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
@@ -36,17 +41,17 @@ const FindEmailView = () => {
         {showSuccessButtons && (
           <div className="mt-[40px] flex w-[327px] flex-col space-y-3">
             <Button onClick={handleGoToLogin} size="lg" fullWidth className="h-[54px]">
-              바로 로그인 하기
+              로그인
             </Button>
 
             <Button
-              onClick={handleGoToSignup}
+              onClick={handleGoToResetPW}
               variant="outline"
               size="lg"
               fullWidth
               className="h-[54px]"
             >
-              회원가입
+              비밀번호 찾기
             </Button>
           </div>
         )}

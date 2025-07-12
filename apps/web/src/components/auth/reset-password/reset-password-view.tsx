@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import ResetPasswordForm from '@/components/auth/reset-password/reset-password-form';
@@ -19,8 +20,8 @@ const ResetPasswordView = () => {
     router.push('/auth/signin');
   };
 
-  const handleGoToSignup = () => {
-    router.push('/auth/signup');
+  const handleGoToFindEmail = () => {
+    router.push('/auth/find-email');
   };
 
   return (
@@ -49,12 +50,12 @@ const ResetPasswordView = () => {
             </span>
           ) : (
             <>
-              <span className="text-sm text-neutral-600">혹시 아직 이메일이 없으신가요? </span>
+              <span className="text-sm text-neutral-600">계정이 기억나지 않으신가요? </span>
               <span
-                onClick={handleGoToSignup}
+                onClick={handleGoToFindEmail}
                 className="text-primary-500 hover:text-primary-600 cursor-pointer text-sm font-medium transition-colors"
               >
-                회원가입
+                이메일 찾기
               </span>
             </>
           )}
