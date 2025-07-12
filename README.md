@@ -33,3 +33,7 @@ pnpm dev
 cd apps/docs
 pnpm run storybook
 ```
+
+# 개발 서버 실행
+cd apps/web
+pnpm run dev
