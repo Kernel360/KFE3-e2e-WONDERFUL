@@ -1,41 +1,32 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+
+import { useParams } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
 
-import BidForm from '@/components/auction-detail/bid-form';
-import BidTable from '@/components/auction-detail/bid-table';
-import ItemImages from '@/components/auction-detail/item-images';
-import ItemInformation from '@/components/auction-detail/item-information';
+import { BidForm, BidTable, ItemImages, ItemInformation } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common/profile';
-import { TabBasic } from '@/components/common/tab';
 import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
 
 import { ItemInfo } from '@/lib/types/auction';
 
-interface AuctionTabItem {
-  key: string;
-  label: string;
-  content: React.ReactNode;
-}
-
-interface AuctionPageProps {
-  auctionId: string;
-}
-
-const AuctionPage = ({ auctionId }: AuctionPageProps) => {
-  // 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
+const AuctionPage = () => {
+  // Todo: 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
   const userId = undefined;
+
+  const params = useParams();
+  const { id } = params;
 
   const {
     data: auctionDetailData,
     isLoading,
     error,
     refetch,
-  } = useAuctionDetail(auctionId, userId);
+  } = useAuctionDetail(id as string, userId);
 
   useEffect(() => {
     refetch();
@@ -92,24 +83,6 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
     category: auction.category.name,
   };
 
-  // 탭 아이템 구성
-  const tabItems: AuctionTabItem[] = [
-    {
-      key: 'description',
-      label: '상세 설명',
-      content: (
-        <div className="whitespace-pre-wrap p-4">
-          {auction.description || '상세 설명이 없습니다.'}
-        </div>
-      ),
-    },
-    {
-      key: 'table',
-      label: '입찰 현황',
-      // content: <BidTable auctionId={auctionId} />,
-      content: <BidTable />,
-    },
-  ];
   // 처리된 이미지 배열 가져오기
   const images = processImages();
 
@@ -127,7 +100,12 @@ const AuctionPage = ({ auctionId }: AuctionPageProps) => {
           </Button>
         </ProfileCard>
         <ItemInformation item={item} />
-        <TabBasic tabs={tabItems} />
+        <div className="my-6 w-full space-y-6 px-4">
+          <div className="">{auction.description}</div>
+          <div className="bg-primary-50/80 rounded-sm px-2 py-1">
+            <BidTable itemId={id as string} />
+          </div>
+        </div>
       </section>
       <footer className="sticky bottom-0 z-50 w-full bg-white">
         <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />

@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import React from 'react';
 
 const invoices = [
   {
@@ -39,21 +38,17 @@ const invoices = [
     totalAmount: '$550.00',
     paymentMethod: 'PayPal',
   },
-  {
-    invoice: 'INV006',
-    paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer',
-  },
-  {
-    invoice: 'INV007',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$300.00',
-    paymentMethod: 'Credit Card',
-  },
 ];
 
-const BidTable = () => {
+// 입찰 이력 (아이템 1:N ― 입찰)
+interface BidTableType {
+  bidder_id: string;
+  price: number;
+  created_at: string;
+}
+
+// Todo: itemId를 props로 받아서 bid-table data RTC 연동
+const BidTable = ({ itemId }: { itemId: string }) => {
   return (
     <Table>
       <TableHeader>
