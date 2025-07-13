@@ -24,7 +24,7 @@ const FilterTabsList = ({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        'scrollbar-hide-x inline-flex h-9 w-full touch-auto flex-nowrap items-center justify-start overflow-x-auto whitespace-nowrap text-neutral-600',
+        'scrollbar-hide-x inline-flex h-9 w-full touch-auto flex-nowrap items-center justify-start gap-1 overflow-x-auto whitespace-nowrap text-neutral-600',
         className
       )}
       {...props}
@@ -41,7 +41,7 @@ const FilterTabsTrigger = ({
       data-slot="tabs-trigger"
       className={cn(
         // data-[state=active] : active상태 스타일
-        "data-[state=active]:bg-primary-500 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-3 pb-2.5 pt-3 text-sm font-medium text-neutral-600 transition-[color,box-shadow] focus-visible:outline-1 focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-white [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "data-[state=active]:bg-primary-500 bg-primary-50/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-3 pb-2.5 pt-3 text-sm font-medium text-neutral-600 transition-[color,box-shadow] focus-visible:outline-1 focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-white [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
