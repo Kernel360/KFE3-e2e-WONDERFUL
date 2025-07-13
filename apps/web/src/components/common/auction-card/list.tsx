@@ -6,27 +6,28 @@ import { AuctionItemCard } from '@/components/common/auction-card';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
-import { AuctionStatus } from '@/lib/constants/tabs';
 import { AuctionListItem, SortOption } from '@/lib/types/auction-prisma';
+import { useFilterStore, useLocationStore } from '@/lib/zustand/store';
 
 import { AuctionItemProps } from '@/types/auction';
+import { AuctionStatus } from '@/types/filter';
 
 interface AuctionItemListProps {
-  selectedCategoryId?: string;
   sortOption?: SortOption;
-  selectedLocationId?: string | null;
   includeCompleted?: boolean; // 종료된 경매 포함 여부
   selectedStatuses?: AuctionStatus[];
 }
 
 const AuctionItemList = ({
-  selectedCategoryId = '',
   sortOption = 'latest',
-  selectedLocationId,
   includeCompleted = false, // 기본값은 종료된 경매 미포함
   selectedStatuses,
 }: AuctionItemListProps) => {
-  console.log('selectedStatuses:', selectedStatuses);
+  const selectedCategoryId = useFilterStore((state) => state.selectedItems.category);
+
+  // 정렬은 Zustand 전역 상태로 관리 (헤더와 공유)
+  const selectedLocationId = useLocationStore((state) => state.selectedLocationId);
+  includeCompleted = true;
 
   // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
   const {
