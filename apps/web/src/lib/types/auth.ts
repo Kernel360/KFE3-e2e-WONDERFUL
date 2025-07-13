@@ -12,61 +12,20 @@ export interface SignupFormData {
   password: string;
 }
 
-// 통합 폼 데이터 타입
-export type AuthFormData = SigninFormData | SignupFormData;
-
-// 폼 타입 구분
-export type FormType = 'signin' | 'signup';
-
-// 에러 타입
-export type AuthErrorType =
-  | 'invalid_account'
-  | 'password_mismatch'
-  | 'email_exists'
-  | 'validation_error'
-  | null;
-
-// 폼 Props 타입
-export interface AuthFormProps<T extends AuthFormData = AuthFormData> {
-  formType: FormType;
-  onSubmit?: (data: T) => void;
-  onToggleForm?: () => void;
-  initialData?: Partial<T>;
-  isLoading?: boolean;
+//Server Action 결과 타입
+export interface AuthActionResult {
+  success: boolean;
+  error?: string;
+  message?: string;
+  field?: 'email' | 'password' | 'name';
+  redirectUrl?: string;
+  user?: any;
 }
 
-// 개별 폼 Props
-export interface SigninFormProps {
-  onSubmit?: (data: SigninFormData) => void;
-  onToggleForm?: () => void;
-  initialData?: Partial<SigninFormData>;
-  isLoading?: boolean;
-}
-
-export interface SignupFormProps {
-  onSubmit?: (data: SignupFormData) => void;
-  onToggleForm?: () => void;
-  initialData?: Partial<SignupFormData>;
-  isLoading?: boolean;
-}
-
-// 폼 필드 설정 타입
-export interface FormFieldConfig {
-  id: string;
-  type: 'text' | 'email' | 'password';
-  placeholder: string;
-  icon: 'user' | 'email' | 'lock';
-  validation?: (value: string) => string | null;
-}
-
-// 폼 설정 타입
-export interface FormConfig {
-  title: string;
-  fields: FormFieldConfig[];
-  submitText: string;
-  footerText?: string;
-  footerLinkText?: string;
-  showRememberMe?: boolean;
-  showForgotPassword?: boolean;
-  showTermsAgreement?: boolean;
+//useFormState 초기 상태 타입
+export interface FormActionState {
+  success: boolean;
+  error: string | null;
+  message: string | null;
+  field?: 'email' | 'password' | 'name';
 }
