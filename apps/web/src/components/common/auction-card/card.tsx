@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 
-import BadgeBidStatus from '@/components/common/auction-card/badge-bid-status';
-import Thumbnail from '@/components/ui/thumbnail';
 import { Badge } from '@/components/ui/badge';
+import Thumbnail from '@/components/ui/thumbnail';
 
 import useCountdown from '@/hooks/common/useCountdown';
 
 import { AuctionItemProps } from '@/types/auction';
+
+import BadgeBidStatus from './badge-bid-status';
 
 const renderTimeBadge = ({
   hours,

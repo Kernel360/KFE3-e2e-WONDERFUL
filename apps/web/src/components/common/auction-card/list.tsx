@@ -2,14 +2,14 @@
 
 import { useEffect, useMemo } from 'react';
 
-import { AuctionItemCard } from '@/components/common/auction-card';
-
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
 import { AuctionStatus } from '@/lib/constants/tabs';
 import { AuctionListItem, SortOption } from '@/lib/types/auction-prisma';
 
 import { AuctionItemProps } from '@/types/auction';
+
+import AuctionItemCard from './card';
 
 interface AuctionItemListProps {
   selectedCategoryId?: string;
