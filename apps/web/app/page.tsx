@@ -1,15 +1,15 @@
-'use client';
-
-import HomePage from '@/views/HomePage';
-import Container from '@/components/layout/container';
+import AuctionList from '@/components/auction/auction-list';
+import { CreateAuctionButton } from '@/components/common/button';
 import { MainHeader } from '@/components/layout';
+import Container from '@/components/layout/container';
 
 const Page = () => {
   return (
     <>
       <MainHeader />
       <Container className="px-4">
-        <HomePage />
+        <AuctionList />
+        <CreateAuctionButton />
       </Container>
     </>
   );
