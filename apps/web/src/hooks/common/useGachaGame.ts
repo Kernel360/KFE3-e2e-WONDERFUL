@@ -41,6 +41,7 @@ export const useGachaGame = () => {
       rotate: Math.floor(Math.random() * 360),
       hue: Math.floor(Math.random() * 360),
       size: 8,
+      isPrize: index === 7,
     }));
   };
 

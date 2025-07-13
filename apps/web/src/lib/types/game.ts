@@ -5,6 +5,7 @@ export interface Ball {
   rotate: number;
   hue: number;
   size: number;
+  isPrize: boolean;
 }
 
 export interface Prize {
