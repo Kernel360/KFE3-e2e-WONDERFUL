@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 
-import { SelectBox } from '@/components/common/select/basic';
 import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
+
 import { AuctionFormSelectProps } from '@/types/auction';
+
+import SelectBox from './basic';
 
 // const stateOptions = FALLBACK_CATEGORIES.slice(1);
 const stateOptions = FALLBACK_CATEGORIES.slice(1).map((category) => ({

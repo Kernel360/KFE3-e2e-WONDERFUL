@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-import AttacedImagesThumbnail from '@/components/common/attach-images/attach-images-thumbnail';
-import AttachImagesInput from '@/components/common/attach-images/attach-images-input';
-
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
+
+import AttachImagesInput from './attach-images-input';
+import AttacedImagesThumbnail from './attach-images-thumbnail';
 
 interface ImagesUploaderProps {
   id: string;

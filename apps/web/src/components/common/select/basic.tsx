@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import {
   Select,
   SelectContent,
@@ -23,7 +21,7 @@ interface SelectBoxProps {
   onValueChange?: (value: string) => void;
 }
 
-export const SelectBox = ({
+const SelectBox = ({
   options,
   placeholder = 'Select an option',
   className,
@@ -53,6 +51,7 @@ export const SelectBox = ({
   );
 };
 
+export default SelectBox;
 // 사용 예시:
 // export const ExampleUsage = () => {
 //   const fruitOptions = [
