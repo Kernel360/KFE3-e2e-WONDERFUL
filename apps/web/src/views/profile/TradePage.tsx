@@ -2,8 +2,7 @@
 // 마이페이지 - 판매 내역 페이지
 import { useState } from 'react';
 
-import { AuctionItemList } from '@/components/common/auction-card';
-import { TabListFilter } from '@/components/common/tab';
+import { AuctionItemList, TabListFilter } from '@/components/common';
 
 import { AUCTION_TABS, AUCTION_TABS_EXTENDED, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
 

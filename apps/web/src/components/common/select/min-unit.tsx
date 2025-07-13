@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { AuctionFormSelectProps } from '@/lib/types/auction';
 
-import { SelectBox } from './basic';
+import SelectBox from './basic';
 
 const stateOptions = [
   { value: '500', label: '500' },

@@ -6,7 +6,7 @@ import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
 
 import { AuctionFormSelectProps } from '@/types/auction';
 
-import { SelectBox } from './basic';
+import SelectBox from './basic';
 
 // const stateOptions = FALLBACK_CATEGORIES.slice(1);
 const stateOptions = FALLBACK_CATEGORIES.slice(1).map((category) => ({
