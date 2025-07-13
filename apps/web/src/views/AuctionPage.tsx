@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { MessageSquareMore } from 'lucide-react';
 
 import { BidForm, BidTable, ItemImages, ItemInformation } from '@/components/auction-detail';
-import { ProfileCard } from '@/components/common/profile';
+import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
