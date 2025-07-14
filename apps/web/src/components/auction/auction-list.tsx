@@ -3,7 +3,7 @@
 // isLoading : Skeleton, error : 잠시후 다시 시도해주세요 -> 공통 error 컴포넌트 필요함
 
 import CategoriesFilter from '@/components/auction/categories-filter';
-import { AuctionItemList } from '@/components/common/auction-card';
+import { AuctionItemList } from '@/components/common';
 
 const AuctionList = () => {
   return (

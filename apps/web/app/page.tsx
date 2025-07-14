@@ -1,5 +1,5 @@
 import AuctionList from '@/components/auction/auction-list';
-import { CreateAuctionButton } from '@/components/common/button';
+import { CreateAuctionButton } from '@/components/common';
 import { MainHeader } from '@/components/layout';
 import Container from '@/components/layout/container';
 
