@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-import { SelectBox } from '@/components/common/select/basic';
+import { Select } from '@/components/common';
+
 import { AuctionFormSelectProps } from '@/lib/types/auction';
 
 const stateOptions = [
@@ -16,7 +17,7 @@ const MinUnitSelectBox = ({ className, name }: AuctionFormSelectProps) => {
   const [selectedState, setSelectedState] = useState(stateOptions[0]?.label);
 
   return (
-    <SelectBox
+    <Select
       options={stateOptions}
       value={selectedState}
       onValueChange={setSelectedState}

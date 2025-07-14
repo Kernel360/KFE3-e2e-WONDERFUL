@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 
-import { SelectBox } from '@/components/common/select/basic';
+import { Select } from '@/components/common';
+
 import { FALLBACK_CATEGORIES } from '@/lib/constants/tabs';
+
 import { AuctionFormSelectProps } from '@/types/auction';
 
 // const stateOptions = FALLBACK_CATEGORIES.slice(1);
@@ -16,7 +18,7 @@ const CategorySelectBox = ({ className, name }: AuctionFormSelectProps) => {
   const [selectedState, setSelectedState] = useState(stateOptions[0]?.value);
 
   return (
-    <SelectBox
+    <Select
       options={stateOptions}
       placeholder="상태"
       value={selectedState}

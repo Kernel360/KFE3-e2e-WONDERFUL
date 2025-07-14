@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from 'react';
 
-import { AuctionItemCard } from '@/components/common/auction-card';
+import { AuctionCard } from '@/components/common';
 
 import { useAuctions } from '@/hooks/queries/auction/useAuctions';
 
@@ -103,7 +103,7 @@ const AuctionItemList = ({
       {filteredData && filteredData.length > 0 ? (
         filteredData.map((auction) => {
           const auctionItemProps = convertToAuctionItemProps(auction);
-          return <AuctionItemCard key={auction.id} {...auctionItemProps} />;
+          return <AuctionCard key={auction.id} {...auctionItemProps} />;
         })
       ) : (
         <div className="flex flex-col items-center justify-center py-16">

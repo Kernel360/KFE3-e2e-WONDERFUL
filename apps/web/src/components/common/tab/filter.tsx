@@ -9,7 +9,7 @@ import { FilterTabProps } from '@/lib/types/filter';
 const FilterTab = ({ filterKey, items }: FilterTabProps) => {
   const { selectedItem, handleChangeItem } = useFilterChange(filterKey);
 
-  if (!items) return null;
+  if (!items || items.length === 0) return null;
 
   return (
     <FilterTabs

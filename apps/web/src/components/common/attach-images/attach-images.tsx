@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import AttacedImagesThumbnail from '@/components/common/attach-images/attach-images-thumbnail';
-import AttachImagesInput from '@/components/common/attach-images/attach-images-input';
+import { AttachImagesInput, AttachImagesThumbnail } from '@/components/common';
 
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
 import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
@@ -35,7 +34,7 @@ const AttachImages = ({ id, setFiles }: ImagesUploaderProps) => {
           ? ''
           : previewImages!.map((item, index) => {
               return (
-                <AttacedImagesThumbnail
+                <AttachImagesThumbnail
                   key={index}
                   url={item}
                   handleDelete={() =>
