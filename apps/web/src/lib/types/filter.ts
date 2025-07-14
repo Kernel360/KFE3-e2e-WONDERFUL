@@ -17,6 +17,6 @@ export interface FilterTabProps {
 }
 // filter-store State
 export interface FilterState {
-  selectedItems: Record<string, string | undefined>;
+  selectedItems: Record<string, string>;
   setSelectedItem: (filterKey: string, itemId: string) => void;
 }
