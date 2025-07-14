@@ -17,7 +17,12 @@ const NAV_MENU: NavMenuItem[] = [
 
 const Navigation = () => {
   const pathname = usePathname();
-  const showNavigation = ['/', '/auction', '/search', '/chat', '/profile'].includes(pathname || '');
+  const showNavigation =
+    pathname === '/' ||
+    pathname.startsWith('/auction') ||
+    pathname.startsWith('/search') ||
+    pathname.startsWith('/chat') ||
+    pathname.startsWith('/profile');
 
   if (!showNavigation) return null;
 
