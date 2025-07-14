@@ -1,11 +1,9 @@
 'use client';
 
 import { CircleAlert } from 'lucide-react';
-
 import CreateAuctionForm from '@/components/auction-create/form-create';
-import { Notice } from '@/components/common';
+import Notice from '@/components/common/messages/notice';
 import { Button } from '@/components/ui';
-
 import useCreateAuction from '@/hooks/auction/useCreateAuction';
 
 const CreateAuctionPage = () => {

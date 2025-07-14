@@ -19,8 +19,8 @@ export { default as ProfileCard } from './profile/card';
 export { default as ProfileImage } from './profile/image';
 export { default as MenuList } from './profile/menu-list';
 
-export { default as Select } from './select/basic';
+export { default as SelectBox } from './select/basic';
 export { default as CategorySelectBox } from './select/category';
 export { default as MinUnitSelectBox } from './select/min-unit';
 
-export { default as TabListFilter } from './tab/list-filter';
+export { default as FilterTab } from './tab/filter';

@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { Pen } from 'lucide-react';
 
-import { MenuList, ProfileCard } from '@/components/common';
+import { MenuList, ProfileCard } from '@/components/common/profile';
 import { Button } from '@/components/ui/button';
 
 import { signOutAction } from '@/lib/actions/auth.action';

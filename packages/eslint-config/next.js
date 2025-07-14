@@ -60,7 +60,6 @@ export const nextJsConfig = [
       import: importPlugin,
     },
     rules: {
-      'react/prop-types': 'off', // TypeScript 사용 시 prop-types 비활성화
       '@typescript-eslint/no-empty-object-type': [
         'error',
         {

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import {
   Select,
   SelectContent,
@@ -54,7 +52,6 @@ const SelectBox = ({
 };
 
 export default SelectBox;
-
 // 사용 예시:
 // export const ExampleUsage = () => {
 //   const fruitOptions = [
