@@ -166,7 +166,9 @@ const ResetPasswordForm = () => {
             type="text"
             placeholder="이름을 입력해주세요"
             value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange('name', e.target.value)
+            }
             className={fieldErrors.name ? 'text-danger-600 placeholder:text-danger-600/60' : ''}
           >
             <User className={fieldErrors.name ? 'text-danger-600' : 'text-neutral-900'} />
@@ -187,7 +189,9 @@ const ResetPasswordForm = () => {
             type="email"
             placeholder="이메일을 입력해주세요"
             value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange('email', e.target.value)
+            }
             className={fieldErrors.email ? 'text-danger-600 placeholder:text-danger-600/60' : ''}
           >
             <Mail className={fieldErrors.email ? 'text-danger-600' : 'text-neutral-900'} />
@@ -237,7 +241,9 @@ const ResetPasswordForm = () => {
             type={showPassword ? 'text' : 'password'}
             placeholder="Enter new password"
             value={formData.newPassword}
-            onChange={(e) => handleInputChange('newPassword', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange('newPassword', e.target.value)
+            }
             className={
               fieldErrors.newPassword ? 'text-danger-600 placeholder:text-danger-600/60' : ''
             }
@@ -265,7 +271,9 @@ const ResetPasswordForm = () => {
             type={showConfirmPassword ? 'text' : 'password'}
             placeholder="Check new password"
             value={formData.confirmPassword}
-            onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange('confirmPassword', e.target.value)
+            }
             className={
               fieldErrors.confirmPassword ? 'text-danger-600 placeholder:text-danger-600/60' : ''
             }

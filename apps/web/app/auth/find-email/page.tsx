@@ -6,7 +6,7 @@ import FindEmailForm from '@/components/auth/find-email/find-email-form';
 
 const Page = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center overflow-hidden bg-white px-[154px] pt-[131px]">
+    <div className="flex min-h-screen flex-col items-center bg-white px-[154px] pt-[131px]">
       <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
         이메일 찾기
       </h1>
