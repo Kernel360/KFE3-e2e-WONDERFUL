@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { Lock, Mail, User } from 'lucide-react';
 
-import InputIcon from '@/components/common/input/icon';
 import PasswordToggle from '@/components/auth/password-toggle';
+import InputIcon from '@/components/common/input/icon';
 
 interface SignupFieldsProps {
   formData: {
