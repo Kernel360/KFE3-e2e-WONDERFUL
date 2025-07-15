@@ -2,15 +2,12 @@
 
 import React, { useState } from 'react';
 
-import Link from 'next/link';
-
-import { User, Mail, Lock } from 'lucide-react';
-
-import ErrorMessage from '@/components/auth/error-message';
-import PasswordToggle from '@/components/auth/password-toggle';
-import { ResetPasswordComplete, ResetPasswordEmail } from '@/components/auth/reset-password';
-import SubmitButton from '@/components/auth/submit-button';
-import InputIcon from '@/components/common/input/icon';
+import {
+  ResetPasswordComplete,
+  ResetPasswordEmail,
+  ResetPasswordInput,
+  ResetPasswordNew,
+} from '@/components/auth/reset-password';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -80,7 +77,7 @@ const ResetPasswordForm = () => {
       const isSuccess = Math.random() > 0.5; //임시 성공/실패 로직
 
       if (isSuccess) {
-        setCurrentStep(3);
+        setCurrentStep(2);
       } else {
         setFieldErrors({
           name: '사용자를 찾을 수 없습니다.',
@@ -94,7 +91,7 @@ const ResetPasswordForm = () => {
     }
   };
 
-  // Step 2: 링크 전송 확인
+  // Step 2: 이메일 전송 확인
   const handleStep2Next = () => {
     setCurrentStep(3);
   };
@@ -141,169 +138,27 @@ const ResetPasswordForm = () => {
 
   // 폼 유효성 검사
   const isStep1Valid = () => !!(formData.name.trim() && formData.email.trim());
-  const isStep4Valid = () => !!(formData.newPassword && formData.confirmPassword);
-
-  // Step 1: 이름과 이메일 입력
-  const renderStep1 = () => (
-    <>
-      <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-        비밀번호 찾기
-      </h1>
-
-      <form onSubmit={handleStep1Submit} className="flex flex-col items-center space-y-3">
-        {/* 이름 입력 */}
-        <div
-          className={`h-[54px] w-[327px] ${
-            fieldErrors.name
-              ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
-              : ''
-          }`}
-        >
-          <InputIcon
-            id="name"
-            name="name"
-            type="text"
-            placeholder="이름을 입력해주세요"
-            value={formData.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange('name', e.target.value)
-            }
-            className={fieldErrors.name ? 'text-danger-600 placeholder:text-danger-600/60' : ''}
-          >
-            <User className={fieldErrors.name ? 'text-danger-600' : 'text-neutral-900'} />
-          </InputIcon>
-        </div>
-
-        {/* 이메일 입력 */}
-        <div
-          className={`h-[54px] w-[327px] ${
-            fieldErrors.email
-              ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
-              : ''
-          }`}
-        >
-          <InputIcon
-            id="email"
-            name="email"
-            type="email"
-            placeholder="이메일을 입력해주세요"
-            value={formData.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange('email', e.target.value)
-            }
-            className={fieldErrors.email ? 'text-danger-600 placeholder:text-danger-600/60' : ''}
-          >
-            <Mail className={fieldErrors.email ? 'text-danger-600' : 'text-neutral-900'} />
-          </InputIcon>
-        </div>
-
-        <ErrorMessage errors={fieldErrors} />
-
-        <div className="mt-[26px]">
-          <SubmitButton isFormValid={isStep1Valid()} isSubmitting={isSubmitting}>
-            비밀번호 찾기
-          </SubmitButton>
-        </div>
-      </form>
-
-      <div className="mt-6 whitespace-nowrap text-center">
-        <span className="text-sm text-neutral-600">계정이 기억나지 않으신가요? </span>
-        <Link
-          href="/auth/find-email"
-          className="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors"
-        >
-          이메일 찾기
-        </Link>
-      </div>
-    </>
-  );
-
-  // Step 3: 새 비밀번호 입력
-  const renderStep3 = () => (
-    <>
-      <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-        비밀번호 찾기
-      </h1>
-
-      <form onSubmit={handleStep3Submit} className="flex flex-col items-center space-y-3">
-        {/* 새 비밀번호 */}
-        <div
-          className={`h-[54px] w-[327px] ${
-            fieldErrors.newPassword
-              ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
-              : ''
-          }`}
-        >
-          <InputIcon
-            id="newPassword"
-            name="newPassword"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Enter new password"
-            value={formData.newPassword}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange('newPassword', e.target.value)
-            }
-            className={
-              fieldErrors.newPassword ? 'text-danger-600 placeholder:text-danger-600/60' : ''
-            }
-          >
-            <Lock className={fieldErrors.newPassword ? 'text-danger-600' : 'text-neutral-900'} />
-            <PasswordToggle
-              showPassword={showPassword}
-              onToggle={handleTogglePassword}
-              hasError={!!fieldErrors.newPassword}
-            />
-          </InputIcon>
-        </div>
-
-        {/* 비밀번호 확인 */}
-        <div
-          className={`h-[54px] w-[327px] ${
-            fieldErrors.confirmPassword
-              ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
-              : ''
-          }`}
-        >
-          <InputIcon
-            id="confirmPassword"
-            name="confirmPassword"
-            type={showConfirmPassword ? 'text' : 'password'}
-            placeholder="Check new password"
-            value={formData.confirmPassword}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange('confirmPassword', e.target.value)
-            }
-            className={
-              fieldErrors.confirmPassword ? 'text-danger-600 placeholder:text-danger-600/60' : ''
-            }
-          >
-            <Lock
-              className={fieldErrors.confirmPassword ? 'text-danger-600' : 'text-neutral-900'}
-            />
-            <PasswordToggle
-              showPassword={showConfirmPassword}
-              onToggle={handleToggleConfirmPassword}
-              hasError={!!fieldErrors.confirmPassword}
-            />
-          </InputIcon>
-        </div>
-
-        <ErrorMessage errors={fieldErrors} />
-
-        <div className="mt-[26px]">
-          <SubmitButton isFormValid={isStep4Valid()} isSubmitting={isSubmitting}>
-            비밀번호 변경
-          </SubmitButton>
-        </div>
-      </form>
-    </>
-  );
+  const isStep3Valid = () => !!(formData.newPassword && formData.confirmPassword);
 
   // 현재 단계에 따른 렌더링
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return renderStep1();
+        return (
+          <>
+            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
+              비밀번호 찾기
+            </h1>
+            <ResetPasswordInput
+              formData={{ name: formData.name, email: formData.email }}
+              fieldErrors={fieldErrors}
+              isSubmitting={isSubmitting}
+              onInputChange={handleInputChange}
+              onSubmit={handleStep1Submit}
+              isFormValid={isStep1Valid}
+            />
+          </>
+        );
       case 2:
         return (
           <>
@@ -314,11 +169,46 @@ const ResetPasswordForm = () => {
           </>
         );
       case 3:
-        return renderStep3();
+        return (
+          <>
+            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
+              비밀번호 찾기
+            </h1>
+            <ResetPasswordNew
+              formData={{
+                newPassword: formData.newPassword,
+                confirmPassword: formData.confirmPassword,
+              }}
+              showPassword={showPassword}
+              showConfirmPassword={showConfirmPassword}
+              fieldErrors={fieldErrors}
+              isSubmitting={isSubmitting}
+              onInputChange={handleInputChange}
+              onTogglePassword={handleTogglePassword}
+              onToggleConfirmPassword={handleToggleConfirmPassword}
+              onSubmit={handleStep3Submit}
+              isFormValid={isStep3Valid}
+            />
+          </>
+        );
       case 4:
         return <ResetPasswordComplete />;
       default:
-        return renderStep1();
+        return (
+          <>
+            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
+              비밀번호 찾기
+            </h1>
+            <ResetPasswordInput
+              formData={{ name: formData.name, email: formData.email }}
+              fieldErrors={fieldErrors}
+              isSubmitting={isSubmitting}
+              onInputChange={handleInputChange}
+              onSubmit={handleStep1Submit}
+              isFormValid={isStep1Valid}
+            />
+          </>
+        );
     }
   };
 
