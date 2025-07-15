@@ -70,6 +70,7 @@ export interface Item {
   title: string;
   status: string;
   endTime: string;
+  description: string;
 }
 // AuctionPage 컴포넌트에서 사용할 Item 인터페이스 확장
 export interface ItemInfo extends Item {
