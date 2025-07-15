@@ -9,7 +9,7 @@ export { default as AuctionItemList } from './auction-card/list';
 export { default as CreateAuctionButton } from './button/create-auction';
 export { default as MoreButton } from './button/more';
 
-export { default as BasicInput } from './input/basic';
+export { default as InputBasic } from './input/basic';
 export { default as InputIcon } from './input/icon';
 
 export { default as ErrorMsg } from './messages/error-msg';
