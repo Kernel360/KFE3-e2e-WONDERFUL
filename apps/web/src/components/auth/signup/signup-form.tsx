@@ -1,9 +1,10 @@
 import React from 'react';
+
 import { useRouter } from 'next/navigation';
 
+import ErrorMessage from '@/components/auth/error-message';
 import SignupFields from '@/components/auth/signup/signup-fields';
 import SubmitButton from '@/components/auth/submit-button';
-import ErrorMessage from '@/components/auth/error-message';
 
 interface SignupFormProps {
   formData: {

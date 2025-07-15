@@ -6,7 +6,7 @@ import { User, Mail } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
 import SubmitButton from '@/components/auth/submit-button';
-import InputIcon from '@/components/common/input/icon';
+import { InputIcon } from '@/components/common';
 
 interface ResetPasswordInputProps {
   formData: {

@@ -7,7 +7,7 @@ import { Lock } from 'lucide-react';
 import ErrorMessage from '@/components/auth/error-message';
 import PasswordToggle from '@/components/auth/password-toggle';
 import SubmitButton from '@/components/auth/submit-button';
-import InputIcon from '@/components/common/input/icon';
+import { InputIcon } from '@/components/common';
 
 interface ResetPasswordNewProps {
   formData: {

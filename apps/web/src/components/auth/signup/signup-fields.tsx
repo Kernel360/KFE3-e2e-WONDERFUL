@@ -3,7 +3,7 @@ import React from 'react';
 import { Lock, Mail, User } from 'lucide-react';
 
 import PasswordToggle from '@/components/auth/password-toggle';
-import InputIcon from '@/components/common/input/icon';
+import { InputIcon } from '@/components/common';
 
 interface SignupFieldsProps {
   formData: {
