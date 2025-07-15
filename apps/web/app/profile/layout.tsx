@@ -1,10 +1,10 @@
-import Navigation from '@/components/layout/navigation';
+import { ProfileHeader } from '@/components/layout';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
+      <ProfileHeader />
       {children}
-      <Navigation />
     </>
   );
 };
