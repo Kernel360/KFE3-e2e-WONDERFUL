@@ -1,10 +1,10 @@
 'use client';
 import { motion } from 'motion/react';
 
-import type { Ball as BollType } from '@/lib/types';
+import type { Ball as BallType } from '@/lib/types';
 
 interface BallProps {
-  ball: BollType;
+  ball: BallType;
   index: number;
   gameState: 'init' | 'ready' | 'playing' | 'complete';
   isJittering: boolean;

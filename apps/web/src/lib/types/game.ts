@@ -1,4 +1,5 @@
 export interface Ball {
+  isPrize: boolean;
   id: number;
   x: number;
   y: number;
