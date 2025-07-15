@@ -1,4 +1,14 @@
 'use client';
+/**
+ * Todo
+ * 1. 전역상태 관리
+ *    -> 현재 최고 입찰가 = bid-form의 최소 입찰 금액
+ *    -> Item 데이터 변환 : 내려줘야하는 컴포넌트 별 prop 기준으로 다시 재작성.
+ *    -> store로 처리할 수 있는 부분은 prop은 최소화로 쓰기
+ * 2. error 처리는 useEffect 안에서 처리! -> 재로딩 컴포넌트 따로 만들어서 호출하기
+ * 3. suspense 컴포넌트 따로 만들어서 lazy.loading 처리
+ * 4. 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
+ */
 
 import { useEffect } from 'react';
 
@@ -6,7 +16,7 @@ import { useParams } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
 
-import { BidForm, BidTable, ItemImages, ItemInformation } from '@/components/auction-detail';
+import { BidForm, ItemImages, ItemInformation } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
@@ -14,8 +24,7 @@ import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
 
 import { ItemInfo } from '@/lib/types/auction';
 
-const AuctionPage = () => {
-  // Todo: 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
+const AuctionDetailContainer = () => {
   const userId = undefined;
 
   const params = useParams();
@@ -58,7 +67,6 @@ const AuctionPage = () => {
 
   const auction = auctionDetailData.data;
 
-  // 이미지 배열 처리 함수
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
     // 모든 레코드의 urls를 하나의 배열로 합치기
@@ -71,6 +79,8 @@ const AuctionPage = () => {
     title: auction.title,
     status: auction.status,
     endTime: auction.endTime.toString(),
+    description: auction.description || '',
+
     // 추가 필요한 필드들
     startPrice: auction.auctionPrice?.startPrice || 0,
     currentPrice: auction.auctionPrice?.currentPrice || 0,
@@ -99,19 +109,13 @@ const AuctionPage = () => {
             채팅하기
           </Button>
         </ProfileCard>
-        <ItemInformation item={item} />
-        <div className="my-6 w-full space-y-6 px-4">
-          <div className="">{auction.description}</div>
-          <div className="bg-primary-50/80 rounded-sm px-2 py-1">
-            <BidTable itemId={id as string} />
-          </div>
-        </div>
+        <ItemInformation item={item} id={id as string} />
       </section>
-      <footer className="sticky bottom-0 z-50 w-full bg-white">
+      <section className="sticky bottom-0 z-50 w-full bg-white">
         <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
-      </footer>
+      </section>
     </>
   );
 };
 
-export default AuctionPage;
+export default AuctionDetailContainer;
