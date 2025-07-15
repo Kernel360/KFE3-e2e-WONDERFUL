@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import ErrorMessage from '@/components/auth/error-message';
-import SigninFields from '@/components/auth/signin/signin-fields';
+import { SigninFields } from '@/components/auth/signin';
 import SubmitButton from '@/components/auth/submit-button';
 
 import { signInAction } from '@/lib/actions/auth.action';

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import Link from 'next/link';
 
-import FindEmailForm from '@/components/auth/find-email/find-email-form';
+import { FindEmailForm } from '@/components/auth/find-email';
 
 const Page = () => {
   return (

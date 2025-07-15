@@ -2,8 +2,7 @@ import { Suspense } from 'react';
 
 import Link from 'next/link';
 
-import GoogleLoginButton from '@/components/auth/signin/google-login-buttons';
-import SigninForm from '@/components/auth/signin/signin-form';
+import { GoogleLoginButton, SigninForm } from '@/components/auth/signin';
 
 const Page = () => {
   return (

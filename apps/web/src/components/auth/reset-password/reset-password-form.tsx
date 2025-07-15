@@ -8,8 +8,7 @@ import { User, Mail, Lock } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
 import PasswordToggle from '@/components/auth/password-toggle';
-import ResetPasswordComplete from '@/components/auth/reset-password/reset-password-complete';
-import ResetPasswordEmail from '@/components/auth/reset-password/reset-password-email';
+import { ResetPasswordComplete, ResetPasswordEmail } from '@/components/auth/reset-password';
 import SubmitButton from '@/components/auth/submit-button';
 import InputIcon from '@/components/common/input/icon';
 

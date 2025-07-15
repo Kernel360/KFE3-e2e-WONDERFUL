@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { User } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
-import FindEmailSuccess from '@/components/auth/find-email/find-email-success';
+import { FindEmailSuccess } from '@/components/auth/find-email';
 import SubmitButton from '@/components/auth/submit-button';
 import InputIcon from '@/components/common/input/icon';
 
