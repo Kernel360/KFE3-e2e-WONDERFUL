@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Pen } from 'lucide-react';
@@ -31,10 +32,12 @@ const ProfilePage = () => {
           nickname="킹갓제너럴판매자"
           profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg"
         >
-          <Button variant="outline" size={'sm'}>
-            <Pen />
-            프로필수정
-          </Button>
+          <Link href="/profile/edit">
+            <Button variant="outline" size={'sm'}>
+              <Pen />
+              프로필수정
+            </Button>
+          </Link>
         </ProfileCard>
       </div>
 
