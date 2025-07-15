@@ -146,9 +146,6 @@ const ResetPasswordForm = () => {
       case 1:
         return (
           <>
-            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-              비밀번호 찾기
-            </h1>
             <ResetPasswordInput
               formData={{ name: formData.name, email: formData.email }}
               fieldErrors={fieldErrors}
@@ -162,18 +159,12 @@ const ResetPasswordForm = () => {
       case 2:
         return (
           <>
-            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-              비밀번호 찾기
-            </h1>
             <ResetPasswordEmail email={formData.email} onNext={handleStep2Next} />
           </>
         );
       case 3:
         return (
           <>
-            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-              비밀번호 찾기
-            </h1>
             <ResetPasswordNew
               formData={{
                 newPassword: formData.newPassword,
@@ -196,9 +187,6 @@ const ResetPasswordForm = () => {
       default:
         return (
           <>
-            <h1 className="text-h3 leading-h3 mb-[80px] whitespace-nowrap text-center font-bold text-neutral-900">
-              비밀번호 찾기
-            </h1>
             <ResetPasswordInput
               formData={{ name: formData.name, email: formData.email }}
               fieldErrors={fieldErrors}
