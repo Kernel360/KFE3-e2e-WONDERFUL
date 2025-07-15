@@ -11,11 +11,7 @@ import SubmitButton from '@/components/auth/submit-button';
 import { signInAction } from '@/lib/actions/auth.action';
 import { validateEmail, validatePassword } from '@/lib/utils/auth';
 
-interface SigninFormProps {
-  onSuccess?: () => void;
-}
-
-const SigninForm = ({ onSuccess }: SigninFormProps) => {
+const SigninForm = () => {
   const router = useRouter();
   // Form state
   const [formData, setFormData] = useState({
@@ -82,8 +78,8 @@ const SigninForm = ({ onSuccess }: SigninFormProps) => {
       const result = await signInAction(submitFormData);
 
       if (result.success) {
-        // 로그인 성공 콜백 호출
-        onSuccess?.();
+        // 로그인 성공 시 홈으로 리다이렉트
+        router.push('/');
       } else {
         // 서버 에러를 필드별로 설정
         if (result.field === 'password') {
