@@ -6,9 +6,6 @@ import { ResetPasswordForm } from '@/components/auth/reset-password';
 const Page = () => {
   return (
     <div className="flex min-h-screen flex-col items-center bg-white px-[154px] pt-[131px]">
-      <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
-        비밀번호 찾기
-      </h1>
       <div className="mt-20 flex w-full max-w-md flex-col items-center">
         <Suspense fallback={<div>Loading...</div>}>
           <ResetPasswordForm />

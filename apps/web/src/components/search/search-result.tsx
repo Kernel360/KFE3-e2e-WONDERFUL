@@ -1,7 +1,6 @@
 'use client';
 
-import { AuctionItemList } from '@/components/common/auction-card';
-import FilterTab from '@/components/common/tab/filter';
+import { AuctionItemList, FilterTab } from '@/components/common';
 
 import { TabId } from '@/lib/types/filter';
 import { useFilterStore } from '@/lib/zustand/store';
