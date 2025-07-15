@@ -4,7 +4,7 @@ import { FilterState } from '@/types/filter';
 
 export const useFilterStore = create<FilterState>((set) => ({
   selectedItems: {
-    category: 'all',
+    category: '',
     auctionBasic: 'all',
     auctionExtended: 'all',
     chatStatus: 'all',
