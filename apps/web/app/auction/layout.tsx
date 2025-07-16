@@ -4,7 +4,7 @@ const AuctionLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <AuctionHeader />
-      <Container className="scrollbar-hide-y">{children}</Container>
+      <Container>{children}</Container>
     </>
   );
 };

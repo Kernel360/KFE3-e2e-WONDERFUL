@@ -1,12 +1,8 @@
 'use client';
 /**
  * Todo
- * 1. 전역상태 관리
- *    -> 현재 최고 입찰가 = bid-form의 최소 입찰 금액
- *    -> Item 데이터 변환 : 내려줘야하는 컴포넌트 별 prop 기준으로 다시 재작성.
- *    -> store로 처리할 수 있는 부분은 prop은 최소화로 쓰기
- *    -> 전역 상태 관리로 변경 후 container 없애기 (안된다면 유지해도 됨)
- * 2. error 처리는 useEffect 안에서 처리! -> 재로딩 컴포넌트 따로 만들어서 호출하기
+ * 1. Item 데이터 변환 : 내려줘야하는 컴포넌트 별 prop 기준으로 다시 재작성.
+ * 2. error 케이스별 컴포넌트로 error 상황 처리하기 (재사용성))
  * 3. suspense 컴포넌트 따로 만들어서 lazy.loading 처리
  * 4. 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
  * 5. ItemImages prioty 처리
@@ -115,7 +111,7 @@ const AuctionDetailContainer = () => {
         <ItemImages urls={images} />
         <ProfileCard
           nickname="user1234"
-          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg"
+          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/f610194f-1750-4dc5-82ef-fe836cd9bf79/1751453508404_8wxxr2.png"
         >
           <Button variant="outline">
             <MessageSquareMore />
@@ -124,9 +120,9 @@ const AuctionDetailContainer = () => {
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />
-        <section className="py-6">
+        <section className="space-y-2 py-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
-          <BidTable itemId={id as string} />
+          <BidTable />
         </section>
       </article>
       <section className="sticky bottom-0 z-50 w-full bg-white">
