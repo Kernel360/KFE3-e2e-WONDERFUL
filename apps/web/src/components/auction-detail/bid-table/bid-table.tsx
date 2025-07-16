@@ -1,6 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import { BidTableHead, BidTableRow } from '@/components/auction-detail';
 
@@ -9,8 +11,10 @@ import { BidType } from '@/types/bid';
 import { BIDDING_DUMMY } from '@/constants/bid-list';
 
 const BidTable = () => {
-  const BIDS = BIDDING_DUMMY.bids;
+  const parentRef = useRef(null);
+  const [animationParent] = useAutoAnimate();
 
+  const BIDS = BIDDING_DUMMY.bids;
   const sortBid: BidType[] = useMemo(() => {
     return [...BIDS].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 5);
   }, [BIDS]);
@@ -22,7 +26,7 @@ const BidTable = () => {
         <span className="w-7.5 absolute flex h-full items-center justify-center">
           <i className="bg-primary-100 h-9/10 block w-1"></i>
         </span>
-        <ul className="space-y-2">
+        <ul ref={animationParent} className="space-y-2">
           {sortBid.map((item) => {
             return <BidTableRow key={item.bid_id} item={item} />;
           })}
