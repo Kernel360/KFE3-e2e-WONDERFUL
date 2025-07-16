@@ -120,7 +120,7 @@ const AuctionDetailContainer = () => {
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />
-        <section className="space-y-2 py-6">
+        <section className="space-y-2 pb-10 pt-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
           <BidTable />
         </section>
