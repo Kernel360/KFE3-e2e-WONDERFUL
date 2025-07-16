@@ -6,4 +6,5 @@ export { default as ButtonDetailMore } from './button-detail-more';
 export { default as ButtonFavorite } from './button-favorite';
 export { default as CountDown } from './countdown';
 export { default as ItemImages } from './item-images';
-export { default as ItemInformation } from './item-information';
+export { default as ItemSummary } from './item-summary';
+export { default as ItemDescription } from './item-description';

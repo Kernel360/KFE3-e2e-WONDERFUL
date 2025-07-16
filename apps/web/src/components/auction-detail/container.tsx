@@ -5,9 +5,11 @@
  *    -> 현재 최고 입찰가 = bid-form의 최소 입찰 금액
  *    -> Item 데이터 변환 : 내려줘야하는 컴포넌트 별 prop 기준으로 다시 재작성.
  *    -> store로 처리할 수 있는 부분은 prop은 최소화로 쓰기
+ *    -> 전역 상태 관리로 변경 후 container 없애기 (안된다면 유지해도 됨)
  * 2. error 처리는 useEffect 안에서 처리! -> 재로딩 컴포넌트 따로 만들어서 호출하기
  * 3. suspense 컴포넌트 따로 만들어서 lazy.loading 처리
  * 4. 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
+ * 5. ItemImages prioty 처리
  */
 
 import { useEffect } from 'react';
@@ -16,12 +18,19 @@ import { useParams } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
 
-import { BidForm, ItemImages, ItemInformation } from '@/components/auction-detail';
+import {
+  ItemImages,
+  ItemSummary,
+  ItemDescription,
+  BidTable,
+  BidForm,
+} from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
 
+import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
 
 const AuctionDetailContainer = () => {
@@ -96,9 +105,13 @@ const AuctionDetailContainer = () => {
   // 처리된 이미지 배열 가져오기
   const images = processImages();
 
+  const sectionStyle = '[&_section]:w-full [&_section]:px-4 [&_section]:bg-white';
+
   return (
     <>
-      <section className="flex flex-col items-center gap-1 px-0">
+      <article
+        className={cn(`flex flex-col items-center break-keep bg-neutral-100 px-0`, sectionStyle)}
+      >
         <ItemImages urls={images} />
         <ProfileCard
           nickname="user1234"
@@ -109,8 +122,13 @@ const AuctionDetailContainer = () => {
             채팅하기
           </Button>
         </ProfileCard>
-        <ItemInformation item={item} id={id as string} />
-      </section>
+        <ItemSummary item={item} id={id as string} />
+        <ItemDescription item={item} />
+        <section className="py-6">
+          <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
+          <BidTable itemId={id as string} />
+        </section>
+      </article>
       <section className="sticky bottom-0 z-50 w-full bg-white">
         <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
       </section>
