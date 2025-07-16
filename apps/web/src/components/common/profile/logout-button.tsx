@@ -6,7 +6,7 @@ import { Button } from '@/components/ui';
 
 import { signOut } from '@/lib/actions/auth';
 
-export const LogoutButton = () => {
+const LogoutButton = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -31,3 +31,5 @@ export const LogoutButton = () => {
     </div>
   );
 };
+
+export default LogoutButton;
