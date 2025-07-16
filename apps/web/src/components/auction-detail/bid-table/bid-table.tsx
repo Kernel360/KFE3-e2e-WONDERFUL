@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
@@ -11,7 +11,6 @@ import { BidType } from '@/types/bid';
 import { BIDDING_DUMMY } from '@/constants/bid-list';
 
 const BidTable = () => {
-  const parentRef = useRef(null);
   const [animationParent] = useAutoAnimate();
 
   const BIDS = BIDDING_DUMMY.bids;
