@@ -146,6 +146,3 @@ const SigninForm = () => {
 };
 
 export default SigninForm;
-function signInAction(submitFormData: FormData) {
-  throw new Error('Function not implemented.');
-}
