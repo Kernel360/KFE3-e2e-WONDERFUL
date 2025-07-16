@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/button';
 
 import { AUCTION_TABS_BASIC, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
 
+import ButtonChat from './button-chat';
+
 const OtherProfilePage = () => {
   // 탭 상태 관리
   const [selectedTab, setSelectedTab] = useState<TabId>(AUCTION_TABS_BASIC[0]?.id || 'all');
@@ -29,12 +31,7 @@ const OtherProfilePage = () => {
           nickname="민돌멩이"
           profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg"
         >
-          <Link href="/chat">
-            <Button variant="outline" size="sm">
-              <MessageSquareMore className="mr-1 h-4 w-4" />
-              채팅하기
-            </Button>
-          </Link>
+          <ButtonChat />
         </ProfileCard>
       </div>
       <div className="p-4">
