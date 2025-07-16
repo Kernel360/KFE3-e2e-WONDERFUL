@@ -1,8 +1,8 @@
-import { createServerComponentClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export const getCurrentUser = async () => {
   try {
-    const supabase = await createServerComponentClient();
+    const supabase = await createClient();
     const {
       data: { user },
       error,

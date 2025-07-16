@@ -1,13 +1,14 @@
 // 260652 18:52 금영 수정 ::FormField 맞춰 type 수정
 'use server';
 
-import { createServerComponentClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { convertHoursToTimestamp } from '@/lib/utils/date';
+
 import { AuctionFormData } from '@/types/auction';
 
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
-  const supabase = await createServerComponentClient();
+  const supabase = await createClient();
   const end_time = convertHoursToTimestamp(data.end_time);
 
   const { data: itemInsertResult, error: itemError } = await supabase
@@ -62,7 +63,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
 
 // Update
 export const updateAuction = async (data: AuctionFormData, itemId: string) => {
-  const supabase = await createServerComponentClient();
+  const supabase = await createClient();
   const end_time = convertHoursToTimestamp(data.end_time);
 
   const { error: itemError } = await supabase
@@ -140,7 +141,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
 
 // Delete
 export const deleteAuction = async (id: string) => {
-  const supabase = await createServerComponentClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.from('auction_items').delete().eq('id', id);
 
