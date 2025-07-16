@@ -10,7 +10,7 @@ import { ModalItem } from '@/hooks/common/useModal';
 export interface ModalProps {
   modalStack: ModalItem[];
   onCloseModal: (id: string) => void;
-  children: (modal: ModalItem, index: number) => React.ReactNode;
+  children: (modal: ModalItem) => React.ReactNode;
 }
 
 const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
@@ -31,7 +31,6 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
 
   const modalsContent = modalStack.map((modal, index) => {
     const zIndex = 50 + index;
-    const isTopModal = index === modalStack.length - 1;
 
     // 오버레이 클릭으로 모달 닫기
     const handleOverlayClick = (event: React.MouseEvent) => {
@@ -66,9 +65,7 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
         {/* 오버레이 */}
         {styles.showOverlay && (
           <div
-            className={`absolute inset-0 transition-colors duration-300 ${
-              isTopModal ? 'bg-black/50 backdrop-blur-sm' : 'bg-black/20'
-            }`}
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleOverlayClick}
           />
         )}
@@ -108,9 +105,7 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
           )}
 
           {/* 컨텐츠 */}
-          <div className={modal.type === 'fullscreen' ? 'h-full' : 'flex-1'}>
-            {children(modal, index)}
-          </div>
+          <div className={modal.type === 'fullscreen' ? 'h-full' : 'flex-1'}>{children(modal)}</div>
         </div>
       </div>
     );
