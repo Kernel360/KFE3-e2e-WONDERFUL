@@ -1,6 +1,6 @@
 'use server';
 import { getCurrentUser } from '@/lib//utils/auth';
-import { getUserProfileFromDB } from '@/lib/api/users';
+import { getUserProfileFromDB } from '@/lib/data/user';
 
 export const getMyProfile = async () => {
   try {
