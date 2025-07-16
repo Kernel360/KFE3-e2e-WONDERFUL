@@ -9,7 +9,7 @@ import { SigninFields } from '@/components/auth/signin';
 import SubmitButton from '@/components/auth/submit-button';
 
 import { signInAction } from '@/lib/actions/auth.action';
-import { validateEmail, validatePassword } from '@/lib/utils/auth';
+import { validateEmail, validatePassword } from '@/lib/utils/validation';
 
 const SigninForm = () => {
   const router = useRouter();
