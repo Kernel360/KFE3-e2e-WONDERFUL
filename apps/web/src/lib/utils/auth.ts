@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 
+// 현재 인증된 사용자 정보를 가져오는 함수
 export const getCurrentUser = async () => {
   try {
     const supabase = await createClient();
@@ -20,6 +21,7 @@ export const getCurrentUser = async () => {
   }
 };
 
+// 인증된 사용자 여부 확인 함수
 export const isAuthenticated = async (): Promise<boolean> => {
   const user = await getCurrentUser();
   return !!user;
