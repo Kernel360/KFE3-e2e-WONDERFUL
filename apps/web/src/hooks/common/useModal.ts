@@ -4,9 +4,7 @@ import { useState, useCallback } from 'react';
 
 export interface ModalItem {
   id: string;
-  type: 'fullscreen' | 'bottom';
   data?: any;
-  height?: string | number;
   closeOnOverlayClick?: boolean;
   showCloseButton?: boolean;
   className?: string;
