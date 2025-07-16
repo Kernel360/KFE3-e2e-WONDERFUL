@@ -29,7 +29,7 @@ const ProductInfoCard = () => {
   return (
     <div className="border-y-1 flex h-auto w-full flex-col justify-between border-neutral-100 p-3">
       <div className="flex h-full w-full items-center gap-2">
-        <Thumbnail url={dummy.url} alt="image" className="h-12 w-12 shrink-0" />
+        <Thumbnail url={dummy.url} alt={dummy.title} className="h-12 w-12 shrink-0" />
         <p className="flex min-w-0 flex-1 flex-col">
           <span className="overflow-hidden truncate whitespace-nowrap text-base font-medium">
             {dummy.title}
