@@ -23,6 +23,6 @@ export const config = {
      * - 이미지 파일들 (svg, png, jpg, jpeg, gif, webp)
      * - certificates 폴더 (인증서 관련 파일)
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|firebase-messaging-sw.js|certificates|.*\\.(?:svg|png|jpg|jpeg|gif, webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|manifest.webmanifest|service-worker.js|firebase-messaging-sw.js|certificates|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
