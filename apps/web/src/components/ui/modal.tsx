@@ -39,6 +39,14 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
       }
     };
 
+    const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      // 표준화: non-fullscreen 모달에 대해서만 전파를 중지합니다.
+      if (modal.type !== 'fullscreen') {
+        e.stopPropagation();
+      }
+      // 선택적으로, 향후 모달 유형에 대한 추가 로직을 여기에 추가합니다.
+    };
+
     // 모달 타입별 스타일
     const getModalStyles = () => {
       switch (modal.type) {
@@ -76,7 +84,7 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
           style={{
             height: styles.height || (modal.type === 'fullscreen' ? '100%' : undefined),
           }}
-          onClick={modal.type === 'fullscreen' ? undefined : (e) => e.stopPropagation()}
+          onClick={handleContainerClick}
         >
           {/* 헤더 (fullscreen이 아니고 showCloseButton이 true인 경우) */}
           {modal.type !== 'fullscreen' && modal.showCloseButton !== false && (
