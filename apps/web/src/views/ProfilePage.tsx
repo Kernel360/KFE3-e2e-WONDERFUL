@@ -7,14 +7,14 @@ import { Pen } from 'lucide-react';
 import { MenuList, ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
-import { signOutAction } from '@/lib/actions/auth.action';
+import { signOut } from '@/lib/actions/auth';
 
 const ProfilePage = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      const result = await signOutAction();
+      const result = await signOut();
       // 성공 시 로그인 페이지로 이동
       if (result && result.success) {
         router.push('/auth/signin');

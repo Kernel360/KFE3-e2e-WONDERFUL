@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { AuthActionResult } from '@/lib/types/auth';
 
 //로그인 액션
-export const signInAction = async (formData: FormData): Promise<AuthActionResult> => {
+export const signIn = async (formData: FormData): Promise<AuthActionResult> => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
@@ -62,7 +62,7 @@ export const signInAction = async (formData: FormData): Promise<AuthActionResult
 };
 
 // === 회원가입 액션 ===
-export const signUpAction = async (formData: FormData): Promise<AuthActionResult> => {
+export const signUp = async (formData: FormData): Promise<AuthActionResult> => {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -160,7 +160,7 @@ export const signUpAction = async (formData: FormData): Promise<AuthActionResult
 };
 
 //로그아웃 액션
-export const signOutAction = async (): Promise<AuthActionResult> => {
+export const signOut = async (): Promise<AuthActionResult> => {
   try {
     const supabase = await createClient();
     const { error } = await supabase.auth.signOut();
@@ -188,7 +188,7 @@ export const signOutAction = async (): Promise<AuthActionResult> => {
 };
 
 //구글 로그인 액션
-export const signInWithGoogleAction = async (): Promise<AuthActionResult> => {
+export const signInWithGoogle = async (): Promise<AuthActionResult> => {
   try {
     const supabase = await createClient();
 

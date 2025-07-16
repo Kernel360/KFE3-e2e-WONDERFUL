@@ -8,7 +8,7 @@ import ErrorMessage from '@/components/auth/error-message';
 import { SigninFields } from '@/components/auth/signin';
 import SubmitButton from '@/components/auth/submit-button';
 
-import { signInAction } from '@/lib/actions/auth.action';
+import { signIn } from '@/lib/actions/auth';
 import { validateEmail, validatePassword } from '@/lib/utils/validation';
 
 const SigninForm = () => {
@@ -75,7 +75,7 @@ const SigninForm = () => {
 
     try {
       // Server Action 호출
-      const result = await signInAction(submitFormData);
+      const result = await signIn(submitFormData);
 
       if (result.success) {
         // 로그인 성공 시 홈으로 리다이렉트
@@ -146,3 +146,6 @@ const SigninForm = () => {
 };
 
 export default SigninForm;
+function signInAction(submitFormData: FormData) {
+  throw new Error('Function not implemented.');
+}

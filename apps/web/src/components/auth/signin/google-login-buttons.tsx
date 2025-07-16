@@ -1,10 +1,8 @@
 'use client';
 
-import React from 'react';
-
 import Image from 'next/image';
 
-import { signInWithGoogleAction } from '@/lib/actions/auth.action';
+import { signInWithGoogle } from '@/lib/actions/auth';
 
 interface GoogleLoginButtonProps {
   className?: string;
@@ -14,7 +12,7 @@ interface GoogleLoginButtonProps {
 const GoogleLoginButton = ({ className, disabled }: GoogleLoginButtonProps) => {
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithGoogleAction();
+      const result = await signInWithGoogle();
 
       if (result.success && result.redirectUrl) {
         window.location.href = result.redirectUrl;
