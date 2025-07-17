@@ -5,8 +5,6 @@ import useCountdown from '@/hooks/common/useCountdown';
 
 import { formatDate } from '@/lib/utils/date';
 
-import BidTable from './bid-table';
-
 interface ItemInformationProps {
   item: Item;
   id: string;
@@ -19,7 +17,7 @@ export interface Item {
   description: string;
 }
 
-const ItemInformation = ({ item, id }: ItemInformationProps) => {
+const ItemSummary = ({ item, id }: ItemInformationProps) => {
   const deadline = formatDate(new Date(item.endTime));
 
   // 실시간으로 경매 종료 여부 확인
@@ -35,7 +33,7 @@ const ItemInformation = ({ item, id }: ItemInformationProps) => {
   };
 
   return (
-    <section className="flex h-auto w-full flex-col border-b border-t border-neutral-100 bg-white p-4">
+    <section className="my-0.5 flex h-auto w-full flex-col bg-white p-4">
       <Badge variant={getBadgeVariant()} className={'rounded-sm px-1.5 py-0 text-xs'}>
         {actualStatus}
       </Badge>
@@ -47,14 +45,8 @@ const ItemInformation = ({ item, id }: ItemInformationProps) => {
         </div>
         <Countdown date={new Date(item.endTime)} />
       </div>
-      <div className="my-6 w-full space-y-6 px-4">
-        <div className="">{item.description}</div>
-        <div className="bg-primary-50/80 rounded-sm px-2 py-1">
-          <BidTable itemId={id} />
-        </div>
-      </div>
     </section>
   );
 };
 
-export default ItemInformation;
+export default ItemSummary;

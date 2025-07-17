@@ -12,15 +12,15 @@ export { default as MoreButton } from './button/more';
 export { default as InputBasic } from './input/basic';
 export { default as InputIcon } from './input/icon';
 
-export { default as ErrorMsg } from './messages/error-msg';
+export { default as FormErrorMessage } from './messages/error-msg';
 export { default as Notice } from './messages/notice';
 
 export { default as ProfileCard } from './profile/card';
 export { default as ProfileImage } from './profile/image';
 export { default as MenuList } from './profile/menu-list';
 
-export { default as SelectBox } from './select/basic';
-export { default as CategorySelectBox } from './select/category';
-export { default as MinUnitSelectBox } from './select/min-unit';
+export { default as SelectBox } from './select-box/basic';
+export { default as CategorySelectBox } from './select-box/category';
+export { default as MinUnitSelectBox } from './select-box/min-unit';
 
 export { default as FilterTab } from './tab/filter';
