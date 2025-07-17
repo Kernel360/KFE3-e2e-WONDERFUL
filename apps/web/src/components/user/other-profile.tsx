@@ -1,20 +1,13 @@
-'use client';
 // 상대방 프로필 페이지
-
-import { useState } from 'react';
+'use client';
 
 import { AuctionItemList, ProfileCard, FilterTab } from '@/components/common';
 
-import { AUCTION_TABS_BASIC, TAB_STATUS_MAP } from '@/lib/constants/tabs';
-import { TabId } from '@/lib/types/filter';
+import { AUCTION_TABS_BASIC } from '@/lib/constants/tabs';
 
 import ButtonChat from './button-chat';
 
 const OtherProfilePage = () => {
-  // 탭 상태 관리
-  const [selectedTab, setSelectedTab] = useState<TabId>(AUCTION_TABS_BASIC[0]?.id || 'all');
-  const handleTabChange = (tabId: string) => setSelectedTab(tabId as TabId);
-
   return (
     <div className="w-full bg-white">
       {/* 1. 상단 프로필 카드 */}
@@ -31,7 +24,7 @@ const OtherProfilePage = () => {
         <FilterTab filterKey="otherHistory" items={AUCTION_TABS_BASIC} />
 
         {/* 3. 경매 리스트 */}
-        <AuctionItemList selectedStatuses={TAB_STATUS_MAP[selectedTab]} includeCompleted={true} />
+        <AuctionItemList />
       </div>
     </div>
   );
