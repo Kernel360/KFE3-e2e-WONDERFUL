@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { createAuction, updateAuction } from '@/lib/actions/auction';
 import { CreateAuctionFormData, createAuctionSchema } from '@/lib/schema/auction.schema';
+import { createClient } from '@/lib/supabase/client';
 import { uploadMultipleImages } from '@/lib/supabase/storage';
 import { FormErrorMessageType } from '@/lib/types/auction';
 
@@ -11,7 +12,7 @@ const useCreateAuction = () => {
   const [errors, setErrors] = useState<FormErrorMessageType>({});
   // 에러 메시지 상태를 객체 형태로 보관
   const [files, setFiles] = useState<File[]>([]);
-  const [userId, setUserId] = useState('5b7df186-e78f-4ee2-ab53-cef989a9177b');
+  // const [userId, setUserId] = useState('de35f43a-138c-4690-ba5e-9372cb943cd2');
 
   const router = useRouter(); // Next.js router 추가
 
@@ -22,6 +23,18 @@ const useCreateAuction = () => {
       const form = e.currentTarget;
       const formData = new FormData(form);
       const newErrors: FormErrorMessageType = {};
+
+      //로그인된 사용자 ID 가져오기
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        setErrors({ server: '로그인이 필요합니다. 다시 로그인해주세요.' });
+        return;
+      }
 
       // FormData → rawData 변환
       const rawData = {
@@ -69,7 +82,7 @@ const useCreateAuction = () => {
 
       try {
         // 게시글 먼저 등록 (DB에 글만 생성)
-        const auctionId = await createAuction(phasedData, userId);
+        const auctionId = await createAuction(phasedData, user.id);
         if (!auctionId) throw new Error('게시글 등록에 실패했습니다.');
 
         //스토리지 전송 response = url
@@ -90,7 +103,7 @@ const useCreateAuction = () => {
         setErrors({ server: '경매 등록 중 오류가 발생했습니다. 다시 시도해주세요.' });
       }
     },
-    [files]
+    [files, router]
   );
 
   return { errors, handleSubmit, setFiles };
