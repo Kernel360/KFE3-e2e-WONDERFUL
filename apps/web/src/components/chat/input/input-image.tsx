@@ -6,7 +6,7 @@ const InputImage = () => {
   return (
     <div className={serviceStyle().wrapper()}>
       <label className={serviceStyle().label()}>
-        <input type="file" className="hidden" />
+        <input type="file" className="hidden" accept="image/*,video/*" />
         <Images size={28} />
       </label>
       <p className={serviceStyle().title()}>사진/동영상</p>
