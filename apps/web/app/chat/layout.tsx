@@ -1,12 +1,12 @@
 import { ChatHeader, Container } from '@/components/layout';
 
-const layoutSearch = ({ children }: { children: React.ReactNode }) => {
+const layoutChat = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ChatHeader />
-      <Container className="px-4">{children}</Container>
+      <Container>{children}</Container>
     </>
   );
 };
 
-export default layoutSearch;
+export default layoutChat;
