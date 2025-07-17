@@ -32,8 +32,8 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
         location_id: data.location_id ?? null,
         start_time: data.start_time ?? null,
         end_time: convertHoursToTimestamp(data.end_time),
-        auction_type: data.auction_type || 'normal',
-        thumbnail_url: '',
+        auction_type: data.auction_type || 'NORMAL',
+        thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
         status: 'ACTIVE',
         created_at: new Date().toISOString(),
       })
@@ -46,9 +46,40 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
     }
 
     console.log('✅ auction_items 삽입 성공:', itemInsertResult.id);
+    const itemId = itemInsertResult.id;
 
-    // 일단 여기서 리턴 (auction_prices, auction_images 제거)
-    return itemInsertResult.id;
+    // 2. auction_prices 삽입
+    console.log('🔄 auction_prices 삽입 시도...');
+    const { error: priceError } = await supabase.from('auction_prices').insert({
+      item_id: itemId,
+      start_price: data.prices.start_price,
+      instant_price: data.prices.instant_price,
+      min_bid_unit: data.prices.min_bid_unit,
+      current_price: data.prices.start_price,
+    });
+
+    if (priceError) {
+      console.error('❌ auction_prices 에러:', priceError);
+      throw new Error(`auction_prices 저장 실패: ${priceError.message}`);
+    }
+    console.log('✅ auction_prices 삽입 성공');
+
+    // 3. auction_images 삽입 (이미지가 있는 경우)
+    if (data.images && data.images.length > 0) {
+      console.log('🔄 auction_images 삽입 시도...');
+      const { error: imageError } = await supabase.from('auction_images').insert({
+        item_id: itemId,
+        urls: data.images,
+      });
+
+      if (imageError) {
+        console.error('❌ auction_images 에러:', imageError);
+        throw new Error(`auction_images 저장 실패: ${imageError.message}`);
+      }
+      console.log('✅ auction_images 삽입 성공');
+    }
+
+    return itemId;
   } catch (error) {
     console.error('❌ createAuction 전체 에러:', error);
     throw error;

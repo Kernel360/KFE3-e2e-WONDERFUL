@@ -81,11 +81,16 @@ const useCreateAuction = () => {
       };
 
       try {
-        // 게시글 먼저 등록 (DB에 글만 생성)
-        const auctionId = await createAuction(phasedData, user.id);
+        // 1. 먼저 경매 등록 (auctionId 받기)
+        const phasedDataWithoutImages = {
+          ...phasedData,
+          images: [], // 빈 배열로 일단 등록
+        };
+
+        const auctionId = await createAuction(phasedDataWithoutImages, user.id);
         if (!auctionId) throw new Error('게시글 등록에 실패했습니다.');
 
-        //스토리지 전송 response = url
+        // 2. 이미지 업로드 (auctionId를 폴더명으로 사용)
         const uploadedUrls = await uploadMultipleImages(files, 'auction-images', auctionId);
         if (!uploadedUrls) throw new Error('이미지 등록에 실패했습니다.');
 
@@ -94,15 +99,18 @@ const useCreateAuction = () => {
           .filter((res) => res.success && res.url)
           .map((res) => res.url!);
 
-        // 이미지 URL DB 업데이트
-        //await updateAuction({ ...phasedData, images: successUrls }, auctionId);
-
-        // 썸네일만 업데이트
+        // 3. 이미지 URL로 auction_images 테이블 업데이트
         if (successUrls.length > 0) {
+          // auction_images 테이블에 직접 삽입
+          const { error: imageError } = await supabase.from('auction_images').insert({
+            item_id: auctionId,
+            urls: successUrls,
+          });
+
+          // 썸네일 업데이트
           await updateThumbnailOnly(successUrls[0] || '', auctionId);
         }
 
-        // 등록 완료 후 상세 페이지로 이동
         router.push(`/auction/${auctionId}`);
       } catch (error) {
         setErrors({ server: '경매 등록 중 오류가 발생했습니다. 다시 시도해주세요.' });
