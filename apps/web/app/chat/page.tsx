@@ -1,5 +1,5 @@
 import { ChatListItem } from '@/components/chat';
-import FilterTab from '@/components/common/tab/filter';
+import { FilterTab } from '@/components/common';
 
 import { CHAT_STATUS } from '@/lib/constants/chat';
 
