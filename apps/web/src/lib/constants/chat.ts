@@ -1,3 +1,5 @@
+export const DONE_MESSAGE = '거래가 종료되어 확인할 수 없습니다.';
+
 export const CHAT_STATUS: { id: string; name: string }[] = [
   {
     id: 'all',
