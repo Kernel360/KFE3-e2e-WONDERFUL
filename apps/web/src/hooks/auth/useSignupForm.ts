@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { signUp } from '@/lib/actions/auth';
 import { validateEmail, validateName, validatePassword } from '@/lib/utils/validation';
 
@@ -81,7 +79,6 @@ export const useSignupForm = () => {
     try {
       // Server Action 호출
       const result = await signUp(submitFormData);
-      const result = await signUpAction(submitFormData);
 
       if (result.success) {
         console.log('회원가입 성공:', result.message);

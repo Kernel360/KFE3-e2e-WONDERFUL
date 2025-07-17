@@ -24,19 +24,9 @@ const SignupSuccess = ({ handleLocationSetup }: SignupSuccessProps) => {
 
         <h2 className="mt-10 text-center text-3xl font-bold text-neutral-900">가입 성공</h2>
 
-        <p className="mt-10 text-center text-xs font-medium text-neutral-600">
+        <p className="mt-10 text-center text-xl font-medium text-neutral-600">
           축하합니다. 이제 서비스를 이용하실 수 있습니다.
         </p>
-
-        <div className="mt-10 text-center">
-          <span className="text-xs font-medium text-neutral-600">다음 단계는? </span>
-          <button
-            onClick={handleLocationSetup}
-            className="text-primary-500 hover:text-primary-600 cursor-pointer border-none bg-transparent text-xs font-medium transition-colors"
-          >
-            지역 설정!
-          </button>
-        </div>
       </div>
 
       <div className="mb-[94px] px-6">
