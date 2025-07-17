@@ -16,6 +16,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
 
     const {
       data: { user },
+      error: authError,
     } = await supabase.auth.getUser();
     console.log('✅ 사용자 인증 확인:', user?.id);
 
@@ -32,7 +33,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
         start_time: data.start_time ?? null,
         end_time: convertHoursToTimestamp(data.end_time),
         auction_type: data.auction_type || 'normal',
-        thumbnail_url: data.images[0] || '',
+        thumbnail_url: '',
         status: 'ACTIVE',
         created_at: new Date().toISOString(),
       })
@@ -49,7 +50,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
     // 일단 여기서 리턴 (auction_prices, auction_images 제거)
     return itemInsertResult.id;
   } catch (error) {
-    console.error('❌ createAuction 전체 에러:', error as Error);
+    console.error('❌ createAuction 전체 에러:', error);
     throw error;
   }
 };
@@ -67,7 +68,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       category_id: data.category_id,
       location_id: data.location_id ?? null,
       end_time: end_time,
-      thumbnail_url: data.images[0] || '',
+      thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
     })
     .eq('id', itemId);
 
@@ -144,4 +145,31 @@ export const deleteAuction = async (id: string) => {
   }
 
   return data;
+};
+
+// 썸네일만 업데이트하는 함수
+export const updateThumbnailOnly = async (thumbnailUrl: string, itemId: string) => {
+  try {
+    console.log('🔄 썸네일 업데이트 시도...', thumbnailUrl);
+
+    const supabase = await createClient();
+
+    const { error } = await supabase
+      .from('auction_items')
+      .update({
+        thumbnail_url: thumbnailUrl,
+      })
+      .eq('id', itemId);
+
+    if (error) {
+      console.error('❌ 썸네일 업데이트 에러:', error);
+      throw new Error(`썸네일 업데이트 실패: ${error.message}`);
+    }
+
+    console.log('✅ 썸네일 업데이트 성공');
+    return true;
+  } catch (error) {
+    console.error('❌ updateThumbnailOnly 전체 에러:', error);
+    throw error;
+  }
 };
