@@ -8,6 +8,8 @@ export { default as ButtonAccount } from './input/button-account';
 export { default as ChatBubble } from './messages/chat-bubble';
 export { default as SentMessage } from './messages/sent-message';
 export { default as ReceivedMessage } from './messages/received-message';
+export { default as DateMessage } from './messages/date-message';
+export { default as ChatContainer } from './messages/chat-container';
 
 export { default as ChatListItem } from './chat-list-item';
 export { default as TestChatRoom } from './test-chat-room';
