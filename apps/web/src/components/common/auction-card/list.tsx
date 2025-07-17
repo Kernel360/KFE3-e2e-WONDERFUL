@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 
 import { AuctionCard } from '@/components/common';
 
-import { useAuctions } from '@/hooks/queries/auction/useAuctions';
+import { useAuctions } from '@/hooks/queries/auction';
 
 import { AuctionListItem, SortOption } from '@/lib/types/auction-prisma';
 import { useFilterStore, useLocationStore } from '@/lib/zustand/store';
