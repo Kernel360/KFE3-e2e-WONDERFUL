@@ -25,6 +25,7 @@ export const useModal = (): UseModalReturn => {
       ...prev,
       {
         id,
+        showCloseButton: false,
         ...options,
       },
     ]);

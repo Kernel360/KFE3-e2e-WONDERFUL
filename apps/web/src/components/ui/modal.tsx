@@ -17,13 +17,13 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
   // body 스크롤 방지
   useEffect(() => {
     if (modalStack.length > 0) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('overflow-hidden');
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('overflow-hidden');
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('overflow-hidden');
     };
   }, [modalStack.length]);
 
@@ -32,17 +32,16 @@ const Modal = ({ modalStack, onCloseModal, children }: ModalProps) => {
   const modalsContent = modalStack.map((modal, index) => {
     const zIndex = 50 + index;
 
-    const styles = {
-      container: 'fixed inset-0 flex items-end justify-center',
-      modal: `w-full max-w-md h-full bg-white ${modal.className || ''}`,
-    };
-
     return (
-      <div key={modal.id} className={styles.container} style={{ zIndex }}>
+      <div
+        key={modal.id}
+        className="fixed inset-0 flex items-end justify-center"
+        style={{ zIndex }}
+      >
         {/* 모달 컨테이너 */}
-        <div className={`relative ${styles.modal}`}>
-          {/* 닫기 버튼 */}
-          {modal.showCloseButton !== false && (
+        <div className={`relative h-full w-full max-w-md bg-white ${modal.className || ''}`}>
+          {/* 닫기 버튼 - showCloseButton이 true일 때만 표시 */}
+          {modal.showCloseButton && (
             <div className="absolute right-4 top-4 z-10">
               <button
                 onClick={() => onCloseModal(modal.id)}
