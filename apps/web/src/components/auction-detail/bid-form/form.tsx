@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 import { tv } from 'tailwind-variants';
 
-import BannerDirect from '@/components/auction-detail/banner-direct';
-import BidInput from '@/components/auction-detail/bid-input';
+import BannerDirect from '@/components/auction-detail/bid-form/button-direct-deal';
+import BidInput from '@/components/auction-detail/bid-form/input';
 import ButtonFavorite from '@/components/auction-detail/button-favorite';
 import { Button } from '@/components/ui/button';
 
 import useCountdown from '@/hooks/common/useCountdown';
+
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 const bidInputWrapper = tv({

@@ -1,10 +1,10 @@
 import { AlarmClock, ChevronRight } from 'lucide-react';
 
-interface BannerDirectProps {
+interface ButtonDirectDealProps {
   directPrice: string;
 }
 
-const BannerDirect = ({ directPrice }: BannerDirectProps) => {
+const ButtonDirectDeal = ({ directPrice }: ButtonDirectDealProps) => {
   return (
     <button className="relative flex h-auto w-full cursor-pointer items-center justify-between rounded-sm bg-indigo-50 pl-3 pr-1">
       <div className="flex items-center gap-2 pl-1.5">
@@ -24,4 +24,4 @@ const BannerDirect = ({ directPrice }: BannerDirectProps) => {
   );
 };
 
-export default BannerDirect;
+export default ButtonDirectDeal;

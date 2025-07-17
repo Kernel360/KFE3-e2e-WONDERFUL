@@ -12,7 +12,7 @@ interface BidInputProps {
   onChange: (price: number | null) => void;
 }
 
-const BidInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputProps) => {
+const BidFormInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputProps) => {
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,4 +63,4 @@ const BidInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputProps) 
   );
 };
 
-export default BidInput;
+export default BidFormInput;
