@@ -1,5 +1,4 @@
 export { default as ButtonDetailMore } from './button-detail-more';
-export { default as ButtonFavorite } from './button-favorite';
 export { default as CountDown } from './countdown';
 export { default as ItemImages } from './item-images';
 export { default as ItemSummary } from './item-summary';
@@ -14,5 +13,6 @@ export { default as BidderAvatar } from './bid-table/bidder-avatar';
 //bid-form
 export { default as BidForm } from './bid-form/form';
 export { default as BidFormInput } from './bid-form/input';
-export { default as BidFormBottom } from './bid-form/bottom';
 export { default as ButtonDirectDeal } from './bid-form/button-direct-deal';
+export { default as BidFormBottom } from './bid-form/bottom';
+export { default as ButtonFavorite } from './bid-form/button-favorite';

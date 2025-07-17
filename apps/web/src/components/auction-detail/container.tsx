@@ -125,9 +125,9 @@ const AuctionDetailContainer = () => {
           <BidTable />
         </section>
       </article>
-      <section className="sticky bottom-0 z-50 w-full bg-white">
-        <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
-      </section>
+      <aside className="sticky bottom-0 z-50 w-full bg-white">
+        <BidForm auctionId={auction.id} currentPrice={item.currentPrice} endTime={item.endTime} />
+      </aside>
     </>
   );
 };
