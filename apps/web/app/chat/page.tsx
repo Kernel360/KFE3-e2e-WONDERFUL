@@ -5,7 +5,7 @@ import { CHAT_STATUS } from '@/lib/constants/chat';
 
 const Page = () => {
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col px-4">
       <FilterTab filterKey={'chatStatus'} items={CHAT_STATUS} />
       <ChatListItem />
     </div>
