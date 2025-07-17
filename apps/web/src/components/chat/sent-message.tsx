@@ -10,9 +10,8 @@ const SentMessage = () => {
   // TODO: 실시간 데이터 연동해서 상태값에 따라 bubble 달라질 수 있도록 수정하기
   const [isDone, setIsDone] = useState(false);
   const color = isDone ? 'disabled' : 'primary';
-  const content = !isDone
-    ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.'
-    : DONE_MESSAGE;
+  const content = isDone ? DONE_MESSAGE : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.';
+
 
   const time = '12:00 AM';
 
