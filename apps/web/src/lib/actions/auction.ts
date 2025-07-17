@@ -1,4 +1,3 @@
-// 260652 18:52 금영 수정 ::FormField 맞춰 type 수정
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -9,19 +8,14 @@ import { AuctionFormData } from '@/types/auction';
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
   try {
-    console.log('=== createAuction 시작 ===');
-
     const supabase = await createClient();
-    console.log('✅ Supabase 클라이언트 생성 완료');
 
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    console.log('✅ 사용자 인증 확인:', user?.id);
 
-    // auction_items 삽입
-    console.log('🔄 auction_items 삽입 시도...');
+    // 1. auction_items 삽입
     const { data: itemInsertResult, error: itemError } = await supabase
       .from('auction_items')
       .insert({
@@ -45,11 +39,9 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       throw new Error(`auction_items 저장 실패: ${itemError?.message}`);
     }
 
-    console.log('✅ auction_items 삽입 성공:', itemInsertResult.id);
     const itemId = itemInsertResult.id;
 
     // 2. auction_prices 삽입
-    console.log('🔄 auction_prices 삽입 시도...');
     const { error: priceError } = await supabase.from('auction_prices').insert({
       item_id: itemId,
       start_price: data.prices.start_price,
@@ -62,11 +54,9 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       console.error('❌ auction_prices 에러:', priceError);
       throw new Error(`auction_prices 저장 실패: ${priceError.message}`);
     }
-    console.log('✅ auction_prices 삽입 성공');
 
     // 3. auction_images 삽입 (이미지가 있는 경우)
     if (data.images && data.images.length > 0) {
-      console.log('🔄 auction_images 삽입 시도...');
       const { error: imageError } = await supabase.from('auction_images').insert({
         item_id: itemId,
         urls: data.images,
@@ -76,7 +66,6 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
         console.error('❌ auction_images 에러:', imageError);
         throw new Error(`auction_images 저장 실패: ${imageError.message}`);
       }
-      console.log('✅ auction_images 삽입 성공');
     }
 
     return itemId;
@@ -89,7 +78,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
 // Update
 export const updateAuction = async (data: AuctionFormData, itemId: string) => {
   const supabase = await createClient();
-  const end_time = convertHoursToTimestamp(data.end_time);
+  const endtime = convertHoursToTimestamp(data.end_time);
 
   const { error: itemError } = await supabase
     .from('auction_items')
@@ -98,7 +87,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       description: data.description,
       category_id: data.category_id,
       location_id: data.location_id ?? null,
-      end_time: end_time,
+      end_time: endtime,
       thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
     })
     .eq('id', itemId);
