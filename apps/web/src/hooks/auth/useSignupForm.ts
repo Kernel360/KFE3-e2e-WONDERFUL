@@ -1,38 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
-
-import { useRouter } from 'next/navigation';
-
-import BottomModal from '@/components/auth/bottom-modal';
-import LocationSetup from '@/components/auth/location-setup';
-import SignupForm from '@/components/auth/signup/signup-form';
-import SignupDone from '@/components/auth/signup-done';
+import { useState } from 'react';
 
 import { signUpAction } from '@/lib/actions/auth.action';
 import { validateEmail, validatePassword, validateName } from '@/lib/utils/auth';
 
-const SignupView = () => {
-  const router = useRouter();
-
-  // 🔥 플로우 상태
-  const [currentStep, setCurrentStep] = useState<'signup' | 'modal' | 'location' | 'start'>(
-    'signup'
-  );
-
-  // Form state
+export const useSignupForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
   });
 
-  // UI state
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Error state
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (fieldId: string, value: string | boolean) => {
@@ -91,17 +73,15 @@ const SignupView = () => {
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors);
       setIsSubmitting(false);
-      return;
+      return { success: false };
     }
 
     try {
-      // Server Action 호출
       const result = await signUpAction(submitFormData);
 
       if (result.success) {
         console.log('회원가입 성공:', result.message);
-        // 🔥 성공 시 모달 단계로 이동
-        setCurrentStep('modal');
+        return { success: true };
       } else {
         // 서버 에러를 필드별로 설정
         if (result.field === 'email') {
@@ -113,69 +93,31 @@ const SignupView = () => {
         } else {
           setFieldErrors({ email: result.error || '회원가입에 실패했습니다.' });
         }
+        return { success: false };
       }
     } catch (error) {
       console.error('회원가입 예외:', error);
       setFieldErrors({ email: '회원가입 중 오류가 발생했습니다.' });
+      return { success: false };
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // 🔥 플로우 핸들러들
-  const handleCloseModal = () => {
-    setCurrentStep('location');
-  };
-
-  const handleSaveLocation = () => {
-    console.log('위치 저장 완료');
-    setCurrentStep('start');
-  };
-
-  const handleSkipLocation = () => {
-    console.log('위치 설정 건너뛰기');
-    setCurrentStep('start');
-  };
-
-  const handleStartActivity = () => {
-    router.push('/');
   };
 
   const isFormValid = (): boolean => {
     return !!(formData.name && formData.email && formData.password && agreeToTerms);
   };
 
-  // 🔥 단계별 렌더링
-  if (currentStep === 'start') {
-    return <SignupDone onStartActivity={handleStartActivity} />;
-  }
-
-  if (currentStep === 'location') {
-    return (
-      <LocationSetup onSaveLocation={handleSaveLocation} onSkipLocation={handleSkipLocation} />
-    );
-  }
-
-  // signup 또는 modal 단계
-  return (
-    <>
-      <SignupForm
-        formData={formData}
-        showPassword={showPassword}
-        agreeToTerms={agreeToTerms}
-        isSubmitting={isSubmitting}
-        fieldErrors={fieldErrors}
-        onInputChange={handleInputChange}
-        onTogglePassword={handleTogglePassword}
-        onAgreeToTerms={handleAgreeToTerms}
-        onSubmit={handleFormSubmit}
-        isFormValid={isFormValid}
-      />
-
-      {/* 🔥 모달 - modal 단계에서만 표시 */}
-      <BottomModal isOpen={currentStep === 'modal'} onClose={handleCloseModal} />
-    </>
-  );
+  return {
+    formData,
+    showPassword,
+    agreeToTerms,
+    isSubmitting,
+    fieldErrors,
+    handleInputChange,
+    handleTogglePassword,
+    handleAgreeToTerms,
+    handleFormSubmit,
+    isFormValid,
+  };
 };
-
-export default SignupView;
