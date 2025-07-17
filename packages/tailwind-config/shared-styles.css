@@ -29,11 +29,30 @@ h6 {
   /* Firefox */
 }
 
+.scrollbar-hide-y {
+  overflow-y: auto;
+  /* 가로 스크롤 가능 */
+  overflow-x: hidden;
+  /* 세로 스크롤 숨김 */
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
 .scrollbar-hide-x::-webkit-scrollbar {
   /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
   width: 0;
   height: 0;
 }
+
+.scrollbar-hide-y::-webkit-scrollbar {
+  /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+  width: 0;
+  height: 0;
+}
+
 
 @theme {
   /* Primary Colors */
@@ -46,6 +65,7 @@ h6 {
   --color-primary-600: #4238f1;
   --color-primary-700: #372ecf;
   --color-primary-800: #2e29a0;
+  --color-primary-950: #16214A;
 
   /* Success Colors */
   --color-success-50: #f0fdfa;
