@@ -1,23 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { AuctionItemList, FilterTab } from '@/components/common';
 
-import { AuctionItemList } from '@/components/common/auction-card';
-import { TabListFilter } from '@/components/common/tab';
+import { TabId } from '@/lib/types/filter';
+import { useFilterStore } from '@/lib/zustand/store';
 
-import { AUCTION_TABS, AUCTION_TABS_BASIC, TAB_STATUS_MAP, TabId } from '@/constants/tabs';
+import { AUCTION_TABS_BASIC, TAB_STATUS_MAP } from '@/constants/tabs';
 
 interface SearchResultsProps {
   query: string;
 }
 
 const SearchResult = ({ query }: SearchResultsProps) => {
-  const [selectedTab, setSelectedTab] = useState<TabId>(AUCTION_TABS[0]?.id || 'all');
-
-  const handleTabChange = (tabId: string) => {
-    setSelectedTab(tabId as TabId);
-  };
-
+  const selectedTab = (useFilterStore((store) => store.selectedItems.search) ?? 'all') as TabId;
   const results = [];
 
   /* TODO
@@ -28,18 +23,14 @@ const SearchResult = ({ query }: SearchResultsProps) => {
   if (results.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-center">
-        <p className="font-medium"> "{query}" 검색 결과가 없습니다</p>
+        <p className="font-medium"> {query} 검색 결과가 없습니다</p>
       </div>
     );
   }
 
   return (
     <>
-      <TabListFilter
-        items={AUCTION_TABS_BASIC}
-        selectedCategoryId={selectedTab}
-        onCategoryChange={handleTabChange}
-      />
+      <FilterTab filterKey={'search'} items={AUCTION_TABS_BASIC} />
       <AuctionItemList selectedStatuses={TAB_STATUS_MAP[selectedTab]} includeCompleted={true} />
     </>
   );

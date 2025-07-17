@@ -1,5 +1,7 @@
+other - profile.tsx;
+
 //apps/web/src/components/user/other-profile.tsx
-'use client';
+('use client');
 // 상대방 프로필 페이지
 
 import { useState } from 'react';

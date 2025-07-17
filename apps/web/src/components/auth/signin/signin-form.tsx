@@ -2,18 +2,17 @@
 
 import React, { useState } from 'react';
 
-import SigninFields from '@/components/auth/signin/signin-fields';
-import SubmitButton from '@/components/auth/submit-button';
+import { useRouter } from 'next/navigation';
+
 import ErrorMessage from '@/components/auth/error-message';
+import { SigninFields } from '@/components/auth/signin';
+import SubmitButton from '@/components/auth/submit-button';
 
 import { signInAction } from '@/lib/actions/auth.action';
 import { validateEmail, validatePassword } from '@/lib/utils/auth';
 
-interface SigninFormProps {
-  onSuccess?: () => void;
-}
-
-const SigninForm = ({ onSuccess }: SigninFormProps) => {
+const SigninForm = () => {
+  const router = useRouter();
   // Form state
   const [formData, setFormData] = useState({
     email: '',
@@ -46,7 +45,7 @@ const SigninForm = ({ onSuccess }: SigninFormProps) => {
   };
 
   const handleForgotPassword = () => {
-    console.log('비밀번호 찾기');
+    router.push('/auth/reset-password');
   };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,8 +78,8 @@ const SigninForm = ({ onSuccess }: SigninFormProps) => {
       const result = await signInAction(submitFormData);
 
       if (result.success) {
-        // 로그인 성공 콜백 호출
-        onSuccess?.();
+        // 로그인 성공 시 홈으로 리다이렉트
+        router.push('/');
       } else {
         // 서버 에러를 필드별로 설정
         if (result.field === 'password') {

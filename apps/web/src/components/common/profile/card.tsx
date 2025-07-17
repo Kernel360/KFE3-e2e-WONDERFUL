@@ -1,4 +1,4 @@
-import { ProfileImage } from '@/components/common/profile';
+import { ProfileImage } from '@/components/common';
 
 interface ProfileCardProps {
   nickname: string;

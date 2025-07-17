@@ -1,9 +1,10 @@
 import { X } from 'lucide-react';
 
 import Thumbnail from '@/components/ui/thumbnail';
+
 import { AttacedAuctionImageProps } from '@/lib/types/auction-prisma';
 
-const AttacedImagesThumbnail = ({ url, handleDelete }: AttacedAuctionImageProps) => {
+const AttachImagesThumbnail = ({ url, handleDelete }: AttacedAuctionImageProps) => {
   if (!url) return null;
 
   return (
@@ -21,4 +22,4 @@ const AttacedImagesThumbnail = ({ url, handleDelete }: AttacedAuctionImageProps)
   );
 };
 
-export default AttacedImagesThumbnail;
+export default AttachImagesThumbnail;

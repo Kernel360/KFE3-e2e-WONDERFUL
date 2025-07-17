@@ -1,7 +1,4 @@
-export interface TabItem {
-  id: string;
-  name: string;
-}
+import { TabItem, TabId, AuctionStatus } from '@/types/filter';
 
 // 폴백용 카테고리 (API 에러시나 데이터 없을 때 사용)
 export const FALLBACK_CATEGORIES: TabItem[] = [
@@ -15,12 +12,6 @@ export const FALLBACK_CATEGORIES: TabItem[] = [
   { id: '89f2b7b7-f8c4-4637-8005-54de5c963940', name: '도서/음반' },
   { id: '9734e870-1cfa-4c97-a584-58c99ab0bd07', name: '부품/소모품' },
 ];
-
-// 경매 상태 타입
-export type AuctionStatus = 'ACTIVE' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED';
-
-// 탭 ID 타입
-export type TabId = 'all' | 'ongoing' | 'completed' | 'cancelled';
 
 // 각 탭에 매핑되는 상태들
 export const TAB_STATUS_MAP: Record<TabId, AuctionStatus[]> = {

@@ -1,3 +1,22 @@
+export const CHAT_STATUS: { id: string; name: string }[] = [
+  {
+    id: 'all',
+    name: '전체',
+  },
+  {
+    id: 'sales',
+    name: '판매',
+  },
+  {
+    id: 'purchases',
+    name: '구매',
+  },
+  {
+    id: 'unread',
+    name: '안 읽은 채팅',
+  },
+];
+
 export interface ChatRoom {
   id: string; // UUID
   auction_id: string;

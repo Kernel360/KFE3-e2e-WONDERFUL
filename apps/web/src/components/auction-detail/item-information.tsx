@@ -5,17 +5,21 @@ import useCountdown from '@/hooks/common/useCountdown';
 
 import { formatDate } from '@/lib/utils/date';
 
+import BidTable from './bid-table';
+
 interface ItemInformationProps {
   item: Item;
+  id: string;
 }
 
 export interface Item {
   title: string;
   status: string;
   endTime: string;
+  description: string;
 }
 
-const ItemInformation = ({ item }: ItemInformationProps) => {
+const ItemInformation = ({ item, id }: ItemInformationProps) => {
   const deadline = formatDate(new Date(item.endTime));
 
   // 실시간으로 경매 종료 여부 확인
@@ -42,6 +46,12 @@ const ItemInformation = ({ item }: ItemInformationProps) => {
           <time className="text-sm font-medium text-neutral-400">{deadline}</time>
         </div>
         <Countdown date={new Date(item.endTime)} />
+      </div>
+      <div className="my-6 w-full space-y-6 px-4">
+        <div className="">{item.description}</div>
+        <div className="bg-primary-50/80 rounded-sm px-2 py-1">
+          <BidTable itemId={id} />
+        </div>
       </div>
     </section>
   );
