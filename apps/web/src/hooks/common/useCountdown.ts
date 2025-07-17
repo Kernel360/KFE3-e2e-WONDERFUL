@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const getRemainingTime = (deadline: Date) => {
   const totalMs = deadline.getTime() - new Date().getTime();
@@ -13,15 +13,25 @@ const getRemainingTime = (deadline: Date) => {
 };
 
 const useCountdown = (deadline: Date) => {
-  const [remaining, setRemaining] = useState(() => getRemainingTime(deadline));
+  const stableDeadline = useMemo(() => new Date(deadline), [deadline]);
+  const [remaining, setRemaining] = useState(() => getRemainingTime(stableDeadline));
 
   useEffect(() => {
+    // 이미 만료된 경우 초기값만 설정하고 종료
+    if (remaining.isExpired) return;
+
     const interval = setInterval(() => {
-      setRemaining(getRemainingTime(deadline));
+      const updated = getRemainingTime(stableDeadline);
+      setRemaining(updated);
+
+      // 만료되었으면 타이머 제거
+      if (updated.isExpired) {
+        clearInterval(interval);
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [deadline]);
+  }, [remaining.isExpired, stableDeadline]);
 
   return remaining;
 };
