@@ -8,8 +8,8 @@ interface ProfileImageProps {
 
 const ProfileImage = ({ src, alt, className }: ProfileImageProps) => {
   return (
-    <Avatar>
-      <AvatarImage src={src} alt={alt} className={`object-cover ${className}`} />
+    <Avatar className={className}>
+      <AvatarImage src={src} alt={alt} className="object-cover" />
     </Avatar>
   );
 };
