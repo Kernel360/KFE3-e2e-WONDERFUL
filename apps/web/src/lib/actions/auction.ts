@@ -8,57 +8,50 @@ import { AuctionFormData } from '@/types/auction';
 
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
-  const supabase = await createClient();
-  const end_time = convertHoursToTimestamp(data.end_time);
+  try {
+    console.log('=== createAuction 시작 ===');
 
-  const { data: itemInsertResult, error: itemError } = await supabase
-    .from('auction_items')
-    .insert({
-      seller_id: userId,
-      title: data.title,
-      description: data.description,
-      category_id: data.category_id,
-      location_id: data.location_id ?? null, // 현재 데이터 없음 : undefined = null
-      start_time: data.start_time ?? null, // 현재 데이터 없음 : undefined = null
-      end_time: end_time,
-      auction_type: data.auction_type || 'normal', // 현재 데이터 없음 : normal
-      thumbnail_url: data.images[0] || '',
-      status: 'ACTIVE',
-      created_at: new Date().toISOString(), // 추가
-    })
-    .select('id') // 새로 생성된 item_id 추출
-    .single();
+    const supabase = await createClient();
+    console.log('✅ Supabase 클라이언트 생성 완료');
 
-  if (itemError || !itemInsertResult) {
-    throw new Error(`auction_items 저장 실패: ${itemError?.message}`);
-  }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log('✅ 사용자 인증 확인:', user?.id);
 
-  const itemId = itemInsertResult.id;
+    // auction_items 삽입
+    console.log('🔄 auction_items 삽입 시도...');
+    const { data: itemInsertResult, error: itemError } = await supabase
+      .from('auction_items')
+      .insert({
+        seller_id: userId,
+        title: data.title,
+        description: data.description,
+        category_id: data.category_id,
+        location_id: data.location_id ?? null,
+        start_time: data.start_time ?? null,
+        end_time: convertHoursToTimestamp(data.end_time),
+        auction_type: data.auction_type || 'normal',
+        thumbnail_url: data.images[0] || '',
+        status: 'ACTIVE',
+        created_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single();
 
-  const { error: priceError } = await supabase.from('auction_prices').insert({
-    item_id: itemId,
-    start_price: data.prices.start_price,
-    instant_price: data.prices.instant_price,
-    min_bid_unit: data.prices.min_bid_unit,
-    current_price: data.prices.start_price,
-  });
-
-  if (priceError) {
-    throw new Error(`auction_prices 저장 실패: ${priceError.message}`);
-  }
-
-  if (data.images.length > 0) {
-    const { error: imageError } = await supabase.from('auction_images').insert({
-      item_id: itemId,
-      urls: data.images,
-    });
-
-    if (imageError) {
-      throw new Error(`auction_images 저장 실패: ${imageError.message}`);
+    if (itemError) {
+      console.error('❌ auction_items 에러:', itemError);
+      throw new Error(`auction_items 저장 실패: ${itemError?.message}`);
     }
-  }
 
-  return itemId;
+    console.log('✅ auction_items 삽입 성공:', itemInsertResult.id);
+
+    // 일단 여기서 리턴 (auction_prices, auction_images 제거)
+    return itemInsertResult.id;
+  } catch (error) {
+    console.error('❌ createAuction 전체 에러:', error as Error);
+    throw error;
+  }
 };
 
 // Update
