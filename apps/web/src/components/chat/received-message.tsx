@@ -12,8 +12,9 @@ const ReceivedMessage = () => {
   // TODO: 실시간 데이터 연동해서 상태값에 따라 bubble 달라질 수 있도록 수정하기
   const [isDone, setIsDone] = useState(false);
   const color = isDone ? 'disabled' : 'secondary';
-  const content = isDone ? DONE_MESSAGE : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.';
-
+  const content = isDone
+    ? DONE_MESSAGE
+    : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.';
 
   const url = dummyUrls[0]!;
 

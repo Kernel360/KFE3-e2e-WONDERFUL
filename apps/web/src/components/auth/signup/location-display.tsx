@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import KakaoMap from '@/components/auth/kakao-map';
+import { KakaoMap } from '@/components/auth/signup';
 import { Button } from '@/components/ui/button';
 
 import { useGeolocation } from '@/hooks/common/useGeolocation';
