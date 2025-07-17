@@ -10,10 +10,9 @@ export const useSignupForm = () => {
   const {
     isSubmitting,
     fieldErrors,
+    setFieldErrors,
     createInputHandler,
     validateForm,
-    handleServerError,
-    handleException,
     withSubmission,
   } = useAuthCommon();
 
@@ -53,21 +52,35 @@ export const useSignupForm = () => {
     }
 
     if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return { success: false };
     }
 
-    return withSubmission(
-      async () => {
-        const result = await signUp(submitFormData);
-        if (!result.success) {
-          handleServerError(result, '회원가입에 실패했습니다.');
-          return { success: false };
+    return withSubmission(async () => {
+      // Server Action 호출
+      const result = await signUp(submitFormData);
+
+      // 서버 응답 처리
+      if (result.success) {
+        console.log('회원가입 성공:', result.message);
+        return { success: true, result };
+      } else {
+        const serverErrors: Record<string, string> = {};
+
+        if (result.field === 'email') {
+          serverErrors.email = result.error || '회원가입에 실패했습니다.';
+        } else if (result.field === 'password') {
+          serverErrors.password = result.error || '회원가입에 실패했습니다.';
+        } else if (result.field === 'name') {
+          serverErrors.name = result.error || '회원가입에 실패했습니다.';
+        } else {
+          serverErrors.email = result.error || '회원가입에 실패했습니다.';
         }
-        return { success: true };
-      },
-      undefined,
-      (error) => handleException(error, '회원가입 중 오류가 발생했습니다.')
-    );
+
+        setFieldErrors(serverErrors);
+        throw new Error(result.error || '회원가입에 실패했습니다.');
+      }
+    });
   };
 
   const isFormValid = (): boolean => {
