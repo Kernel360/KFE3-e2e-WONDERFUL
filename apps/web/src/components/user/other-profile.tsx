@@ -9,9 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
 
-import { AuctionItemList } from '@/components/common/auction-card';
-import ProfileCard from '@/components/common/profile/card';
-import { TabListFilter } from '@/components/common/tab';
+import { AuctionItemList, ProfileCard, TabListFilter } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { AUCTION_TABS_BASIC, TAB_STATUS_MAP, TabId } from '@/lib/constants/tabs';
