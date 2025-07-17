@@ -28,7 +28,7 @@ export interface Address {
 const Address = ({ color, children, address }: AddressProps) => {
   return (
     <div className={style({ color })}>
-      <div className="flex-col">
+      <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <p className="text-lg font-medium text-neutral-900">{address.name}</p>
           {address.isPrimary && <BadgePrimary />}

@@ -10,7 +10,13 @@ const ButtonSelect = ({ isSelected }: ButtonSelectProps) => {
   const textColor = isSelected ? 'text-primary-500' : 'text-neutral-400';
 
   return (
-    <Button variant="solid" color="transparent" size="sm" aria-pressed={isSelected}>
+    <Button
+      variant="solid"
+      color="transparent"
+      size="sm"
+      aria-label={isSelected ? 'Deselect' : 'Select'}
+      aria-pressed={isSelected}
+    >
       <Check className={textColor} strokeWidth={2.5} />
     </Button>
   );
