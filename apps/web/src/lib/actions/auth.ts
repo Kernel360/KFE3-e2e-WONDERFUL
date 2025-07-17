@@ -1,39 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 
+import { createClient } from '@/lib/supabase/server';
 import { AuthActionResult } from '@/lib/types/auth';
 
-//Supabase 클라이언트 생성 헬퍼
-const createAuthClient = async () => {
-  const cookieStore = await cookies();
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Server Action에서는 쿠키 설정 무시
-          }
-        },
-      },
-    }
-  );
-};
-
 //로그인 액션
-export const signInAction = async (formData: FormData): Promise<AuthActionResult> => {
+export const signIn = async (formData: FormData): Promise<AuthActionResult> => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
@@ -46,7 +19,7 @@ export const signInAction = async (formData: FormData): Promise<AuthActionResult
   }
 
   try {
-    const supabase = await createAuthClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -89,7 +62,7 @@ export const signInAction = async (formData: FormData): Promise<AuthActionResult
 };
 
 // === 회원가입 액션 ===
-export const signUpAction = async (formData: FormData): Promise<AuthActionResult> => {
+export const signUp = async (formData: FormData): Promise<AuthActionResult> => {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -103,7 +76,7 @@ export const signUpAction = async (formData: FormData): Promise<AuthActionResult
   }
 
   try {
-    const supabase = await createAuthClient();
+    const supabase = await createClient();
     // Supabase Auth로 회원가입
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -187,9 +160,9 @@ export const signUpAction = async (formData: FormData): Promise<AuthActionResult
 };
 
 //로그아웃 액션
-export const signOutAction = async (): Promise<AuthActionResult> => {
+export const signOut = async (): Promise<AuthActionResult> => {
   try {
-    const supabase = await createAuthClient();
+    const supabase = await createClient();
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -215,9 +188,9 @@ export const signOutAction = async (): Promise<AuthActionResult> => {
 };
 
 //구글 로그인 액션
-export const signInWithGoogleAction = async (): Promise<AuthActionResult> => {
+export const signInWithGoogle = async (): Promise<AuthActionResult> => {
   try {
-    const supabase = await createAuthClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

@@ -16,3 +16,20 @@ export interface UsersResponse {
   message: string;
   data: User[];
 }
+
+// 사용자 프로필 응답 타입
+export interface UserProfile {
+  id: string;
+  email: string;
+  phone: string | null;
+  isVerified: boolean;
+  profileImg: string | null;
+  nickname: string | null;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+// 에러 응답 타입
+export interface ErrorResponse {
+  error: string;
+}

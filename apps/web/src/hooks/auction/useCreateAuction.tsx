@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-import { createAuctionSchema, CreateAuctionFormData } from '@/lib/schema/auction.schema';
-import { FormErrorMessageType } from '@/lib/types/auction';
+
+import { createAuction, updateAuction } from '@/lib/actions/auction';
+import { CreateAuctionFormData, createAuctionSchema } from '@/lib/schema/auction.schema';
 import { uploadMultipleImages } from '@/lib/supabase/storage';
-import { createAuction, updateAuction } from '@/lib/actions/auction.action';
+import { FormErrorMessageType } from '@/lib/types/auction';
 
 const useCreateAuction = () => {
   const [errors, setErrors] = useState<FormErrorMessageType>({});

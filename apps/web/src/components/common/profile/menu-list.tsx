@@ -37,7 +37,7 @@ const MenuList = () => {
   return (
     <nav aria-label="마이페이지 메뉴 목록">
       {menuSections.map((section) => (
-        <section key={section.id} className="mb-14 w-full space-y-6 px-6">
+        <section key={section.id} className="mb-14 w-full space-y-6">
           <h2 className="mb-6 text-lg font-bold text-neutral-900">{section.title}</h2>
           <ul className="space-y-6">
             {section.items.map((item) => (

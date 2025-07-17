@@ -6,11 +6,11 @@ import { useRouter } from 'next/navigation';
 
 import BottomModal from '@/components/auth/bottom-modal';
 import LocationSetup from '@/components/auth/location-setup';
-import SignupForm from '@/components/auth/signup/signup-form';
 import SignupDone from '@/components/auth/signup-done';
+import SignupForm from '@/components/auth/signup/signup-form';
 
-import { signUpAction } from '@/lib/actions/auth.action';
-import { validateEmail, validatePassword, validateName } from '@/lib/utils/auth';
+import { signUp } from '@/lib/actions/auth';
+import { validateEmail, validateName, validatePassword } from '@/lib/utils/validation';
 
 const SignupView = () => {
   const router = useRouter();
@@ -96,7 +96,7 @@ const SignupView = () => {
 
     try {
       // Server Action 호출
-      const result = await signUpAction(submitFormData);
+      const result = await signUp(submitFormData);
 
       if (result.success) {
         console.log('회원가입 성공:', result.message);

@@ -16,8 +16,8 @@ if (!supabaseServiceRoleKey) {
   throw new Error('Missing environment variable: SUPABASE_SERVICE_ROLE_KEY');
 }
 
-// 서버 컴포넌트용 (서버사이드)
-export const createServerComponentClient = async () => {
+// 서버 컴포넌트용 (Server Actions)
+export const createClient = async () => {
   const cookieStore = await cookies();
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -29,29 +29,19 @@ export const createServerComponentClient = async () => {
         try {
           cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         } catch {
-          // 서버 컴포넌트에서는 쿠키 설정 무시
+          // Server Actions에서는 쿠키 설정 무시
         }
       },
     },
   });
 };
 
-// Server Actions용 (새로 추가)
-export const createClient = async () => {
-  const cookieStore = await cookies();
-
+// Admin용 (Service Role Key 사용)
+export const createAdminClient = async () => {
   return createServerClient(supabaseUrl, supabaseServiceRoleKey, {
     cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-        } catch {
-          // Server Actions에서는 쿠키 설정 무시
-        }
-      },
+      getAll: () => [],
+      setAll: () => {},
     },
   });
 };
