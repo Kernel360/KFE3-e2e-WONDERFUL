@@ -8,8 +8,13 @@ const BackButton = () => {
   const routes = useRouter();
 
   return (
-    <button type="button" onClick={() => routes.back()}>
+    <button
+      type="button"
+      onClick={() => routes.back()}
+      aria-label="Go back"
+    >
       <ChevronLeftIcon />
+      <span className="sr-only">Go back</span>
     </button>
   );
 };
