@@ -1,12 +1,5 @@
-import { ChatRoomHeader, Container } from '@/components/layout';
-
 const layoutChatRoom = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <>
-      <ChatRoomHeader />
-      <Container>{children}</Container>
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default layoutChatRoom;
