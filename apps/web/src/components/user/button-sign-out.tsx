@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 
-import { signOutAction } from '@/lib/actions/auth.action';
+import { signOut } from '@/lib/actions/auth';
 
 const ButtonSignOut: FC = () => {
   const router = useRouter();
   const handleLogout = async () => {
     try {
-      const result = await signOutAction();
+      const result = await signOut();
       if (result && result.success) {
         router.push('/auth/signin');
       }
