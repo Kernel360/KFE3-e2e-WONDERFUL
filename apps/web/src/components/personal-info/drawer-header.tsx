@@ -3,7 +3,7 @@ interface DrawerHeaderProps {
   description: string;
 }
 
-const drawerHeader = ({ title, description }: DrawerHeaderProps) => {
+const DrawerHeader = ({ title, description }: DrawerHeaderProps) => {
   return (
     <div className="flex flex-col gap-1 px-3">
       <p className="text-lg font-semibold text-neutral-900">{title}</p>
@@ -12,4 +12,4 @@ const drawerHeader = ({ title, description }: DrawerHeaderProps) => {
   );
 };
 
-export default drawerHeader;
+export default DrawerHeader;
