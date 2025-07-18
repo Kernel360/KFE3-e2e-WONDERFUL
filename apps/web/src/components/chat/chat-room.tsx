@@ -1,4 +1,4 @@
-import { ChatContainer, ChatInputBar, ProductInfoCard } from '@/components/chat/index';
+import { ChatContainer, ChatInputBar, ProductInfoCard } from '@/components/chat';
 
 const ChatRoom = () => {
   return (
