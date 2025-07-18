@@ -33,10 +33,10 @@ const AccountDrawerContent = () => {
     },
   ];
 
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   const handleSelect = (id: string) => {
-    setSelectedAddressId(id === selectedAddressId ? null : id);
+    setSelectedAccountId(id === selectedAccountId ? null : id);
   };
 
   // TODO: 해당하는 id 에 대하여 메세지 컴포넌트로 공유하는 onClick 함수 넣어주기
