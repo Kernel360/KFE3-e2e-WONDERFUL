@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { createAuction, updateThumbnailOnly } from '@/lib/actions/auction';
+import { addAuctionImages, createAuction, updateThumbnailOnly } from '@/lib/actions/auction';
 import { CreateAuctionFormData, createAuctionSchema } from '@/lib/schema/auction.schema';
 import { createClient } from '@/lib/supabase/client';
 import { uploadMultipleImages } from '@/lib/supabase/storage';
@@ -102,10 +102,7 @@ const useCreateAuction = () => {
         // 3. 이미지 URL로 auction_images 테이블 업데이트
         if (successUrls.length > 0) {
           // auction_images 테이블에 직접 삽입
-          const { error: imageError } = await supabase.from('auction_images').insert({
-            item_id: auctionId,
-            urls: successUrls,
-          });
+          await addAuctionImages(auctionId, successUrls);
 
           // 썸네일 업데이트
           await updateThumbnailOnly(successUrls[0] || '', auctionId);

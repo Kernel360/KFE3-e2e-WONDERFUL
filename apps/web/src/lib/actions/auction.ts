@@ -193,3 +193,14 @@ export const updateThumbnailOnly = async (thumbnailUrl: string, itemId: string) 
     throw error;
   }
 };
+
+export const addAuctionImages = async (itemId: string, imageUrls: string[]) => {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from('auction_images').insert({
+    item_id: itemId,
+    urls: imageUrls,
+  });
+
+  if (error) throw new Error(`이미지 저장 실패: ${error.message}`);
+};
