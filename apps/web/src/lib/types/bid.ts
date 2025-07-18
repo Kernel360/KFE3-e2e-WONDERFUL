@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
-
 interface BidType {
   bid_id: string;
   bidder_id: string;
