@@ -3,8 +3,8 @@ import localFont from 'next/font/local';
 import type { Metadata, Viewport } from 'next';
 
 import Navigation from '@/components/layout/navigation';
-import LocationModalProvider from '@/components/location/location-modal-provider';
 
+import LocationModalProvider from '@/providers/location-modal-provider';
 import QueryProvider from '@/providers/query-provider';
 import './globals.css';
 
