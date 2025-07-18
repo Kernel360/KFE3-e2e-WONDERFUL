@@ -2,21 +2,45 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-import type { KakaoMapSignupProps, KakaoMap } from '@/lib/types/kakao-map';
+import type {
+  UserLocation,
+  KakaoMapProps,
+  KakaoMap as KakaoMapType,
+  KakaoMarker,
+  KakaoInfoWindow,
+  KakaoMouseEvent,
+} from '@/lib/types/kakao-map';
 
 const KakaoMap = ({
   location,
+  onLocationSelect,
   width = '100%',
   height = '200px',
   level = 3,
   showMarker = true,
-  showInfoWindow = true,
+  showInfoWindow = false,
   infoContent = '현재 위치',
   className = '',
-}: KakaoMapSignupProps) => {
+  draggable = true,
+  scrollwheel = true,
+  disableDoubleClick = false,
+  disableDoubleClickZoom = false,
+}: KakaoMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<KakaoMapType | null>(null);
+  const markerRef = useRef<KakaoMarker | null>(null);
+  const infoWindowRef = useRef<KakaoInfoWindow | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string>('');
+
+  // 지도 중심과 마커 업데이트 함수
+  const updateMapCenter = (newLocation: UserLocation) => {
+    if (mapRef.current && markerRef.current && window.kakao && window.kakao.maps) {
+      const newCenter = new window.kakao.maps.LatLng(newLocation.latitude, newLocation.longitude);
+      mapRef.current.setCenter(newCenter);
+      markerRef.current.setPosition(newCenter);
+    }
+  };
 
   // Kakao Map API 스크립트 로드
   useEffect(() => {
@@ -70,7 +94,7 @@ const KakaoMap = ({
   // 위치 변경시 지도 업데이트
   useEffect(() => {
     if (isMapLoaded && location && window.kakao) {
-      initializeMap();
+      updateMapCenter(location);
     }
   }, [location, isMapLoaded]);
 
@@ -82,9 +106,14 @@ const KakaoMap = ({
       const options = {
         center: new window.kakao.maps.LatLng(location.latitude, location.longitude),
         level: level,
+        draggable,
+        scrollwheel,
+        disableDoubleClick,
+        disableDoubleClickZoom,
       };
 
       const map = new window.kakao.maps.Map(mapContainer.current, options);
+      mapRef.current = map;
 
       if (showMarker) {
         const markerPosition = new window.kakao.maps.LatLng(location.latitude, location.longitude);
@@ -93,6 +122,7 @@ const KakaoMap = ({
         });
 
         marker.setMap(map);
+        markerRef.current = marker;
 
         if (showInfoWindow) {
           const infowindow = new window.kakao.maps.InfoWindow({
@@ -100,7 +130,31 @@ const KakaoMap = ({
           });
 
           infowindow.open(map, marker);
+          infoWindowRef.current = infowindow;
         }
+      }
+
+      // 지도 클릭 이벤트 추가 (위치 선택 가능한 경우)
+      if (onLocationSelect) {
+        window.kakao.maps.event.addListener(map, 'click', (mouseEvent: KakaoMouseEvent) => {
+          const latlng = mouseEvent.latLng;
+          const newLocation: UserLocation = {
+            latitude: latlng.getLat(),
+            longitude: latlng.getLng(),
+          };
+
+          // 마커 위치 업데이트
+          if (markerRef.current) {
+            markerRef.current.setPosition(latlng);
+          }
+
+          // 정보창 위치 업데이트
+          if (infoWindowRef.current && showInfoWindow) {
+            infoWindowRef.current.setPosition(latlng);
+          }
+
+          onLocationSelect(newLocation);
+        });
       }
 
       setIsMapLoaded(true);
@@ -114,20 +168,16 @@ const KakaoMap = ({
   if (mapError) {
     return (
       <div
-        className={`bg-danger-50 flex items-center justify-center rounded-lg ${className}`}
+        className={`flex items-center justify-center rounded-lg bg-red-50 ${className}`}
         style={{ width, height }}
       >
-        <p className="text-danger-600 text-sm">{mapError}</p>
+        <p className="text-sm text-red-600">{mapError}</p>
       </div>
     );
   }
 
   return (
-    <div
-      ref={mapContainer}
-      className={`rounded-lg border ${className}`}
-      style={{ width, height }}
-    />
+    <div ref={mapContainer} className={`bg-neutral-100 ${className}`} style={{ width, height }} />
   );
 };
 
