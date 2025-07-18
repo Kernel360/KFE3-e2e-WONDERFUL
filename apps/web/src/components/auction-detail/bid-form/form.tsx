@@ -12,9 +12,9 @@ import useCountdown from '@/hooks/common/useCountdown';
 import { cn } from '@/lib/cn';
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
-import { BidFormProps } from '@/types/bid';
+import { BidBaseProps } from '@/types/bid';
 
-const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps) => {
+const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidBaseProps) => {
   const [isBidInputOpen, setIsBidInputOpen] = useState(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
@@ -63,6 +63,7 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         isExpired={isExpired}
         isBidding={isBidInputOpen}
         onChange={setIsBidInputOpen}
+        bidTableRef={bidTableRef}
       />
     </form>
   );

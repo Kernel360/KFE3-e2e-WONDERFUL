@@ -10,12 +10,11 @@ import { formatCurrencyWithUnit } from '@/lib/utils/price';
 import { BidFormBottomProps } from '@/types/bid';
 
 const BidFormBottom = ({
-  auctionId,
-  endTime,
   currentPrice,
   isExpired,
   isBidding,
   onChange,
+  bidTableRef,
 }: BidFormBottomProps) => {
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
@@ -38,8 +37,16 @@ const BidFormBottom = ({
     if (bidPrice === null) return alert('입찰 금액을 입력해주세요');
 
     // 여기에 실제 입찰 로직 추가
+    try {
+      const results = true;
 
-    //입찰 완료 시 bid-table로 scroll 이동
+      //입찰 완료 시 bid-table로 scroll 이동
+      if (results) {
+        bidTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

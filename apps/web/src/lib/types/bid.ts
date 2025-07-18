@@ -17,16 +17,13 @@ interface BidBaseProps {
   auctionId: string;
   currentPrice: number;
   endTime: string | Date; // 경매 종료 시간
+  bidTableRef: React.RefObject<HTMLDivElement | null>;
 }
 
 interface BidFormBottomProps extends BidBaseProps {
   isExpired: boolean;
   isBidding: boolean;
   onChange: Dispatch<SetStateAction<boolean>>;
-}
-
-interface BidFormProps extends BidBaseProps {
-  bidTableRef: React.RefObject<HTMLDivElement | null>;
 }
 
 interface BidInputProps {
@@ -37,4 +34,4 @@ interface BidInputProps {
   onChange: (price: number | null) => void;
 }
 
-export type { BidType, BidsListType, BidInputProps, BidFormBottomProps, BidFormProps };
+export type { BidType, BidsListType, BidInputProps, BidFormBottomProps, BidBaseProps };
