@@ -1,5 +1,7 @@
-import { getAuctionDetail, getAuctions } from '@/lib/api/auction';
 import { useQuery } from '@tanstack/react-query';
+
+import { getAuctionDetail, getAuctions } from '@/lib/api/auction';
+
 import { auctionKeys } from './keys';
 
 // 경매 목록 조회 훅 (전체 목록)

@@ -6,13 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
-interface BidInputProps {
-  currentPrice: number;
-  minUnit: number;
-  bidPrice: number | null;
-  isBidding: boolean;
-  onChange: (price: number | null) => void;
-}
+import { BidInputProps } from '@/types/bid';
 
 const bidInputWrapper = tv({
   base: 'transition-all duration-600 overflow-hidden',

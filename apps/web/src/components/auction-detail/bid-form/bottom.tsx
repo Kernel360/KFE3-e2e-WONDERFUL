@@ -1,11 +1,13 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 import { ButtonFavorite } from '@/components/auction-detail/';
 import { Button } from '@/components/ui';
 
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
+
+import { BidFormBottomProps } from '@/types/bid';
 
 const BidFormBottom = ({
   auctionId,
@@ -14,14 +16,7 @@ const BidFormBottom = ({
   isExpired,
   isBidding,
   onChange,
-}: {
-  auctionId: string;
-  endTime: string | Date;
-  currentPrice: number;
-  isExpired: boolean;
-  isBidding: boolean;
-  onChange: Dispatch<SetStateAction<boolean>>;
-}) => {
+}: BidFormBottomProps) => {
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
   const formattedCurrentPrice = formatCurrencyWithUnit(currentPrice);
