@@ -14,7 +14,6 @@ const BackButton = () => {
       aria-label="Go back"
     >
       <ChevronLeftIcon />
-      <span className="sr-only">Go back</span>
     </button>
   );
 };
