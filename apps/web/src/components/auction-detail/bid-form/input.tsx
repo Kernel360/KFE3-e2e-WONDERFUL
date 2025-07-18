@@ -18,7 +18,13 @@ const bidInputWrapper = tv({
   },
 });
 
-const BidFormInput = ({ currentPrice, minUnit, bidPrice, isBidding, onChange }: BidInputProps) => {
+const BidFormInput = ({
+  currentPrice,
+  minUnit,
+  bidPrice,
+  isBidInputOpen,
+  onChange,
+}: BidInputProps) => {
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +46,7 @@ const BidFormInput = ({ currentPrice, minUnit, bidPrice, isBidding, onChange }: 
   };
 
   return (
-    <div className={bidInputWrapper({ open: isBidding })}>
+    <div className={bidInputWrapper({ open: isBidInputOpen })}>
       <InputIcon
         id="price"
         type="number"

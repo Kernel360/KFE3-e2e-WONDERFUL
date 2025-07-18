@@ -124,6 +124,7 @@ const AuctionDetailContainer = () => {
           currentPrice={item.currentPrice}
           endTime={item.endTime}
           bidTableRef={bidTableRef}
+          isExpired={false}
         />
       </aside>
     </>

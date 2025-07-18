@@ -12,9 +12,9 @@ import useCountdown from '@/hooks/common/useCountdown';
 import { cn } from '@/lib/cn';
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
-import { BidBaseProps } from '@/types/bid';
+import { BidFormProps } from '@/types/bid';
 
-const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidBaseProps) => {
+const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps) => {
   const [isBidInputOpen, setIsBidInputOpen] = useState(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
@@ -22,8 +22,37 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidBaseProps
   const { isExpired } = useCountdown(new Date(endTime));
   const directPrice = formatCurrencyWithUnit(currentPrice * 1.2); // 20% 증가한 가격
 
+  const handleBidClick = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // 경매가 종료된 경우 입찰 불가
+    if (isExpired) {
+      alert('경매가 종료되어 입찰할 수 없습니다.');
+      return;
+    }
+
+    if (!isBidInputOpen) {
+      setIsBidInputOpen(true);
+      return;
+    }
+
+    if (bidPrice === null) return alert('입찰 금액을 입력해주세요');
+
+    // 여기에 실제 입찰 로직 추가
+    try {
+      const results = true;
+
+      //입찰 완료 시 bid-table로 scroll 이동
+      if (results) {
+        bidTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleBidClick}>
       {/* 그림자 배경*/}
       <div
         className={cn(
@@ -43,7 +72,7 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidBaseProps
           currentPrice={currentPrice}
           minUnit={1000}
           bidPrice={bidPrice}
-          isBidding={isBidInputOpen}
+          isBidInputOpen={isBidInputOpen}
           onChange={setBidPrice}
         />
 
@@ -61,9 +90,6 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidBaseProps
         currentPrice={currentPrice}
         endTime={endTime}
         isExpired={isExpired}
-        isBidding={isBidInputOpen}
-        onChange={setIsBidInputOpen}
-        bidTableRef={bidTableRef}
       />
     </form>
   );
