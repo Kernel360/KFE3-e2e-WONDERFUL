@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-import type { KakaoMapSignupProps, KakaoMap } from '@/lib/types/kakao-map';
+import type { KakaoMapSignupProps } from '@/lib/types/kakao-map';
 
-const KakaoMap = ({
+const SignupKakaoMap = ({
   location,
   width = '100%',
   height = '200px',
@@ -131,4 +131,4 @@ const KakaoMap = ({
   );
 };
 
-export default KakaoMap;
+export default SignupKakaoMap;

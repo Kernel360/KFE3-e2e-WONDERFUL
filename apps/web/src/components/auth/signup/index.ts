@@ -5,4 +5,4 @@ export { default as SignupSuccess } from './signup-success';
 export { default as LocationDisplay } from './location-display';
 export { default as LocationSetup } from './location-setup';
 export { default as SignupDone } from './signup-done';
-export { default as KakaoMap } from './kakao-map';
+export { default as SignupKakaoMap } from './signup-kakao-map';

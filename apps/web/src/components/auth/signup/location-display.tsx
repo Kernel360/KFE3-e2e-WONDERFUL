@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { KakaoMap } from '@/components/auth/signup';
+import { SignupKakaoMap } from '@/components/auth/signup';
 import { Button } from '@/components/ui/button';
 
 import { useGeolocation } from '@/hooks/common/useGeolocation';
@@ -61,7 +61,7 @@ const LocationDisplay = ({
     <div className={`rounded-lg bg-neutral-100 ${className}`}>
       {location && !isLocationLoading && !error ? (
         <div className="relative p-2 pb-0">
-          <KakaoMap
+          <SignupKakaoMap
             location={location}
             height={mapHeight}
             width="100%"
