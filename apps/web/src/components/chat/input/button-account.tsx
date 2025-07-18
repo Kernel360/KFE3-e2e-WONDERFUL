@@ -8,8 +8,8 @@ const ButtonAccount = () => {
   return (
     <div className={serviceStyle().wrapper()}>
       <Drawer>
-        <DrawerTrigger>
-          <button className={serviceStyle().label()} onClick={() => {}}>
+        <DrawerTrigger asChild>
+          <button className={serviceStyle().label()}>
             <Wallet size={28} />
           </button>
         </DrawerTrigger>

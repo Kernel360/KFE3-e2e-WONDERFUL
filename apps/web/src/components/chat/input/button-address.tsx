@@ -8,7 +8,7 @@ const ButtonAddress = () => {
   return (
     <div className={serviceStyle().wrapper()}>
       <Drawer>
-        <DrawerTrigger>
+        <DrawerTrigger asChild>
           <button className={serviceStyle().label()}>
             <MapPinHouse size={28} />
           </button>
