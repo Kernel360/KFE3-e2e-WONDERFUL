@@ -4,7 +4,12 @@ import { prisma } from '@repo/db';
 
 // 찜하기 API
 import { createClient } from '@/lib/supabase/server';
-export async function POST(request: NextRequest, { params }: { params: { itemId: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ itemId: string }> }
+) {
+  const { itemId } = await params;
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,7 +26,7 @@ export async function POST(request: NextRequest, { params }: { params: { itemId:
       where: {
         userId_itemId: {
           userId: user.id,
-          itemId: params.itemId,
+          itemId: itemId,
         },
       },
     });
@@ -37,7 +42,7 @@ export async function POST(request: NextRequest, { params }: { params: { itemId:
     await prisma.favoriteItem.create({
       data: {
         userId: user.id,
-        itemId: params.itemId,
+        itemId: itemId,
       },
     });
     return NextResponse.json({ success: true, message: '찜하기 성공', action: 'added' });
@@ -54,7 +59,11 @@ export async function POST(request: NextRequest, { params }: { params: { itemId:
 }
 
 // 찜하기 취소 API
-export async function DELETE(request: NextRequest, { params }: { params: { itemId: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ itemId: string }> }
+) {
+  const { itemId } = await params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -71,7 +80,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { itemI
       where: {
         userId_itemId: {
           userId: user.id,
-          itemId: params.itemId,
+          itemId: itemId,
         },
       },
     });
@@ -88,7 +97,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { itemI
       where: {
         userId_itemId: {
           userId: user.id,
-          itemId: params.itemId,
+          itemId: itemId,
         },
       },
     });
