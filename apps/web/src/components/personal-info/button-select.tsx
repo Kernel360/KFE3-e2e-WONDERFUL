@@ -4,9 +4,10 @@ import { Button } from '@/components/ui';
 
 interface ButtonSelectProps {
   isSelected: boolean;
+  onClick: () => void;
 }
 
-const ButtonSelect = ({ isSelected }: ButtonSelectProps) => {
+const ButtonSelect = ({ isSelected, onClick }: ButtonSelectProps) => {
   const textColor = isSelected ? 'text-primary-500' : 'text-neutral-400';
 
   return (
@@ -16,6 +17,7 @@ const ButtonSelect = ({ isSelected }: ButtonSelectProps) => {
       size="sm"
       aria-label={isSelected ? 'Deselect' : 'Select'}
       aria-pressed={isSelected}
+      onClick={onClick}
     >
       <Check className={textColor} strokeWidth={2.5} />
     </Button>

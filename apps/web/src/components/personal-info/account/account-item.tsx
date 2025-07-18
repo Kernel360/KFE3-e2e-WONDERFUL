@@ -15,10 +15,11 @@ const style = tv({
 interface AccountProps {
   color?: 'default' | 'selected';
   children: React.ReactNode;
-  account: Account;
+  account: AccountItem;
 }
 
-export interface Account {
+export interface AccountItem {
+  id: string;
   name: string;
   bank: string;
   account: string;

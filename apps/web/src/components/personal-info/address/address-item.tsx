@@ -10,15 +10,19 @@ const style = tv({
       selected: 'bg-primary-50/70',
     },
   },
+  defaultVariants: {
+    color: 'default',
+  },
 });
 
 interface AddressProps {
   color?: 'default' | 'selected';
   children: React.ReactNode;
-  address: Address;
+  address: AddressItem;
 }
 
-export interface Address {
+export interface AddressItem {
+  id: string;
   name: string;
   address: string;
   phone: string;
