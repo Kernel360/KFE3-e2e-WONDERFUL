@@ -1,6 +1,9 @@
-export { default as AccountItem } from './account';
-export { default as AddressItem } from './address';
+export { default as AccountItem } from './account/account-item';
+export { default as AccountDrawerContent } from './account/drawer-content';
+export { default as AddressItem } from './address/address-item';
+export { default as AddressDrawerContent } from './address/drawer-content';
 export { default as BadgePrimary } from './badge-primary';
 export { default as ButtonBox } from './button-box';
 export { default as ButtonSelect } from './button-select';
 export { default as BankIcon } from './icon-bank';
+export { default as DrawerHeader } from './drawer-header';
