@@ -90,7 +90,7 @@ export const searchAddressByKeyword = async (query: string): Promise<SearchResul
 /**
  * 좌표를 "시 구 동" 형태 주소로 변환
  */
-export const convertCoordinatesToDisplayAddress = async (
+export const convertCoordinatesToAddress = async (
   longitude: number,
   latitude: number
 ): Promise<string> => {

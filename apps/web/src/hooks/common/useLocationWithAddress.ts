@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-import { convertCoordinatesToDisplayAddress } from '@/lib/api/kakao';
+import { convertCoordinatesToAddress } from '@/lib/api/kakao';
 import type { UserLocation, GeolocationOptions } from '@/lib/types/location';
 
 import { useGeolocation } from './useGeolocation';
@@ -36,7 +36,7 @@ export const useLocationWithAddress = (
 
     const fetchAddress = async () => {
       try {
-        const addressResult = await convertCoordinatesToDisplayAddress(
+        const addressResult = await convertCoordinatesToAddress(
           location.longitude,
           location.latitude
         );

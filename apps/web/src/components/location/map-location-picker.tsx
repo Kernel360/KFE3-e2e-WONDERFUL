@@ -8,7 +8,7 @@ import KakaoMap from '@/components/location/kakao-map';
 import SearchInput from '@/components/location/search-input';
 import { Button } from '@/components/ui/button';
 
-import { searchAddressByKeyword, convertCoordinatesToDisplayAddress } from '@/lib/api/kakao';
+import { searchAddressByKeyword, convertCoordinatesToAddress } from '@/lib/api/kakao';
 import type { UserLocation } from '@/lib/types/location';
 
 interface MapLocationPickerProps {
@@ -31,10 +31,7 @@ const MapLocationPicker = ({
     setSelectedLocation(location);
 
     try {
-      const address = await convertCoordinatesToDisplayAddress(
-        location.longitude,
-        location.latitude
-      );
+      const address = await convertCoordinatesToAddress(location.longitude, location.latitude);
       setSelectedAddress(address);
     } catch (error) {
       console.error('주소 변환 실패:', error);
