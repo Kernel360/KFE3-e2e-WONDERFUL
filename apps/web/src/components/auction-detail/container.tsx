@@ -15,16 +15,16 @@ import { useParams } from 'next/navigation';
 import { MessageSquareMore } from 'lucide-react';
 
 import {
+  BidForm,
+  BidTable,
+  ItemDescription,
   ItemImages,
   ItemSummary,
-  ItemDescription,
-  BidTable,
-  BidForm,
 } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
-import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
+import { useAuctionDetail } from '@/hooks/queries/auction';
 
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';

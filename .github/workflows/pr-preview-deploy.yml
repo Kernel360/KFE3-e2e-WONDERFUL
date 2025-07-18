@@ -86,6 +86,83 @@ jobs:
             echo "✅ PR HEAD에서 프리뷰 브랜치 생성 완료: $PREVIEW_BRANCH"
           fi
 
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Post initial deployment comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          PR_BRANCH: ${{ steps.pr-info.outputs.pr_branch }}
+          PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
+
+        run: |
+          cat > comment.md << EOF
+          🚀 **PR #$PR_NUMBER 프리뷰 배포 시작!**
+
+          - **브랜치**: \`$PR_BRANCH\`
+          - **작성자**: @$PR_AUTHOR
+          - **프리뷰 브랜치**: \`${{ env.preview_branch }}\`
+
+          ⏳ 배포 진행 중... 약 2-3분 후 확인 가능합니다.
+
+          ---
+          *자동 생성된 프리뷰 배포입니다.*
+          EOF
+
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/Kernel360/KFE3-e2e-WONDERFUL/issues/$PR_NUMBER/comments \
+            -d "{\"body\": $(cat comment.md | jq -Rs .)}"
+
+          echo "✅ 초기 배포 댓글 작성 완료!"
+
+      - name: Install Vercel CLI
+        run: |
+          npm install -g vercel@latest
+
+      - name: Wait and Get Actual Vercel URL
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+        run: |
+          set -e
+
+          echo "🔍 Vercel 배포 완료 대기 중..."
+
+          # 최대 5분 대기
+          for i in {1..30}; do
+            echo "Vercel 배포 확인 중... (시도 $i/30)"
+            
+            # Vercel CLI로 최신 배포 목록 가져오기
+            DEPLOYMENTS=$(vercel ls --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" 2>/dev/null || echo "")
+            
+            if [ -n "$DEPLOYMENTS" ]; then
+              # 가장 최근 배포 중에서 Ready 상태인 것 찾기
+              LATEST_URL=$(echo "$DEPLOYMENTS" | grep -E "kfe3-wonderful.*Ready" | head -1 | awk '{print $2}' || echo "")
+              
+              if [ -n "$LATEST_URL" ] && [[ "$LATEST_URL" =~ ^https?:// ]]; then
+                echo "✅ Vercel 배포 URL 발견: $LATEST_URL"
+                
+                # URL이 실제로 접근 가능한지 확인
+                STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$LATEST_URL" || echo "000")
+                
+                if [ "$STATUS_CODE" -eq 200 ] || [ "$STATUS_CODE" -eq 404 ]; then
+                  echo "✅ 프리뷰 배포가 활성화되었습니다!"
+                  echo "preview_url=$LATEST_URL" >> $GITHUB_ENV
+                  exit 0
+                fi
+              fi
+            fi
+            
+            echo "⏳ 아직 배포 중입니다..."
+            sleep 10
+          done
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

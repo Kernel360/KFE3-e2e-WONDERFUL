@@ -24,7 +24,7 @@ export interface AuctionFormData {
   start_time?: string | null;
   end_time: string;
   auction_type?: 'normal' | 'flash';
-  images: string[];
+  images?: string[];
 }
 
 export interface Auction extends AuctionFormData {
