@@ -51,7 +51,7 @@ const BidFormBottom = ({
   };
 
   return (
-    <div className="bg-wthie z-40 flex items-center gap-2 bg-white px-5 pb-6 pt-3">
+    <div className="z-40 flex items-center gap-2 bg-white px-5 pb-6 pt-3">
       <ButtonFavorite auctionId={auctionId} />
       <div className="flex flex-1 flex-col">
         <span className="text-sm font-medium text-neutral-600">
