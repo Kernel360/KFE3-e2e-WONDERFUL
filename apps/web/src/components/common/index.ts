@@ -7,6 +7,7 @@ export { default as AuctionCard } from './auction-card/card';
 export { default as AuctionItemList } from './auction-card/list';
 
 export { default as CreateAuctionButton } from './button/create-auction';
+export { default as BackButton } from './button/back';
 export { default as ButtonMore } from './button/more';
 
 export { default as InputBasic } from './input/basic';
