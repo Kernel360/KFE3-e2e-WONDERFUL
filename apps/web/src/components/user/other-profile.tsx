@@ -1,4 +1,3 @@
-// 상대방 프로필 페이지
 'use client';
 
 import { AuctionItemList, ProfileCard, FilterTab } from '@/components/common';

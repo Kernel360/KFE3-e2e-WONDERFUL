@@ -30,17 +30,10 @@ import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
 
 const AuctionDetailContainer = () => {
-  const userId = undefined;
-
   const params = useParams();
   const { id } = params;
 
-  const {
-    data: auctionDetailData,
-    isLoading,
-    error,
-    refetch,
-  } = useAuctionDetail(id as string, userId);
+  const { data: auctionDetailData, isLoading, error, refetch } = useAuctionDetail(id as string);
 
   useEffect(() => {
     refetch();
@@ -71,6 +64,7 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
+  const seller = auction.seller; // 판매자 정보
 
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
@@ -110,8 +104,8 @@ const AuctionDetailContainer = () => {
       >
         <ItemImages urls={images} />
         <ProfileCard
-          nickname="user1234"
-          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/f610194f-1750-4dc5-82ef-fe836cd9bf79/1751453508404_8wxxr2.png"
+          nickname={seller.nickname}
+          profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
         >
           <Button variant="outline">
             <MessageSquareMore />
@@ -126,7 +120,11 @@ const AuctionDetailContainer = () => {
         </section>
       </article>
       <section className="sticky bottom-0 z-50 w-full bg-white">
-        <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
+        <BidForm
+          currentPrice={item.currentPrice}
+          endTime={auction.endTime}
+          auctionId={id as string}
+        />
       </section>
     </>
   );

@@ -8,6 +8,7 @@ import ButtonFavorite from '@/components/auction-detail/button-favorite';
 import { Button } from '@/components/ui/button';
 
 import useCountdown from '@/hooks/common/useCountdown';
+
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 const bidInputWrapper = tv({
@@ -22,8 +23,9 @@ const bidInputWrapper = tv({
 interface BidFormProps {
   currentPrice: number;
   endTime: string | Date; // 경매 종료 시간
+  auctionId: string; // 경매 ID
 }
-const BidForm = ({ currentPrice, endTime }: BidFormProps) => {
+const BidForm = ({ currentPrice, endTime, auctionId }: BidFormProps) => {
   const [isBidding, setIsBidding] = useState(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
@@ -87,7 +89,7 @@ const BidForm = ({ currentPrice, endTime }: BidFormProps) => {
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <ButtonFavorite auctionId="123" />
+          <ButtonFavorite auctionId={auctionId} />
           <div className="flex flex-col">
             <span className="text-sm font-medium text-neutral-600">
               {isExpired ? '최종 낙찰가' : '현재 입찰가'}
