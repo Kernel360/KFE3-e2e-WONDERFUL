@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import { X } from 'lucide-react';
-import { tv } from 'tailwind-variants';
 
 import { BidFormBottom } from '@/components/auction-detail';
 import { ButtonDirectDeal, BidFormInput } from '@/components/auction-detail';
