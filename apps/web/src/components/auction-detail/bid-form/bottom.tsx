@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { ButtonFavorite } from '@/components/auction-detail/';
 import { Button } from '@/components/ui';
@@ -12,33 +12,43 @@ const BidFormBottom = ({
   endTime,
   currentPrice,
   isExpired,
+  isBidding,
+  onChange,
 }: {
   auctionId: string;
   endTime: string | Date;
   currentPrice: number;
   isExpired: boolean;
+  isBidding: boolean;
+  onChange: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [isBidding, setIsBidding] = useState(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
 
   const formattedCurrentPrice = formatCurrencyWithUnit(currentPrice);
 
-  const handleBidClick = () => {
+  const handleBidClick = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isBidding) {
+      onChange(true);
+      return;
+    }
+
     // 경매가 종료된 경우 입찰 불가
     if (isExpired) {
       alert('경매가 종료되어 입찰할 수 없습니다.');
       return;
     }
-    if (!isBidding) return setIsBidding((prev) => !prev);
 
     if (bidPrice === null) return alert('입찰 금액을 입력해주세요');
 
     // 여기에 실제 입찰 로직 추가
-    // console.log('입찰 처리:', bidPrice);
+
+    //입찰 완료 시 bid-table로 scroll 이동
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="bg-wthie z-40 flex items-center gap-2 bg-white px-5 pb-6 pt-3">
       <ButtonFavorite auctionId="123" />
       <div className="flex flex-1 flex-col">
         <span className="text-sm font-medium text-neutral-600">

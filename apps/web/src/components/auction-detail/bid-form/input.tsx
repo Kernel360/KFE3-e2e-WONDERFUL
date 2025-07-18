@@ -1,6 +1,7 @@
 import { UserRound } from 'lucide-react';
+import { tv } from 'tailwind-variants';
 
-import InputIcon from '@/components/common/input/icon';
+import { InputIcon } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
@@ -9,10 +10,21 @@ interface BidInputProps {
   currentPrice: number;
   minUnit: number;
   bidPrice: number | null;
+  isBidding: boolean;
   onChange: (price: number | null) => void;
 }
 
-const BidFormInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputProps) => {
+const bidInputWrapper = tv({
+  base: 'transition-all duration-600 overflow-hidden',
+  variants: {
+    open: {
+      true: 'pt-2 max-h-[150px] translate-y-0',
+      false: 'max-h-0 translate-y-4 pointer-events-none',
+    },
+  },
+});
+
+const BidFormInput = ({ currentPrice, minUnit, bidPrice, isBidding, onChange }: BidInputProps) => {
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +46,7 @@ const BidFormInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputPro
   };
 
   return (
-    <div>
+    <div className={bidInputWrapper({ open: isBidding })}>
       <InputIcon
         id="price"
         type="number"
@@ -46,7 +58,7 @@ const BidFormInput = ({ currentPrice, minUnit, bidPrice, onChange }: BidInputPro
         <UserRound />
       </InputIcon>
 
-      <div className="mt-2 grid grid-cols-4 gap-2">
+      <div className="my-2 grid grid-cols-4 gap-2">
         {increaseButtons.map(({ label, amount }) => (
           <Button
             key={amount}

@@ -105,9 +105,7 @@ const AuctionDetailContainer = () => {
 
   return (
     <>
-      <article
-        className={cn(`flex flex-col items-center break-keep bg-neutral-100 px-0`, sectionStyle)}
-      >
+      <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
         <ItemImages urls={images} />
         <ProfileCard
           nickname="user1234"
@@ -125,7 +123,7 @@ const AuctionDetailContainer = () => {
           <BidTable />
         </section>
       </article>
-      <aside className="sticky bottom-0 z-50 w-full bg-white">
+      <aside className="sticky bottom-0 z-50 w-full">
         <BidForm auctionId={auction.id} currentPrice={item.currentPrice} endTime={item.endTime} />
       </aside>
     </>
