@@ -8,7 +8,7 @@
  * 5. ItemImages prioty 처리
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
@@ -30,6 +30,7 @@ import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
 
 const AuctionDetailContainer = () => {
+  const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
 
@@ -99,9 +100,7 @@ const AuctionDetailContainer = () => {
 
   return (
     <>
-      <article
-        className={cn(`flex flex-col items-center break-keep bg-neutral-100 px-0`, sectionStyle)}
-      >
+      <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
         <ItemImages urls={images} />
         <ProfileCard
           nickname={seller.nickname}
@@ -114,18 +113,20 @@ const AuctionDetailContainer = () => {
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />
-        <section className="space-y-2 pb-10 pt-6">
+        <section ref={bidTableRef} className="space-y-2 pb-10 pt-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
           <BidTable />
         </section>
       </article>
-      <section className="sticky bottom-0 z-50 w-full bg-white">
+      <aside className="sticky bottom-0 z-50 w-full">
         <BidForm
+          auctionId={auction.id}
           currentPrice={item.currentPrice}
-          endTime={auction.endTime}
-          auctionId={id as string}
+          endTime={item.endTime}
+          bidTableRef={bidTableRef}
+          isExpired={false}
         />
-      </section>
+      </aside>
     </>
   );
 };

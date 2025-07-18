@@ -8,7 +8,7 @@ interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
 
 const InputIcon = ({ id, label, children, ...props }: InputIconProps) => {
   return (
-    <div className="flex w-full flex-col items-start justify-center gap-1">
+    <div className="flex w-full flex-col items-start justify-center gap-2">
       {label && (
         <label className="font-medium" htmlFor={id}>
           {label}
