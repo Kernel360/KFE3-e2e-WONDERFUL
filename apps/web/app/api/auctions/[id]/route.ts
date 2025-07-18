@@ -2,15 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@repo/db';
 
+import { createClient } from '@/lib/supabase/server';
 import { AuctionDetailResponse } from '@/lib/types/auction-prisma';
 
 // 경매 상세페이지 조회 api
-// export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId'); // 사용자 ID (찜한 상태 확인용)
-    // const auctionId = (await params).id;
+    const supabase = await createClient();
+
     const { id: auctionId } = await context.params;
 
     // 경매아이템 상세 정보조회
@@ -81,15 +80,19 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
       auctionImagesCount: auctionItem.auctionImages.length,
     });
 
-    // 사용자가 찜하기 했는지 확인
+    // 로그인 한 사용자의 찜 상태 확인
     let isFavorite = false;
-    if (userId) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
       const favoriteItem = await prisma.favoriteItem.findUnique({
         where: {
           // userId와 itemId로 찜 여부 확인
           // 복합 유니크 제약조건을 사용하여 중복 찜 방지
           userId_itemId: {
-            userId: userId,
+            userId: user.id,
             itemId: auctionId,
           },
         },
@@ -106,6 +109,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
       userFavorite: {
         isFavorite,
       },
+      currentUserId: user?.id || null, // 현재 로그인한 사용자의 ID도 포함
     };
 
     return NextResponse.json(response);

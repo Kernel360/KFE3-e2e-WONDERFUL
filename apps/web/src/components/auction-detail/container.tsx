@@ -8,39 +8,33 @@
  * 5. ItemImages prioty 처리
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
 
 import {
+  BidForm,
+  BidTable,
+  ItemDescription,
   ItemImages,
   ItemSummary,
-  ItemDescription,
-  BidTable,
-  BidForm,
 } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
-import { useAuctionDetail } from '@/hooks/queries/auction/useAuctions';
+import { useAuctionDetail } from '@/hooks/queries/auction';
 
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
 
 const AuctionDetailContainer = () => {
-  const userId = undefined;
-
+  const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
 
-  const {
-    data: auctionDetailData,
-    isLoading,
-    error,
-    refetch,
-  } = useAuctionDetail(id as string, userId);
+  const { data: auctionDetailData, isLoading, error, refetch } = useAuctionDetail(id as string);
 
   useEffect(() => {
     refetch();
@@ -71,6 +65,7 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
+  const seller = auction.seller; // 판매자 정보
 
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
@@ -105,13 +100,11 @@ const AuctionDetailContainer = () => {
 
   return (
     <>
-      <article
-        className={cn(`flex flex-col items-center break-keep bg-neutral-100 px-0`, sectionStyle)}
-      >
+      <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
         <ItemImages urls={images} />
         <ProfileCard
-          nickname="user1234"
-          profileImg="https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/f610194f-1750-4dc5-82ef-fe836cd9bf79/1751453508404_8wxxr2.png"
+          nickname={seller.nickname}
+          profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
         >
           <Button variant="outline">
             <MessageSquareMore />
@@ -120,14 +113,20 @@ const AuctionDetailContainer = () => {
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />
-        <section className="space-y-2 pb-10 pt-6">
+        <section ref={bidTableRef} className="space-y-2 pb-10 pt-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
           <BidTable />
         </section>
       </article>
-      <section className="sticky bottom-0 z-50 w-full bg-white">
-        <BidForm currentPrice={item.currentPrice} endTime={auction.endTime} />
-      </section>
+      <aside className="sticky bottom-0 z-50 w-full">
+        <BidForm
+          auctionId={auction.id}
+          currentPrice={item.currentPrice}
+          endTime={item.endTime}
+          bidTableRef={bidTableRef}
+          isExpired={false}
+        />
+      </aside>
     </>
   );
 };

@@ -50,7 +50,7 @@ const buttonVariants = cva(
       {
         variant: 'solid',
         color: 'disabled',
-        className: 'bg-neutral-100 text-neutral-300 [&_svg]:stroke-neutral-300',
+        className: 'bg-neutral-200 text-neutral-400 [&_svg]:stroke-neutral-300 cursor-not-allowed',
       },
       {
         variant: 'solid',

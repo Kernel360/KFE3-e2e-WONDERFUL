@@ -9,5 +9,5 @@ export const auctionKeys = {
 
   // 경매 상세 페이지 조회 쿼리 키
   details: () => [...auctionKeys.all, 'detail'] as const,
-  detail: (id: string, userId?: string) => [...auctionKeys.details(), id, userId] as const,
+  detail: (id: string) => [...auctionKeys.details(), id] as const,
 } as const;

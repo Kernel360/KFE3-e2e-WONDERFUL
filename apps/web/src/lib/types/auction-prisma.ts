@@ -102,6 +102,7 @@ export interface AuctionListResponse {
 export interface AuctionDetailResponse {
   data: AuctionDetailItem;
   userFavorite: UserFavoriteStatus;
+  currentUserId: string | null; // 현재 로그인한 사용자의 ID
 }
 
 // 필터 및 정렬 타입들
