@@ -4,19 +4,7 @@ import React from 'react';
 
 import { MapPin } from 'lucide-react';
 
-interface SearchResultItem {
-  id: string;
-  address_name: string;
-  road_address_name?: string;
-  latitude: number;
-  longitude: number;
-  region_1depth_name: string;
-  region_2depth_name: string;
-  region_3depth_name: string;
-  display_name: string;
-  place_name?: string;
-  category_name?: string;
-}
+import type { SearchResultItem } from '@/lib/types/location';
 
 interface LocationSearchResultsProps {
   results: SearchResultItem[];

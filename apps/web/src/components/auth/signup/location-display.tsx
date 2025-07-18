@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 import { useGeolocation } from '@/hooks/common/useGeolocation';
 
-import { convertCoordinatesToAddress } from '@/lib/api/kakao-geocoding';
+import { convertCoordinatesToDisplayAddress } from '@/lib/api/kakao';
 
 interface LocationDisplayProps {
   showAddressText?: boolean; // 주소 텍스트 표시 (기본 true)
@@ -36,7 +36,7 @@ const LocationDisplay = ({
       });
 
       try {
-        const addressResult = await convertCoordinatesToAddress(
+        const addressResult = await convertCoordinatesToDisplayAddress(
           location.longitude,
           location.latitude
         );

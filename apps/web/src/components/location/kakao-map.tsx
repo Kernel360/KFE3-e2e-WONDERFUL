@@ -2,14 +2,15 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
+import { validateMapApiKey } from '@/lib/api/kakao';
 import type {
-  UserLocation,
   KakaoMapProps,
   KakaoMap as KakaoMapType,
   KakaoMarker,
   KakaoInfoWindow,
   KakaoMouseEvent,
 } from '@/lib/types/kakao-map';
+import type { UserLocation } from '@/lib/types/location';
 
 const KakaoMap = ({
   location,
@@ -33,70 +34,17 @@ const KakaoMap = ({
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string>('');
 
-  // 지도 중심과 마커 업데이트 함수
+  // 지도 중심과 마커 업데이트 (재초기화 방지)
   const updateMapCenter = (newLocation: UserLocation) => {
-    if (mapRef.current && markerRef.current && window.kakao && window.kakao.maps) {
+    if (mapRef.current && window.kakao && window.kakao.maps) {
       const newCenter = new window.kakao.maps.LatLng(newLocation.latitude, newLocation.longitude);
       mapRef.current.setCenter(newCenter);
-      markerRef.current.setPosition(newCenter);
+
+      if (markerRef.current && showMarker) {
+        markerRef.current.setPosition(newCenter);
+      }
     }
   };
-
-  // Kakao Map API 스크립트 로드
-  useEffect(() => {
-    const loadKakaoMap = () => {
-      if (window.kakao && window.kakao.maps) {
-        window.kakao.maps.load(() => {
-          initializeMap();
-        });
-        return;
-      }
-
-      if (!process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY) {
-        console.error('Kakao Map API 키가 설정되지 않았습니다.');
-        setMapError('Kakao Map API 키가 설정되지 않았습니다.');
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`;
-
-      script.onload = () => {
-        window.kakao.maps.load(() => {
-          initializeMap();
-        });
-      };
-
-      script.onerror = () => {
-        console.error('Kakao Map API 로드 실패');
-        setMapError('Kakao Map API 로드에 실패했습니다.');
-      };
-
-      document.head.appendChild(script);
-
-      return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
-      };
-    };
-
-    if (!window.kakao) {
-      loadKakaoMap();
-    } else {
-      window.kakao.maps.load(() => {
-        initializeMap();
-      });
-    }
-  }, []);
-
-  // 위치 변경시 지도 업데이트
-  useEffect(() => {
-    if (isMapLoaded && location && window.kakao) {
-      updateMapCenter(location);
-    }
-  }, [location, isMapLoaded]);
 
   // Kakao Map 초기화
   const initializeMap = () => {
@@ -105,7 +53,7 @@ const KakaoMap = ({
     try {
       const options = {
         center: new window.kakao.maps.LatLng(location.latitude, location.longitude),
-        level: level,
+        level,
         draggable,
         scrollwheel,
         disableDoubleClick,
@@ -134,7 +82,7 @@ const KakaoMap = ({
         }
       }
 
-      // 지도 클릭 이벤트 추가 (위치 선택 가능한 경우)
+      // 지도 클릭 이벤트 (위치 선택 가능한 경우)
       if (onLocationSelect) {
         window.kakao.maps.event.addListener(map, 'click', (mouseEvent: KakaoMouseEvent) => {
           const latlng = mouseEvent.latLng;
@@ -144,13 +92,8 @@ const KakaoMap = ({
           };
 
           // 마커 위치 업데이트
-          if (markerRef.current) {
+          if (markerRef.current && showMarker) {
             markerRef.current.setPosition(latlng);
-          }
-
-          // 정보창 위치 업데이트
-          if (infoWindowRef.current && showInfoWindow) {
-            infoWindowRef.current.setPosition(latlng);
           }
 
           onLocationSelect(newLocation);
@@ -164,6 +107,54 @@ const KakaoMap = ({
       setMapError('지도 초기화 중 오류가 발생했습니다.');
     }
   };
+
+  // Kakao Map API 스크립트 로드
+  useEffect(() => {
+    const loadKakaoMap = () => {
+      if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(() => {
+          initializeMap();
+        });
+        return;
+      }
+
+      try {
+        const apiKey = validateMapApiKey();
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false&libraries=services`;
+
+        script.onload = () => {
+          window.kakao.maps.load(() => {
+            initializeMap();
+          });
+        };
+
+        script.onerror = () => {
+          setMapError('Kakao Map API 로드에 실패했습니다.');
+        };
+
+        document.head.appendChild(script);
+
+        return () => {
+          if (document.head.contains(script)) {
+            document.head.removeChild(script);
+          }
+        };
+      } catch (error) {
+        setMapError(error instanceof Error ? error.message : '지도를 로드할 수 없습니다.');
+      }
+    };
+
+    loadKakaoMap();
+  }, []);
+
+  // 위치 변경시 지도 업데이트 (재초기화 방지)
+  useEffect(() => {
+    if (isMapLoaded && location) {
+      updateMapCenter(location);
+    }
+  }, [location, isMapLoaded]);
 
   if (mapError) {
     return (

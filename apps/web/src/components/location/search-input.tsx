@@ -39,13 +39,14 @@ const SearchInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        disabled={disabled}
+        disabled={disabled || isSearching}
         className="pr-12"
       />
       <button
         onClick={onSearch}
         disabled={isSearching || !value.trim() || disabled}
         className="absolute right-3 top-1/2 -translate-y-1/2 transform p-1.5 text-neutral-600 hover:text-neutral-900 disabled:opacity-50"
+        type="button"
       >
         {isSearching ? (
           <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>

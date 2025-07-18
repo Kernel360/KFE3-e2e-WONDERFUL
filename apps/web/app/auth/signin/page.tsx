@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 
 import { GoogleLoginButton, SigninForm } from '@/components/auth/signin';
-import LocationRegistrationModal from '@/components/location/location-set-modal';
 
 const Page = () => {
   return (
@@ -11,8 +10,6 @@ const Page = () => {
       <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
         로그인
       </h1>
-
-      <LocationRegistrationModal />
 
       <div className="mt-[80px] flex w-full flex-col items-center">
         <Suspense fallback={<div>Loading...</div>}>

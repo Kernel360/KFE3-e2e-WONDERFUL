@@ -2,126 +2,50 @@
 
 import { useState, useEffect } from 'react';
 
-import { convertCoordinatesToDisplayAddress } from '@/lib/api/kakao-search';
+import type { UserLocation, GeolocationOptions } from '@/lib/types/location';
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
-
-interface GeolocationState {
+interface UseGeolocationReturn {
   location: UserLocation | null;
-  address: string; // 추가: "서울시 서초구 서초동" 형태 주소
   error: string;
   isLoading: boolean;
-  isLoadingAddress: boolean; // 추가: 주소 로딩 상태
+  retry: () => void;
+  isReady: boolean;
 }
 
-interface GeolocationOptions {
-  enableHighAccuracy?: boolean;
-  timeout?: number;
-  maximumAge?: number;
-  autoFetchAddress?: boolean; // 추가: 자동으로 주소 가져올지 여부
-}
+/**
+ * 순수 위치 정보만 관리하는 훅
+ * 주소 변환은 별도 훅에서 처리
+ */
+export const useGeolocation = (options: GeolocationOptions = {}): UseGeolocationReturn => {
+  const [location, setLocation] = useState<UserLocation | null>(null);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-export const useGeolocation = (options: GeolocationOptions = {}) => {
-  const [state, setState] = useState<GeolocationState>({
-    location: null,
-    address: '',
-    error: '',
-    isLoading: true,
-    isLoadingAddress: false,
-  });
-
-  const defaultOptions = {
+  const defaultOptions: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 10000,
     maximumAge: 600000,
-    autoFetchAddress: true, // 기본값: 자동으로 주소 가져오기
     ...options,
   };
 
-  // 주소 가져오기 함수
-  const fetchAddress = async (location: UserLocation) => {
-    if (!defaultOptions.autoFetchAddress) return;
-
-    setState((prev) => ({ ...prev, isLoadingAddress: true }));
-
-    try {
-      const address = await convertCoordinatesToDisplayAddress(
-        location.longitude,
-        location.latitude
-      );
-      setState((prev) => ({
-        ...prev,
-        address,
-        isLoadingAddress: false,
-      }));
-    } catch (error) {
-      console.error('주소 변환 실패:', error);
-      setState((prev) => ({
-        ...prev,
-        address: '주소 확인 실패',
-        isLoadingAddress: false,
-      }));
-    }
-  };
-
   const getCurrentLocation = () => {
-    console.log('Geolocation: 위치 정보 요청 시작');
-
     if (!navigator.geolocation) {
-      console.error('Geolocation: 브라우저에서 지원하지 않음');
-      setState((prev) => ({
-        ...prev,
-        location: null,
-        address: '',
-        error: '이 브라우저에서는 위치 서비스를 지원하지 않습니다.',
-        isLoading: false,
-        isLoadingAddress: false,
-      }));
+      setError('이 브라우저에서는 위치 서비스를 지원하지 않습니다.');
+      setIsLoading(false);
       return;
     }
 
-    setState((prev) => ({
-      ...prev,
-      isLoading: true,
-      error: '',
-      address: '',
-      isLoadingAddress: false,
-    }));
+    setIsLoading(true);
+    setError('');
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const newLocation = { latitude, longitude };
-
-        console.log('Geolocation 성공:', {
-          latitude,
-          longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: new Date(position.timestamp).toLocaleString(),
-        });
-
-        setState((prev) => ({
-          ...prev,
-          location: newLocation,
-          error: '',
-          isLoading: false,
-        }));
-
-        // 주소 자동 가져오기
-        fetchAddress(newLocation);
+        setLocation({ latitude, longitude });
+        setError('');
+        setIsLoading(false);
       },
       (error) => {
-        console.error('Geolocation 에러:', {
-          code: error.code,
-          message: error.message,
-          PERMISSION_DENIED: error.PERMISSION_DENIED,
-          POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
-          TIMEOUT: error.TIMEOUT,
-        });
-
         let errorMessage = '';
         switch (error.code) {
           case error.PERMISSION_DENIED:
@@ -137,15 +61,9 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
             errorMessage = '위치를 가져오는 중 오류가 발생했습니다.';
             break;
         }
-
-        setState((prev) => ({
-          ...prev,
-          location: null,
-          address: '',
-          error: errorMessage,
-          isLoading: false,
-          isLoadingAddress: false,
-        }));
+        setLocation(null);
+        setError(errorMessage);
+        setIsLoading(false);
       },
       defaultOptions
     );
@@ -159,19 +77,13 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
     getCurrentLocation();
   };
 
-  // 수동으로 주소 다시 가져오기
-  const refetchAddress = () => {
-    if (state.location) {
-      fetchAddress(state.location);
-    }
-  };
+  const isReady = !isLoading && !error && !!location;
 
   return {
-    ...state,
+    location,
+    error,
+    isLoading,
     retry,
-    refetchAddress,
-    // 편의 속성들
-    isReady: !state.isLoading && !state.error && !!state.location,
-    displayText: state.isLoadingAddress ? '위치 확인 중...' : state.address || '위치 정보 없음',
+    isReady,
   };
 };
