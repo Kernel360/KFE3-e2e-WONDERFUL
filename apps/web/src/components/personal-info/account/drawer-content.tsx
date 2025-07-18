@@ -52,11 +52,11 @@ const AccountDrawerContent = () => {
         {dummyAccount.map((account) => (
           <li key={account.id}>
             <AccountItem
-              color={selectedAddressId === account.id ? 'selected' : 'default'}
+              color={selectedAccountId === account.id ? 'selected' : 'default'}
               account={account}
             >
               <ButtonSelect
-                isSelected={selectedAddressId === account.id}
+                isSelected={selectedAccountId === account.id}
                 onClick={() => handleSelect(account.id)}
               />
             </AccountItem>
