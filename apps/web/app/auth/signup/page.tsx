@@ -1,7 +1,13 @@
-import SignupView from '@/components/auth/signup/signup-view';
+import { Suspense } from 'react';
 
-const Page = () => {
-  return <SignupView />;
+import { SignupFlow } from '@/components/auth/signup';
+
+const SignupPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignupFlow />
+    </Suspense>
+  );
 };
 
-export default Page;
+export default SignupPage;

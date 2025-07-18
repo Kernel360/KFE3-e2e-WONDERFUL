@@ -2,15 +2,14 @@
 
 import React from 'react';
 
-import LocationDisplay from '@/components/auth/location-display';
+import { LocationDisplay } from '@/components/auth/signup';
 import { Button } from '@/components/ui/button';
 
 interface LocationSetupProps {
   onSaveLocation: () => void;
-  onSkipLocation: () => void;
 }
 
-const LocationSetup = ({ onSaveLocation, onSkipLocation }: LocationSetupProps) => {
+const LocationSetup = ({ onSaveLocation }: LocationSetupProps) => {
   // 위치 저장 시 처리
   const handleSaveLocation = () => {
     // 실제 저장 로직 추가 가능
@@ -47,16 +46,6 @@ const LocationSetup = ({ onSaveLocation, onSkipLocation }: LocationSetupProps) =
             className="h-14"
           >
             위치 저장
-          </Button>
-
-          <Button
-            onClick={onSkipLocation}
-            size="lg"
-            color="secondary"
-            fullWidth={true}
-            className="h-14"
-          >
-            다음에 설정하기
           </Button>
         </div>
       </div>

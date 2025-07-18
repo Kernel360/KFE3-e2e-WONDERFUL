@@ -1,6 +1,7 @@
 import { MenuList, ProfileCard } from '@/components/common/profile';
 
-import ButtonEdit from './button-edit';
+import ButtonEdit from '@/components/user/button-edit';
+
 import ButtonSignOut from './button-sign-out';
 
 const ProfilePage = () => {

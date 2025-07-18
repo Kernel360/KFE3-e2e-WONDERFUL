@@ -1,4 +1,4 @@
-import FilterTab from '@/components/common/tab/filter';
+import { FilterTab } from '@/components/common';
 
 import { useCategories } from '@/hooks/queries/category/useCategories';
 

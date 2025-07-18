@@ -1,6 +1,6 @@
 'use client';
 
-import { AuctionItemList, FilterTab, ProfileCard } from '@/components/common';
+import { AuctionItemList, ProfileCard, FilterTab } from '@/components/common';
 
 import { AUCTION_TABS_BASIC } from '@/lib/constants/tabs';
 
