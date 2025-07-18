@@ -14,7 +14,7 @@ export const createAuctionSchema = z.object({
     .string()
     .min(1, '경매 종료시간을 입력해주세요.')
     .max(2, '최대 99시간까지 입력할 수 있어요.'),
-  images: z.array(z.string()).default([]),
+  images: z.array(z.string()).optional(),
 });
 
 export type CreateAuctionFormData = z.infer<typeof createAuctionSchema>;
