@@ -10,6 +10,7 @@ import { formatCurrencyWithUnit } from '@/lib/utils/price';
 import { BidFormBottomProps } from '@/types/bid';
 
 const BidFormBottom = ({
+  auctionId,
   currentPrice,
   isExpired,
   isBidding,
@@ -51,7 +52,7 @@ const BidFormBottom = ({
 
   return (
     <div className="bg-wthie z-40 flex items-center gap-2 bg-white px-5 pb-6 pt-3">
-      <ButtonFavorite auctionId="123" />
+      <ButtonFavorite auctionId={auctionId} />
       <div className="flex flex-1 flex-col">
         <span className="text-sm font-medium text-neutral-600">
           {isExpired ? '최종 낙찰가' : '현재 입찰가'}
