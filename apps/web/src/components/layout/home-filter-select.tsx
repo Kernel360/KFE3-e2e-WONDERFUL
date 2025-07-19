@@ -37,14 +37,13 @@ const HomeFilterSelect = () => {
     // ** 실제 데이터 호출 연결 필요 **
     const results: LocationType[] = LOCATION_DUMMY;
 
-    // 저장된 위치 정보가 없으면 기본 설정
+    // 저장된 위치 정보가 없으면 기본 설정 쓰기
     if (results.length === 0) return;
 
     // 저장된 위치 정보가 있으면 저장된 위치 정보 설정 & 호출된 리스트 setLocationList
     setLocationList(results);
-    const primaryLocation = results.find((locate) => locate.IsPrimary) ?? results[0];
-    setLocation(primaryLocation!);
-  }, [selectedLocation, setLocation, locationList.length]);
+    setLocation(results.find((locate) => locate.IsPrimary) ?? results[0]!);
+  }, [setLocation, locationList.length]);
 
   const homeFilterIcon = tv({
     base: 'transition-all duration-400',
@@ -57,6 +56,8 @@ const HomeFilterSelect = () => {
   });
 
   const homeFilterWrapper = cn('text-h4 flex h-10 items-center justify-between px-1 font-bold');
+
+  console.log('seleted', selectedLocation);
 
   return (
     <>
