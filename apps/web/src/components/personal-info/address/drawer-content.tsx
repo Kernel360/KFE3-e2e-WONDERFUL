@@ -63,7 +63,7 @@ const AddressDrawerContent = () => {
           </li>
         ))}
       </ul>
-      <ButtonManage url="/chat/123" title="주소 관리" />
+      <ButtonManage url="/address" title="주소 관리" />
       <Button variant="solid" size="lg">
         공유하기
       </Button>
