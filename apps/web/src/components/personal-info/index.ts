@@ -12,3 +12,4 @@ export { default as ButtonManage } from './button/button-manage';
 
 export { default as BankIcon } from './icon-bank';
 export { default as DrawerHeader } from './drawer-header';
+export { default as InputPersonal } from './input';
