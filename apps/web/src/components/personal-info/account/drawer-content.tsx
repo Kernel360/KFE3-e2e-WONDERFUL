@@ -63,7 +63,7 @@ const AccountDrawerContent = () => {
           </li>
         ))}
       </ul>
-      <ButtonManage url="/chat/123" title="계좌 관리" />
+      <ButtonManage title="계좌 관리" url="/account" />
       <Button variant="solid" size="lg">
         공유하기
       </Button>
