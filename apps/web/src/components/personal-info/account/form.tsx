@@ -17,7 +17,7 @@ const AccountForm = ({ item }: AccountFormProps) => {
     <div className="flex h-full w-full flex-col justify-between px-4">
       <div className="flex flex-col gap-3">
         <InputPersonal id="bank" label="은행명" placeholder={item.bank} type="text" />
-        <InputPersonal id="account" label="이름" placeholder={item.account} type="number" />
+        <InputPersonal id="account" label="계좌" placeholder={item.account} type="number" />
         <InputPersonal id="name" label="예금주" placeholder={item.name} type="text" />
       </div>
       <div className="flex w-full flex-col gap-4 pb-4">
