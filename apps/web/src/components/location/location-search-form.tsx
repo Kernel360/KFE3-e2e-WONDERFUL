@@ -47,6 +47,7 @@ const LocationSearchForm = ({ onLocationSelect, onClose }: LocationSearchFormPro
     <SearchLocationPicker
       onLocationSelect={handleLocationSelect}
       onShowMapPicker={handleShowMapPicker}
+      onClose={onClose}
     />
   );
 };

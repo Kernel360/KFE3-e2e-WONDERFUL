@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { Map } from 'lucide-react';
+import { Map, X } from 'lucide-react';
 
 import LocationSearchResults from '@/components/location/location-search-results';
 import SearchInput from '@/components/location/search-input';
@@ -16,9 +16,14 @@ import type { UserLocation, SearchResultItem } from '@/lib/types/location';
 interface SearchLocationPickerProps {
   onLocationSelect: (location: UserLocation, address: string) => void;
   onShowMapPicker: () => void;
+  onClose?: () => void;
 }
 
-const SearchLocationPicker = ({ onLocationSelect, onShowMapPicker }: SearchLocationPickerProps) => {
+const SearchLocationPicker = ({
+  onLocationSelect,
+  onShowMapPicker,
+  onClose,
+}: SearchLocationPickerProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -52,8 +57,15 @@ const SearchLocationPicker = ({ onLocationSelect, onShowMapPicker }: SearchLocat
   return (
     <div className="flex h-full flex-col bg-white">
       {/* 헤더 */}
-      <div className="border-b border-neutral-200 px-4 py-3">
-        <h2 className="text-center text-lg font-semibold">위치 정보 설정</h2>
+      <div className="flex items-center justify-between border-b border-neutral-200 p-4">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <h2 className="text-lg font-semibold">위치 정보 설정</h2>
+        <div className="w-8"></div>
       </div>
 
       {/* 검색 영역 */}
@@ -70,7 +82,7 @@ const SearchLocationPicker = ({ onLocationSelect, onShowMapPicker }: SearchLocat
         <Button
           onClick={onShowMapPicker}
           size="medium"
-          color="primary"
+          color="secondary"
           fullWidth={true}
           className="gap-3"
         >
