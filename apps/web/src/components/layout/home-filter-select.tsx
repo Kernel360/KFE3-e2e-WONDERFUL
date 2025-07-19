@@ -56,7 +56,9 @@ const HomeFilterSelect = () => {
     },
   });
 
-  const homeFilterWrapper = cn('text-h4 flex h-10 w-fit items-center px-1 font-bold ');
+  const homeFilterWrapper = cn(
+    'text-h4 flex h-10 w-34 items-center justify-between px-1 font-bold hover:bg-neutral-50'
+  );
 
   return (
     <>
