@@ -2,9 +2,10 @@ import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
-import QueryProvider from '@/providers/query-provider';
 import Navigation from '@/components/layout/navigation';
 
+import LocationModalProvider from '@/providers/location-modal-provider';
+import QueryProvider from '@/providers/query-provider';
 import './globals.css';
 
 const pretendard = localFont({
@@ -74,6 +75,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             style={{ position: 'relative' }}
           >
             {children}
+            <LocationModalProvider />
             <Navigation />
           </div>
         </QueryProvider>

@@ -2,105 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
+import type { KakaoMapSignupProps } from '@/lib/types/kakao-map';
 
-interface KakaoMapProps {
-  location: UserLocation;
-  width?: string | number;
-  height?: string | number;
-  level?: number;
-  showMarker?: boolean;
-  showInfoWindow?: boolean;
-  infoContent?: string;
-  className?: string;
-}
-
-declare global {
-  interface Window {
-    kakao: {
-      maps: {
-        LatLng: new (lat: number, lng: number) => KakaoLatLng;
-        Map: new (container: HTMLElement, options: KakaoMapOptions) => KakaoMap;
-        Marker: new (options: KakaoMarkerOptions) => KakaoMarker;
-        InfoWindow: new (options: KakaoInfoWindowOptions) => KakaoInfoWindow;
-        load: (callback: () => void) => void;
-        services: {
-          Geocoder: new () => KakaoGeocoder;
-          Status: {
-            OK: string;
-          };
-        };
-      };
-    };
-  }
-}
-
-interface KakaoLatLng {
-  getLat: () => number;
-  getLng: () => number;
-}
-
-interface KakaoMapOptions {
-  center: KakaoLatLng;
-  level: number;
-}
-
-interface KakaoMap {
-  setCenter: (latlng: KakaoLatLng) => void;
-  getLevel: () => number;
-  setLevel: (level: number) => void;
-}
-
-interface KakaoMarkerOptions {
-  position: KakaoLatLng;
-}
-
-interface KakaoMarker {
-  setMap: (map: KakaoMap | null) => void;
-  getPosition: () => KakaoLatLng;
-}
-
-interface KakaoInfoWindowOptions {
-  content: string;
-}
-
-interface KakaoInfoWindow {
-  open: (map: KakaoMap, marker: KakaoMarker) => void;
-  close: () => void;
-}
-
-interface KakaoGeocoder {
-  coord2Address: (
-    lng: number,
-    lat: number,
-    callback: (result: KakaoGeocoderResult[], status: string) => void
-  ) => void;
-}
-
-interface KakaoGeocoderResult {
-  address_name: string;
-  address_type: string;
-  x: string;
-  y: string;
-  address: {
-    address_name: string;
-    region_1depth_name: string;
-    region_2depth_name: string;
-    region_3depth_name: string;
-  };
-  road_address?: {
-    address_name: string;
-    region_1depth_name: string;
-    region_2depth_name: string;
-    region_3depth_name: string;
-    road_name: string;
-  };
-}
-
-const KakaoMap = ({
+const SignupKakaoMap = ({
   location,
   width = '100%',
   height = '200px',
@@ -109,7 +13,7 @@ const KakaoMap = ({
   showInfoWindow = true,
   infoContent = '현재 위치',
   className = '',
-}: KakaoMapProps) => {
+}: KakaoMapSignupProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string>('');
@@ -227,4 +131,4 @@ const KakaoMap = ({
   );
 };
 
-export default KakaoMap;
+export default SignupKakaoMap;

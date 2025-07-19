@@ -2,31 +2,26 @@
 
 import { useState, useEffect } from 'react';
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
+import type { UserLocation, GeolocationOptions } from '@/lib/types/location';
 
-interface GeolocationState {
+interface UseGeolocationReturn {
   location: UserLocation | null;
   error: string;
   isLoading: boolean;
+  retry: () => void;
+  isReady: boolean;
 }
 
-interface GeolocationOptions {
-  enableHighAccuracy?: boolean;
-  timeout?: number;
-  maximumAge?: number;
-}
+/**
+ * 순수 위치 정보만 관리하는 훅
+ * 주소 변환은 별도 훅에서 처리
+ */
+export const useGeolocation = (options: GeolocationOptions = {}): UseGeolocationReturn => {
+  const [location, setLocation] = useState<UserLocation | null>(null);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-export const useGeolocation = (options: GeolocationOptions = {}) => {
-  const [state, setState] = useState<GeolocationState>({
-    location: null,
-    error: '',
-    isLoading: true,
-  });
-
-  const defaultOptions = {
+  const defaultOptions: GeolocationOptions = {
     enableHighAccuracy: true,
     timeout: 10000,
     maximumAge: 600000,
@@ -34,44 +29,23 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
   };
 
   const getCurrentLocation = () => {
-    console.log('Geolocation: 위치 정보 요청 시작');
-
     if (!navigator.geolocation) {
-      console.error('Geolocation: 브라우저에서 지원하지 않음');
-      setState({
-        location: null,
-        error: '이 브라우저에서는 위치 서비스를 지원하지 않습니다.',
-        isLoading: false,
-      });
+      setError('이 브라우저에서는 위치 서비스를 지원하지 않습니다.');
+      setIsLoading(false);
       return;
     }
 
-    setState((prev) => ({ ...prev, isLoading: true, error: '' }));
+    setIsLoading(true);
+    setError('');
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log('Geolocation 성공:', {
-          latitude,
-          longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: new Date(position.timestamp).toLocaleString(),
-        });
-        setState({
-          location: { latitude, longitude },
-          error: '',
-          isLoading: false,
-        });
+        setLocation({ latitude, longitude });
+        setError('');
+        setIsLoading(false);
       },
       (error) => {
-        console.error('Geolocation 에러:', {
-          code: error.code,
-          message: error.message,
-          PERMISSION_DENIED: error.PERMISSION_DENIED,
-          POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
-          TIMEOUT: error.TIMEOUT,
-        });
-
         let errorMessage = '';
         switch (error.code) {
           case error.PERMISSION_DENIED:
@@ -87,11 +61,9 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
             errorMessage = '위치를 가져오는 중 오류가 발생했습니다.';
             break;
         }
-        setState({
-          location: null,
-          error: errorMessage,
-          isLoading: false,
-        });
+        setLocation(null);
+        setError(errorMessage);
+        setIsLoading(false);
       },
       defaultOptions
     );
@@ -105,8 +77,13 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
     getCurrentLocation();
   };
 
+  const isReady = !isLoading && !error && !!location;
+
   return {
-    ...state,
+    location,
+    error,
+    isLoading,
     retry,
+    isReady,
   };
 };
