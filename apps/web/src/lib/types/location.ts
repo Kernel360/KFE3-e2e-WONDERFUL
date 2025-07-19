@@ -96,7 +96,7 @@ export interface KakaoAddressDocument {
 }
 
 export interface LocationType {
-  locationId: string;
+  locationId: string | null;
   locationName: string;
   IsPrimary: boolean;
 }

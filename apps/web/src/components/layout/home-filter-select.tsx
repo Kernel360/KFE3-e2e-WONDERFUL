@@ -43,7 +43,7 @@ const HomeFilterSelect = () => {
     // 저장된 위치 정보가 있으면 저장된 위치 정보 설정 & 호출된 리스트 setLocationList
     setLocationList(results);
     setLocation(results.find((locate) => locate.IsPrimary) ?? results[0]!);
-  }, [setLocation, locationList.length]);
+  }, [setLocation]);
 
   const homeFilterIcon = tv({
     base: 'transition-all duration-400',
@@ -56,8 +56,6 @@ const HomeFilterSelect = () => {
   });
 
   const homeFilterWrapper = cn('text-h4 flex h-10 items-center justify-between px-1 font-bold');
-
-  console.log('seleted', selectedLocation);
 
   return (
     <>

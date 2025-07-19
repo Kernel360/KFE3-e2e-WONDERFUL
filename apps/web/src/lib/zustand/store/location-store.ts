@@ -1,14 +1,10 @@
 import { create } from 'zustand';
 
-interface Location {
-  locationId: string | null;
-  locationName: string;
-  IsPrimary: boolean;
-}
+import { LocationType } from '@/types/location';
 
 interface LocationState {
-  selectedLocation: Location;
-  setLocation: (location: Location) => void;
+  selectedLocation: LocationType;
+  setLocation: (location: LocationType) => void;
 }
 
 export const useLocationStore = create<LocationState>((set) => ({
