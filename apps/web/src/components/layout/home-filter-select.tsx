@@ -34,13 +34,14 @@ const HomeFilterSelect = () => {
   };
 
   useEffect(() => {
-    // 저장된 위치 정보가 없으면 기본 설정
-    if (locationList.length > 0) return;
-
-    // (수정 필요) 저장된 위치 정보가 있으면 저장된 위치 정보로 설정
+    // ** 실제 데이터 호출 연결 필요 **
     const results: LocationType[] = LOCATION_DUMMY;
-    setLocationList(results);
 
+    // 저장된 위치 정보가 없으면 기본 설정
+    if (results.length === 0) return;
+
+    // 저장된 위치 정보가 있으면 저장된 위치 정보 설정 & 호출된 리스트 setLocationList
+    setLocationList(results);
     const primaryLocation = results.find((locate) => locate.IsPrimary) ?? results[0];
     setLocation(primaryLocation!);
   }, [selectedLocation, setLocation, locationList.length]);
@@ -55,22 +56,20 @@ const HomeFilterSelect = () => {
     },
   });
 
-  const homeFilterWrapper = cn(
-    'text-h4 flex h-10 min-w-24 items-center justify-between px-2 font-bold hover:bg-neutral-50'
-  );
+  const homeFilterWrapper = cn('text-h4 flex h-10 w-fit items-center px-1 font-bold ');
 
   return (
     <>
       {locationList.length >= 1 ? (
         <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
           <PopoverTrigger asChild>
-            <button aria-label="서비스 위치 선택" className={homeFilterWrapper}>
+            <button aria-label="서비스 위치 선택" className={cn(homeFilterWrapper, `gap-2`)}>
               {phaseName}
               <ChevronDown size={24} className={homeFilterIcon({ open: isSelectOpen })} />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-fit min-w-24">
-            <ul className="space-y-2">
+          <PopoverContent align="start" className="w-34">
+            <ul className="space-y-3">
               {locationList.map((locate) => {
                 const locateName = locate.locationName.split(' ').at(-1);
                 return (
@@ -79,12 +78,16 @@ const HomeFilterSelect = () => {
                   </li>
                 );
               })}
+              <li>
+                {/* /위치설정 페이지로 이동 */}
+                <Link href={'/'}>내 동네 설정</Link>
+              </li>
             </ul>
           </PopoverContent>
         </Popover>
       ) : (
         // 위치설정 페이지로 이동
-        <Link href={'/'} className={homeFilterWrapper}>
+        <Link href={'/'} className={cn(homeFilterWrapper, `w-22 justify-between`)}>
           {phaseName}
           <ChevronRight size={24} />
         </Link>
