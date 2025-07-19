@@ -9,7 +9,6 @@ import { SigninFields } from '@/components/auth/signin';
 import SubmitButton from '@/components/auth/submit-button';
 
 import { signIn } from '@/lib/actions/auth';
-import { openLocationModal } from '@/lib/utils/location-modal';
 import { validateEmail, validatePassword } from '@/lib/utils/validation';
 
 const SigninForm = () => {
@@ -20,11 +19,6 @@ const SigninForm = () => {
     password: '',
     rememberMe: false,
   });
-  const onclickevent = () => {
-    openLocationModal((location, address) => {
-      console.log('선택됨:', location, address);
-    });
-  };
   // UI state
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,9 +121,7 @@ const SigninForm = () => {
             }
             className="text-primary-500 focus:ring-primary-500 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2"
           />
-          <span className="text-sm text-neutral-600" onClick={onclickevent}>
-            자동 로그인
-          </span>
+          <span className="text-sm text-neutral-600">자동 로그인</span>
         </label>
 
         <button
