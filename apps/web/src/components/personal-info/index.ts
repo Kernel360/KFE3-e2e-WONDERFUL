@@ -6,8 +6,10 @@ export { default as AddressItem } from './address/address-item';
 export { default as AddressDrawerContent } from './address/drawer-content';
 export { default as BadgePrimary } from './badge-primary';
 
-export { default as ButtonBox } from './button-box';
-export { default as ButtonSelect } from './button-select';
+export { default as ButtonBox } from './button/button-box';
+export { default as ButtonSelect } from './button/button-select';
+export { default as ButtonManage } from './button/button-manage';
 
 export { default as BankIcon } from './icon-bank';
 export { default as DrawerHeader } from './drawer-header';
+export { default as InputPersonal } from './input';
