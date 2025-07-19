@@ -26,7 +26,7 @@ export interface AccountItem {
   isPrimary: boolean;
 }
 
-const Account = ({ color, children, account }: AccountProps) => {
+const AccountItem = ({ color, children, account }: AccountProps) => {
   return (
     <div className={style({ color })}>
       <div className="flex items-center gap-4">
@@ -47,4 +47,4 @@ const Account = ({ color, children, account }: AccountProps) => {
   );
 };
 
-export default Account;
+export default AccountItem;
