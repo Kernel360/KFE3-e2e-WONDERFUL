@@ -56,7 +56,7 @@ const HomeFilterSelect = () => {
   });
 
   const homeFilterWrapper = cn(
-    'text-h4 flex h-10 min-w-24 items-center justify-between px-2 font-bold hover:bg-neutral-50'
+    'text-h4 flex h-10 w-34 items-center justify-between px-1 font-bold hover:bg-neutral-50'
   );
 
   return (
@@ -69,8 +69,8 @@ const HomeFilterSelect = () => {
               <ChevronDown size={24} className={homeFilterIcon({ open: isSelectOpen })} />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-fit min-w-24">
-            <ul className="space-y-2">
+          <PopoverContent align="start" className="w-34">
+            <ul className="space-y-3">
               {locationList.map((locate) => {
                 const locateName = locate.locationName.split(' ').at(-1);
                 return (
@@ -79,6 +79,10 @@ const HomeFilterSelect = () => {
                   </li>
                 );
               })}
+              <li>
+                {/* /위치설정 페이지로 이동 */}
+                <Link href={'/'}>내 동네 설정</Link>
+              </li>
             </ul>
           </PopoverContent>
         </Popover>
