@@ -1,4 +1,4 @@
-import AddressList from '@/components/personal-info/address/list';
+import { AddressList } from '@/components/personal-info';
 
 const Page = () => {
   return (
