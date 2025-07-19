@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 
-import { AddressItem, ButtonSelect, DrawerHeader } from '@/components/personal-info';
-import ButtonManage from '@/components/personal-info/button-manage';
+import { AddressItem, ButtonManage, ButtonSelect, DrawerHeader } from '@/components/personal-info';
 import { Button, DrawerContent } from '@/components/ui';
 
 import { ADDRESS_DRAWER_HEADER } from '@/constants/personal-info';
@@ -63,7 +62,7 @@ const AddressDrawerContent = () => {
           </li>
         ))}
       </ul>
-      <ButtonManage url="/chat/123" title="주소 관리" />
+      <ButtonManage url="/address" title="주소 관리" />
       <Button variant="solid" size="lg">
         공유하기
       </Button>

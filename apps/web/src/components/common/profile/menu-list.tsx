@@ -20,7 +20,8 @@ const menuSections: MenuSection[] = [
       { title: '구매 내역', route: '/profile/purchases' },
       { title: '관심 목록', route: '/profile/wishlist' },
       { title: '위치 정보 설정', route: '/profile/location' },
-      { title: '결제 정보 설정', route: '/profile/payment' },
+      { title: '계좌 관리', route: '/account' },
+      { title: '주소 관리', route: '/address' },
     ],
   },
   {
