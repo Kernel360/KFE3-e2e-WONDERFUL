@@ -17,18 +17,25 @@ const ProfileEditForm = () => {
 
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [nicknameError, setNicknameError] = useState<string>('');
 
   // 프로필 데이터 로드 시, 폼 필드 초기화
   useEffect(() => {
     if (profile) {
       setNickname(profile.nickname || '');
+      setNicknameError('');
     }
   }, [profile]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nickname.trim()) return;
+    // 닉네임 필드가 비어 있을 때 오류 메시지 추가
+    if (!nickname.trim()) {
+      setNicknameError('닉네임을 입력해주세요.');
+      return;
+    }
+    setNicknameError('');
 
     const formData = new FormData();
     formData.append('nickname', nickname.trim());
@@ -58,6 +65,7 @@ const ProfileEditForm = () => {
         }}
       />
       <NicknameInput value={nickname} onChange={(e) => setNickname(e.target.value)} />
+      {nicknameError && <div className="px-7 text-sm text-red-500">{nicknameError}</div>}
       <div className="mb-8 mt-auto px-4">
         <Button type="submit" fullWidth disabled={isPending}>
           {isPending ? '수정 중...' : '수정 완료'}

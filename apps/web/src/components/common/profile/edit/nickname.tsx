@@ -7,7 +7,7 @@ interface NicknameInputProps {
 
 const NicknameInput = ({ value, onChange }: NicknameInputProps) => {
   return (
-    <div className="mb-8 flex flex-col gap-2 px-4">
+    <div className="mb-2 flex flex-col gap-2 px-4">
       <label htmlFor="nickname" className="mb-1 text-lg font-bold text-neutral-900">
         닉네임
       </label>
