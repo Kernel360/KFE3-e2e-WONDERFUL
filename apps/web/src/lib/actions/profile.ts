@@ -4,9 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@repo/db';
 
 import { getUserProfileFromDB } from '@/lib/data/user';
+import { uploadProfileImageServer } from '@/lib/supabase/storage-server';
 import { getCurrentUser } from '@/lib/utils/auth';
-
-import { uploadProfileImage } from '../supabase/storage';
 
 export const getMyProfile = async () => {
   try {
@@ -65,7 +64,7 @@ export const updateProfile = async (formData: FormData) => {
     // 이미지 업로드 처리
     if (profileImage && profileImage.size > 0) {
       console.log('이미지 업로드 시작');
-      profileImgUrl = await uploadProfileImage(profileImage, user.id);
+      profileImgUrl = await uploadProfileImageServer(profileImage, user.id);
       console.log('이미지 업로드 완료:', profileImgUrl);
     }
 

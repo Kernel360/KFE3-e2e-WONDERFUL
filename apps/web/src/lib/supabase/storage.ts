@@ -1,5 +1,5 @@
 import { createClient } from './client';
-import { createClient as createServerClient } from './server';
+
 const supabase = createClient();
 
 export type StorageBucket = 'auction-images' | 'profile-images';
@@ -185,16 +185,11 @@ export const uploadProfileImage = async (file: File, userId: string): Promise<st
     // 프로필 이미지는 사용자 별 폴더에 저장
     const filePath = `${userId}/${fileName}`;
 
-    // 서버 클라이언트 생성 (인증 정보 포함)
-    const supabaseServer = await createServerClient();
-
     // profile-images 버킷 사용
-    const { data, error } = await supabaseServer.storage
-      .from('profile-images')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    const { data, error } = await supabase.storage.from('profile-images').upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
 
     if (error) {
       console.error('프로필 이미지 업로드 에러:', error);
