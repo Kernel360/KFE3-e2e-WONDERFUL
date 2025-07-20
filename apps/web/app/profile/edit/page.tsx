@@ -1,5 +1,5 @@
-import ProfileEditForm from '@/components/common/profile/edit/form-edit';
-import ProfileHeader from '@/components/layout/header/profile';
+import { ProfileEditForm } from '@/components/common';
+import { ProfileHeader } from '@/components/layout';
 
 const ProfileEditPage = () => {
   return (

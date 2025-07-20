@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { ChevronLeftIcon, Settings } from 'lucide-react';
 
-import HeaderWrapper from '@/components/layout/header/wrapper';
+import { HeaderWrapper } from '@/components/layout/';
 
 const ProfileHeader = () => {
   const routes = useRouter();
