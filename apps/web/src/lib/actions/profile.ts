@@ -63,6 +63,15 @@ export const updateProfile = async (formData: FormData) => {
 
     // 이미지 업로드 처리
     if (profileImage && profileImage.size > 0) {
+      // 허용된 이미지 타입과 최대 크기(예: 5MB)
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (!allowedTypes.includes(profileImage.type)) {
+        throw new Error('지원하지 않는 이미지 형식입니다. (jpg, png, gif, webp만 허용)');
+      }
+      if (profileImage.size > maxSize) {
+        throw new Error('이미지 파일 크기가 너무 큽니다. (최대 5MB)');
+      }
       console.log('이미지 업로드 시작');
       profileImgUrl = await uploadProfileImageServer(profileImage, user.id);
       console.log('이미지 업로드 완료:', profileImgUrl);
