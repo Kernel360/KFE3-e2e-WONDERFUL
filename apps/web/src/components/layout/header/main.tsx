@@ -1,12 +1,11 @@
 import { BellRing } from 'lucide-react';
 
-import { HeaderWrapper } from '@/components/layout';
-import HomeSelectBox from '@/components/layout/home-selectbox';
+import { HeaderWrapper, HomeFilterSelect } from '@/components/layout';
 
 const MainHeader = () => {
   return (
     <HeaderWrapper className="bg-white">
-      <HomeSelectBox />
+      <HomeFilterSelect />
       <BellRing />
     </HeaderWrapper>
   );

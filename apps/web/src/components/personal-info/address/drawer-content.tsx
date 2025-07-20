@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 
-import { AddressItem, ButtonSelect, DrawerHeader } from '@/components/personal-info';
-import ButtonManage from '@/components/personal-info/button-manage';
+import { AddressItem, ButtonManage, ButtonSelect, DrawerHeader } from '@/components/personal-info';
 import { Button, DrawerContent } from '@/components/ui';
 
 import { ADDRESS_DRAWER_HEADER } from '@/constants/personal-info';

@@ -1,17 +1,13 @@
 import { create } from 'zustand';
 
+import { LocationType } from '@/types/location';
+
 interface LocationState {
-  selectedLocationId: string | null;
-  selectedLocationName: string;
-  setLocation: (locationId: string | null, locationName: string) => void;
+  selectedLocation: LocationType;
+  setLocation: (location: LocationType) => void;
 }
 
 export const useLocationStore = create<LocationState>((set) => ({
-  selectedLocationId: null,
-  selectedLocationName: '전체',
-  setLocation: (locationId, locationName) =>
-    set({
-      selectedLocationId: locationId,
-      selectedLocationName: locationName,
-    }),
+  selectedLocation: { locationId: null, locationName: '서울 강남구 역삼동', IsPrimary: false },
+  setLocation: (location) => set({ selectedLocation: location }),
 }));

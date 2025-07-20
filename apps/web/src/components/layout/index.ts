@@ -7,5 +7,7 @@ export { default as ChatHeader } from './header/chat';
 export { default as ProfileHeader } from './header/profile';
 export { default as AccountHeader } from './header/account';
 
+export { default as HomeFilterSelect } from './home-filter-select';
+
 export { default as Navigation } from './navigation';
 export { default as Container } from './container';
