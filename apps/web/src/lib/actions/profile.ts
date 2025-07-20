@@ -3,8 +3,8 @@ import { revalidatePath } from 'next/cache';
 
 import { prisma } from '@repo/db';
 
-import { getCurrentUser } from '@/lib//utils/auth';
 import { getUserProfileFromDB } from '@/lib/data/user';
+import { getCurrentUser } from '@/lib/utils/auth';
 
 import { uploadProfileImage } from '../supabase/storage';
 
