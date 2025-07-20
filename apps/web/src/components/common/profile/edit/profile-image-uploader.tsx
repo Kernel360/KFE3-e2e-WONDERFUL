@@ -18,6 +18,16 @@ const ProfileImageUploader = ({
   const [preview, setPreview] = useState<string>(defaultImage);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 컴포넌트가 마운트/언마운트 상태를 추적하는 ref
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   // defaultImage가 변경될 때마다 미리보기 업데이트
   useEffect(() => {
     setPreview(defaultImage);
