@@ -1,23 +1,27 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Pencil } from 'lucide-react';
 
 import ProfileImage from '../image';
 
-const DEFAULT_IMAGE =
-  'https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/0bf0d884-38e1-4cf9-8663-5f65d0685233/1751631153830_jfii5z.jpeg';
-
+const DEFAULT_IMAGE = '/avatar-female.svg';
+interface ProfileImageUploaderProps {
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  id?: string;
+  defaultImage?: string;
+}
 const ProfileImageUploader = ({
   onChange,
   id = 'profile-image-upload',
   defaultImage = DEFAULT_IMAGE,
-}: {
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  id?: string;
-  defaultImage?: string;
-}) => {
+}: ProfileImageUploaderProps) => {
   const [preview, setPreview] = useState<string>(defaultImage);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // defaultImage가 변경될 때마다 미리보기 업데이트
+  useEffect(() => {
+    setPreview(defaultImage);
+  }, [defaultImage]);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
@@ -25,11 +29,12 @@ const ProfileImageUploader = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) onChange(e);
+
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (ev) => {
-        setPreview(ev.target?.result as string);
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
