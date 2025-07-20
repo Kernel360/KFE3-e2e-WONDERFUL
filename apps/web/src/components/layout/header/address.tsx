@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { ChevronLeftIcon } from 'lucide-react';
 
-import HeaderWrapper from '@/components/layout/header/wrapper';
+import { HeaderWrapper } from '@/components/layout';
 import { Button } from '@/components/ui';
 
 const AddressHeader = () => {

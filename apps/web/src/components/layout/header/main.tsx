@@ -1,6 +1,7 @@
-import HomeSelectBox from '@/components/layout/home-selectbox';
-import HeaderWrapper from '@/components/layout/header/wrapper';
 import { BellRing } from 'lucide-react';
+
+import { HeaderWrapper } from '@/components/layout';
+import HomeSelectBox from '@/components/layout/home-selectbox';
 
 const MainHeader = () => {
   return (

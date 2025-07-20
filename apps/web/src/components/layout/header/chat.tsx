@@ -5,7 +5,7 @@ import { useParams, usePathname } from 'next/navigation';
 import { Bell } from 'lucide-react';
 
 import { BackButton, ButtonMore } from '@/components/common';
-import HeaderWrapper from '@/components/layout/header/wrapper';
+import { HeaderWrapper } from '@/components/layout';
 
 const ChatHeader = () => {
   const pathname = usePathname();
