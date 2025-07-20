@@ -93,9 +93,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               expand={true}
               duration={3000}
             />
+
+            <LocationModalProvider />
+            <Navigation />
           </div>
-          <LocationModalProvider />
-          <Navigation />
         </QueryProvider>
       </body>
     </html>
