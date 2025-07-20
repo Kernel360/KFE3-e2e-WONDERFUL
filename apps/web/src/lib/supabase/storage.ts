@@ -196,8 +196,6 @@ export const uploadProfileImage = async (file: File, userId: string): Promise<st
       throw new Error(`이미지 업로드 실패: ${error.message}`);
     }
 
-    console.log('프로필 이미지 업로드 성공:', data);
-
     // 공개 URL 생성
     const { data: urlData } = supabase.storage.from('profile-images').getPublicUrl(data.path);
 
