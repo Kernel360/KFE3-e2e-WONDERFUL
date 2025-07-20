@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { updateProfile } from '@/lib/actions/profile';
 export const useUpdateProfile = () => {
@@ -16,10 +17,14 @@ export const useUpdateProfile = () => {
           queryKey: ['profile', 'me'],
         });
 
+        toast.success('프로필이 수정 되었습니다.');
         router.push('/profile');
+      } else {
+        toast.error(result.error || '프로필 수정에 실패했습니다.');
       }
     },
     onError: (error) => {
+      toast.error('프로필 수정 중 오류가 발생했습니다.');
       console.error('프로필 수정 에러:', error as Error);
     },
   });
