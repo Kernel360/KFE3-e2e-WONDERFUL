@@ -11,12 +11,7 @@ const EditLayout = async ({
 }) => {
   const { id } = await params;
   // console.log('EditLayout params:', id); // 디버깅용 로그
-  return (
-    <>
-      {children}
-      <div>Edit Layout for Auction ID: {id}</div>
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default EditLayout;
