@@ -25,20 +25,30 @@ import { ProfileCard } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
+import { useBidsByAuction } from '@/hooks/queries/bids';
 
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
+import { BidType } from '@/lib/types/bid';
 
 const AuctionDetailContainer = () => {
   const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
 
-  const { data: auctionDetailData, isLoading, error, refetch } = useAuctionDetail(id as string);
+  const {
+    data: auctionDetailData,
+    isLoading,
+    error,
+    refetch: refetchAuction,
+  } = useAuctionDetail(id as string);
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    refetchAuction();
+  }, [refetchAuction]);
+
+  // 초기 입찰 데이터 로드 추가
+  const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
   // 로딩 상태 처리
   if (isLoading) {
@@ -55,7 +65,7 @@ const AuctionDetailContainer = () => {
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
         <div className="text-danger-600 text-lg">경매 정보를 불러오는 중 오류가 발생했습니다.</div>
         <button
-          onClick={() => refetch()}
+          onClick={() => refetchAuction()}
           className="bg-primary-500 hover:bg-primary-600 rounded-lg px-4 py-2 text-white transition-colors"
         >
           다시 시도
@@ -66,6 +76,9 @@ const AuctionDetailContainer = () => {
 
   const auction = auctionDetailData.data;
   const seller = auction.seller; // 판매자 정보
+
+  // 초기 입찰 데이터 준비
+  const initialBids = (initialBidsData?.data as BidType[]) || [];
 
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
@@ -115,7 +128,7 @@ const AuctionDetailContainer = () => {
         <ItemDescription item={item} />
         <section ref={bidTableRef} className="space-y-2 pb-10 pt-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
-          <BidTable />
+          <BidTable auctionId={auction.id} initialBids={initialBids} />
         </section>
       </article>
       <aside className="sticky bottom-0 z-50 w-full">

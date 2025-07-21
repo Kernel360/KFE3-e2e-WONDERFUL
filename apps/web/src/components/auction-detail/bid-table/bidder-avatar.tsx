@@ -1,22 +1,21 @@
-import React from 'react';
-
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
-const BidderAvatar = ({ isAuthor }: { isAuthor: boolean }) => {
+const BidderAvatar = ({
+  userId,
+  profileImg,
+  nickname,
+}: {
+  userId: string;
+  profileImg: string;
+  nickname: string;
+}) => {
   return (
     <>
-      {!isAuthor ? (
-        <span className="flex size-8 items-center justify-center">
-          <i className="bg-primary-100 size-5 rounded-full"></i>
-        </span>
-      ) : (
+      {userId && (
+        // 유저 아이디가 있을 때만 아바타 표시
+        // 프로필 이미지가 없으면 기본 아바타 이미지 사용
         <Avatar className="border-primary-500 shadow-primary-200 size-8 border-2 bg-white shadow-md">
-          <AvatarImage
-            src={
-              'https://autkdwezfwdduoqiadsc.supabase.co/storage/v1/object/public/auction-images/f610194f-1750-4dc5-82ef-fe836cd9bf79/1751453508404_8wxxr2.png'
-            }
-            alt="user1234 프로필"
-          />
+          <AvatarImage src={profileImg || '/avatar-female.svg'} alt={nickname} />
         </Avatar>
       )}
     </>
