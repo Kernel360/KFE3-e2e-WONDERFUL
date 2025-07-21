@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
 
     if (bidPrice < minBidAmount) {
       console.log('❌ [BID API] 최소 입찰 금액 미달');
+      console.log('입찰 금액:', bidPrice, '최소 입찰 금액:', minBidAmount);
       return NextResponse.json(
         { error: `최소 입찰 금액은 ${minBidAmount.toLocaleString()}원입니다.` },
         { status: 400 }
