@@ -18,11 +18,16 @@ interface ToastState {
   closeToast: (id: string) => void;
 }
 
+const MAX_TOAST = 3;
+
 export const useToastStore = create<ToastState>((set, get) => ({
   toasts: [],
   showToast: (toast) => {
-    const id = Date.now().toString(); // timestamp로 unique id
-    set({ toasts: [...get().toasts, { ...toast, id }] });
+    const id = `toast_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // 항상 최신 MAX_TOAST개만 유지
+    set({
+      toasts: [...[...get().toasts, { ...toast, id }].slice(-MAX_TOAST)],
+    });
     // autoClose true면 3초 뒤 자동 삭제
     if (toast.autoClose !== false) {
       setTimeout(() => get().closeToast(id), 3000);
