@@ -74,8 +74,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 최소 입찰 단위 확인
-    //const minBidAmount = auction.auctionPrice!.currentPrice + auction.auctionPrice!.minBidUnit;
-    // 최소 입찰 단위 확인
     const { currentPrice } = auction.auctionPrice!;
     const { minBidUnit } = auction.auctionPrice!;
     const minBidAmount = currentPrice + minBidUnit;

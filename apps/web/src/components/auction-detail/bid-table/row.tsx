@@ -13,11 +13,6 @@ const BidTableRow = ({ item }: { item: BidType }) => {
   const isAuthor = userid && item.bidder.id === userid;
   const bid = formatCurrencyWithUnit(item.price);
 
-  // 디버깅용 로그 추가
-  // console.log('현재 유저 ID:', userid);
-  // console.log('입찰자 ID:', item.bidder.id);
-  // console.log('isAuthor:', isAuthor);
-
   useEffect(() => {
     const getUser = async () => {
       const supabase = createClient();
