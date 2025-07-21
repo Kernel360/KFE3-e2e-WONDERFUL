@@ -15,7 +15,7 @@ export const openLocationModal = (
   onClose?: () => void
 ) => {
   const { openLocationModal } = useLocationModalStore.getState();
-  openLocationModal(onLocationSelect, onClose);
+  openLocationModal();
 };
 
 /**
