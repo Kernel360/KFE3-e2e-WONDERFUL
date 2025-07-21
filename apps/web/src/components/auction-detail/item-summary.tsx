@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 
 import useCountdown from '@/hooks/common/useCountdown';
 
-import { formatDate } from '@/lib/utils/date';
+import { convertToKST } from '@/lib/utils/date';
 
 interface ItemInformationProps {
   item: Item;
@@ -18,9 +18,9 @@ export interface Item {
 }
 
 const ItemSummary = ({ item, id }: ItemInformationProps) => {
-  const deadline = formatDate(new Date(item.endTime));
+  const deadline = convertToKST(item.endTime); // KST로 변환된 마감 시간
 
-  // 실시간으로 경매 종료 여부 확인
+  // 실시간으로 경매 종료 여부 확인: UTC 원본으로 카운트다운
   const { isExpired } = useCountdown(new Date(item.endTime));
 
   // 실제 경매 상태 결정 (서버 상태 + 실시간 시간 비교)

@@ -1,5 +1,5 @@
-import Button from '@repo/ui/components/common/Button';
-import type { StoryObj, Meta } from '@storybook/nextjs';
+import Button from '@repo/ui/components/Button';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
 export default {
   component: Button,

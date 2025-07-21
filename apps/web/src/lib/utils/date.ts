@@ -51,3 +51,38 @@ export const convertHoursToTimestamp = (hours: string): string => {
   const added = new Date(now.getTime() + parseInt(hours, 10) * 60 * 60 * 1000);
   return added.toISOString();
 };
+
+// UTC 날짜를 KST로 변환하는 함수
+export const convertToKST = (utcDate: string | Date) => {
+  const date = new Date(utcDate);
+  return new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).format(date);
+};
+
+// KST 날짜 포맷팅 함수
+export const formatKSTDate = (utcDate: string | Date) => {
+  const date = new Date(utcDate);
+  return new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+};
+
+// KST 시간만 포맷팅하는 함수
+export const formatKSTTime = (utcDate: string | Date) => {
+  const date = new Date(utcDate);
+  return new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+};
