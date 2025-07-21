@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 
-import { X } from 'lucide-react';
-
-import { BidFormBottom } from '@/components/auction-detail';
-import { ButtonDirectDeal, BidFormInput } from '@/components/auction-detail';
+import { BidFormBottom, BidFormInput, ButtonDirectDeal } from '@/components/auction-detail';
 
 import useCountdown from '@/hooks/common/useCountdown';
+import { useBidMutation } from '@/hooks/mutations/bids';
 
 import { cn } from '@/lib/cn';
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
@@ -15,14 +13,16 @@ import { formatCurrencyWithUnit } from '@/lib/utils/price';
 import { BidFormProps } from '@/types/bid';
 
 const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps) => {
-  const [isBidInputOpen, setIsBidInputOpen] = useState(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
+
+  // 입찰 뮤테이션
+  const bidMutation = useBidMutation();
 
   // 경매 종료 시간까지의 카운트다운
   const { isExpired } = useCountdown(new Date(endTime));
   const directPrice = formatCurrencyWithUnit(currentPrice * 1.2); // 20% 증가한 가격
 
-  const handleBidClick = (e: React.FormEvent) => {
+  const handleBidClick = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // 경매가 종료된 경우 입찰 불가
@@ -31,40 +31,42 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
       return;
     }
 
-    if (!isBidInputOpen) {
-      setIsBidInputOpen(true);
+    if (bidPrice === null) {
+      alert('입찰 금액을 입력해주세요');
       return;
     }
 
-    if (bidPrice === null) return alert('입찰 금액을 입력해주세요');
-
-    // 여기에 실제 입찰 로직 추가
     try {
-      const results = true;
+      // 현재 스크롤 위치 저장
+      const currentScrollY = window.scrollY;
 
-      //입찰 완료 시 bid-table로 scroll 이동
-      if (results) {
-        bidTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // API 호출
+      await bidMutation.mutateAsync({
+        auctionId,
+        bidPrice,
+      });
+
+      // 스크롤만 처리
+      setTimeout(() => {
+        window.scrollTo(0, currentScrollY);
+        bidTableRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 100);
     } catch (error) {
-      console.error(error);
+      alert(error instanceof Error ? error.message : '입찰 중 오류가 발생했습니다.');
     }
   };
 
   return (
     <form onSubmit={handleBidClick}>
-      {/* 그림자 배경*/}
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-x-0 bottom-[98%] z-0 h-2/5',
-          'from-black/16 bg-gradient-to-t to-transparent',
-          'duration-600 transition-all',
-          !isBidInputOpen && 'h-6 opacity-30'
-        )}
-      />
+      <div className={cn('w-full bg-white transition-all duration-500 ease-in-out')} />
 
       <div
-        className={cn('duration-600 relative z-20 rounded-t-sm bg-white px-5 pt-6 transition-all')}
+        className={cn(
+          'duration-600 relative rounded-t-sm bg-white px-5 pt-4 shadow-[var(--shadow-nav)] transition-all'
+        )}
       >
         {!isExpired && <ButtonDirectDeal directPrice={directPrice} />}
 
@@ -72,17 +74,8 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
           currentPrice={currentPrice}
           minUnit={1000}
           bidPrice={bidPrice}
-          isBidInputOpen={isBidInputOpen}
           onChange={setBidPrice}
         />
-
-        <button
-          type="button"
-          onClick={() => setIsBidInputOpen(false)}
-          className={`duration-600 invisible absolute right-2.5 top-0 translate-y-[-100%] p-2 text-white opacity-0 ${isBidInputOpen && 'visible opacity-100'}`}
-        >
-          <X size={'30'} />
-        </button>
       </div>
 
       <BidFormBottom
