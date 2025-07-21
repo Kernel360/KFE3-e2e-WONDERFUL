@@ -2,8 +2,12 @@ import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
-import QueryProvider from '@/providers/query-provider';
+import Toast from '@/components/common/toast'; // 커스텀 Toast 컴포넌트 import
 import Navigation from '@/components/layout/navigation';
+
+import QueryProvider from '@/providers/query-provider';
+
+import LocationModalProvider from '@/providers/location-modal-provider';
 
 import './globals.css';
 
@@ -74,6 +78,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             style={{ position: 'relative' }}
           >
             {children}
+
+            <Toast />
+
+            <LocationModalProvider />
             <Navigation />
           </div>
         </QueryProvider>

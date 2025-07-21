@@ -1,68 +1,66 @@
-import { CircleCheck, CircleX, TriangleAlert, Info, X } from 'lucide-react';
+// apps/web/src/components/common/toast.tsx
+'use client';
 
-type ToastProps = {
-  description: string;
-  status: 'success' | 'error' | 'warning' | 'info';
-};
+import { X } from 'lucide-react';
 
-const ToastStyle = {
-  success: {
-    wrapper: 'bg-success-50 border-success-600 shadow-success-600/12 ',
-    text: 'text-green-800',
-    icon: <CircleCheck className="stroke-success-600" />,
-  },
-  error: {
-    wrapper: 'bg-danger-50 border-danger-500 shadow-danger-600/12',
-    text: 'text-red-800',
-    icon: <CircleX className="stroke-danger-600" />,
-  },
-  warning: {
-    wrapper: 'bg-amber-50 border-amber-500 shadow-amber-600/12',
-    text: 'text-yellow-800',
-    icon: <TriangleAlert className="stroke-amber-600" />,
-  },
-  info: {
-    wrapper: 'bg-neutral-100 border-neutral-500 shadow-neutral-500/12 ',
-    text: 'text-blue-800',
-    icon: <Info className="stroke-neutral-600" />,
-  },
-};
+import { useToastStore } from '@/lib/zustand/store/toast-store';
 
-const TEST: ToastProps[] = [
-  {
-    status: 'success',
-    description: '성공했습니다.',
-  },
-  { status: 'error', description: '문제가 발생했습니다.' },
-  { status: 'warning', description: '확인이 필요합니다.' },
-  {
-    status: 'info',
-    description: '처리가 됐습니다.',
-  },
-];
-const Toast = ({ description }: ToastProps) => {
+const Toast = () => {
+  const { toasts, closeToast } = useToastStore();
+
+  const getToastStyles = (status: string) => {
+    const styles = {
+      success: {
+        container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(39,116,255,0.12)]',
+        title: 'text-indigo-500',
+        subtext: 'text-neutral-600',
+        closeBtn: 'bg-indigo-50 text-indigo-500 hover:bg-indigo-100',
+      },
+      error: {
+        container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(255,76,0,0.12)]',
+        title: 'text-orange-600',
+        subtext: 'text-neutral-500',
+        closeBtn: 'bg-rose-50 text-orange-600 hover:bg-rose-100',
+      },
+      notice: {
+        container: 'bg-neutral-900 shadow-[0px_6px_12px_-3px_rgba(82,82,82,0.12)]',
+        title: 'text-neutral-200',
+        subtext: '',
+        closeBtn: '',
+      },
+    };
+    return styles[status as keyof typeof styles];
+  };
+
   return (
-    <>
-      {TEST.map((obj) => {
-        const style = ToastStyle[obj.status];
+    <div className="pointer-events-none fixed left-1/2 top-10 z-[9999] -translate-x-1/2 space-y-2">
+      {toasts.map((toast) => {
+        const styles = getToastStyles(toast.status);
 
         return (
           <div
-            key={obj.status}
-            className={`border-1 m-auto my-4 flex w-11/12 items-center justify-between rounded-sm px-4 py-2 shadow-lg ${style.wrapper}`}
+            key={toast.id}
+            className={`pointer-events-auto flex w-96 items-center justify-between rounded-md px-4 py-3 ${styles.container} `}
           >
-            <div className="flex gap-2">
-              <i>{style.icon}</i>
-              <p>{obj.description}</p>
+            <div className="flex-1">
+              <div className={`text-sm font-semibold ${styles.title}`}>{toast.title}</div>
+              {toast.subtext && (
+                <div className={`mt-1 text-xs ${styles.subtext}`}>{toast.subtext}</div>
+              )}
             </div>
-            <button className="flex h-[40px] w-[40px] cursor-pointer items-center justify-center self-start">
-              <X className="h-auto w-3/5 stroke-neutral-600" />
-              <span className="sr-only">닫기</span>
-            </button>
+
+            {toast.status !== 'notice' && (
+              <button
+                onClick={() => closeToast(toast.id)}
+                className={`ml-3 flex h-7 w-7 items-center justify-center rounded-full transition-colors ${styles.closeBtn} `}
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 
