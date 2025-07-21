@@ -105,6 +105,8 @@ const AuctionDetailContainer = () => {
 
   return (
     <>
+      {/* // 개발 환경에서만 표시 */}
+      {/* {process.env.NODE_ENV === 'development' && <TimezoneTest />} */}
       <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
         <ItemImages urls={images} />
         <ProfileCard
