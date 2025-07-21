@@ -22,7 +22,7 @@ const BidFormInput = ({
   currentPrice,
   minUnit,
   bidPrice,
-  isBidInputOpen,
+  // isBidInputOpen,
   onChange,
 }: BidInputProps) => {
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
@@ -46,7 +46,7 @@ const BidFormInput = ({
   };
 
   return (
-    <div className={bidInputWrapper({ open: isBidInputOpen })}>
+    <div>
       <InputIcon
         id="price"
         type="number"
@@ -58,7 +58,7 @@ const BidFormInput = ({
         <UserRound />
       </InputIcon>
 
-      <div className="my-2 grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2 py-2">
         {increaseButtons.map(({ label, amount }) => (
           <Button
             key={amount}

@@ -7,22 +7,37 @@ import SearchLocationPicker from '@/components/location/search-location-picker';
 
 import { useGeolocation } from '@/hooks/common/useGeolocation';
 
+import { createLocation } from '@/lib/actions/location';
 import type { UserLocation } from '@/lib/types/location';
 
 interface LocationSearchFormProps {
-  onLocationSelect?: (location: UserLocation, address: string) => void;
   onClose?: () => void;
 }
 
 type ViewType = 'search' | 'map';
 
-const LocationSearchForm = ({ onLocationSelect, onClose }: LocationSearchFormProps) => {
+const LocationSearchForm = ({ onClose }: LocationSearchFormProps) => {
   const { location: currentLocation } = useGeolocation();
   const [currentView, setCurrentView] = useState<ViewType>('search');
 
-  const handleLocationSelect = (location: UserLocation, address: string) => {
-    console.log('위치 선택됨:', { location, address });
-    onLocationSelect?.(location, address);
+  const handleLocationSelect = async (location: UserLocation, address: string) => {
+    // 위치 정보 서버에 저장
+    try {
+      const result = await createLocation({
+        location_name: address,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        is_primary: true,
+      });
+
+      if (result.success) {
+        onClose?.();
+      } else {
+        alert(result.error || '위치 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('❌ 위치 저장 중 오류:', error);
+    }
   };
 
   const handleShowMapPicker = () => {
