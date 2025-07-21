@@ -9,7 +9,7 @@ export interface BidType {
   item_id: string;
   bidder_id: string;
   price: string;
-  createdAt: Date | string;
+  createdAt: string;
   bidder: BidderInfo;
 }
 

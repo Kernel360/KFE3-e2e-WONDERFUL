@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
     // 최소 입찰 단위 확인
     //const minBidAmount = auction.auctionPrice!.currentPrice + auction.auctionPrice!.minBidUnit;
     // 최소 입찰 단위 확인
-    const currentPrice = auction.auctionPrice!.currentPrice;
-    const minBidUnit = auction.auctionPrice!.minBidUnit;
+    const { currentPrice } = auction.auctionPrice!;
+    const { minBidUnit } = auction.auctionPrice!;
     const minBidAmount = currentPrice + minBidUnit;
 
     console.log('💰 [BID API] 가격 검증:', {
@@ -183,7 +183,12 @@ export async function GET(request: NextRequest) {
       orderBy: {
         price: 'desc',
       },
-      take: 10,
+      take: (() => {
+        const url = new URL(request.url);
+        const limitParam = url.searchParams.get('limit');
+        const limit = limitParam ? parseInt(limitParam, 10) : 10;
+        return isNaN(limit) ? 10 : limit;
+      })(),
     });
 
     return NextResponse.json({
