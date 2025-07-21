@@ -1,8 +1,10 @@
+// apps/web/app/layout.tsx
+
 import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
 
-import Toast from '@/components/common/toast'; // 커스텀 Toast 컴포넌트 import
+import Toast from '@/components/common/toast';
 import Navigation from '@/components/layout/navigation';
 
 import QueryProvider from '@/providers/query-provider';
@@ -24,7 +26,6 @@ const APP_DEFAULT_TITLE = '지역 경매 서비스';
 const APP_TITLE_TEMPLATE = '%s - 경매앱';
 const APP_DESCRIPTION = '지역 기반 실시간 경매 플랫폼';
 
-// 클라이언트 컴포넌트와 서버 컴포넌트 분리
 export const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {

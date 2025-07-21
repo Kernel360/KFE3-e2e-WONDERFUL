@@ -1,3 +1,5 @@
+// apps/web/src/lib/zustand/store/toast-store.ts
+
 import { create } from 'zustand';
 
 export type ToastStatus = 'success' | 'error' | 'notice';

@@ -1,4 +1,5 @@
 // apps/web/src/components/common/toast.tsx
+
 'use client';
 
 import { X } from 'lucide-react';
@@ -12,15 +13,15 @@ const Toast = () => {
     const styles = {
       success: {
         container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(39,116,255,0.12)]',
-        title: 'text-indigo-500',
+        title: 'text-primary-500',
         subtext: 'text-neutral-600',
-        closeBtn: 'bg-indigo-50 text-indigo-500 hover:bg-indigo-100',
+        closeBtn: 'bg-primary-50 text-primary-500 hover:bg-primary-100',
       },
       error: {
         container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(255,76,0,0.12)]',
-        title: 'text-orange-600',
+        title: 'text-secondary-600',
         subtext: 'text-neutral-500',
-        closeBtn: 'bg-rose-50 text-orange-600 hover:bg-rose-100',
+        closeBtn: 'bg-secondary-50 text-secondary-600 hover:bg-secondary-100',
       },
       notice: {
         container: 'bg-neutral-900 shadow-[0px_6px_12px_-3px_rgba(82,82,82,0.12)]',

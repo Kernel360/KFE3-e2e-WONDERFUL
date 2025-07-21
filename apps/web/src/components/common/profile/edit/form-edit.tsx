@@ -1,3 +1,4 @@
+// apps/web/src/components/common/profile/edit/form-edit.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -41,7 +42,7 @@ const ProfileEditForm = () => {
     if (isSuccess) {
       showToast({
         status: 'success',
-        title: '수정 완료',
+        title: '프로필 수정 완료',
         subtext: '변경사항이 성공적으로 저장되었어요!',
         autoClose: true,
       });
@@ -52,7 +53,7 @@ const ProfileEditForm = () => {
     if (isError) {
       showToast({
         status: 'error',
-        title: '수정 실패',
+        title: '프로필 수정 실패',
         subtext: error?.message || '잘못된 형식입니다.',
         autoClose: true,
       });
@@ -65,6 +66,12 @@ const ProfileEditForm = () => {
     // 닉네임 필드가 비어 있을 때 오류 메시지 추가
     if (!nickname.trim()) {
       setNicknameError('닉네임을 입력해주세요.');
+      showToast({
+        status: 'error',
+        title: '입력 오류',
+        subtext: '닉네임을 입력해주세요.',
+        autoClose: true,
+      });
       return;
     }
     setNicknameError('');
