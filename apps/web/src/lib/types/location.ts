@@ -101,3 +101,9 @@ export interface KakaoAddressDocument {
   address: KakaoAddress;
   road_address?: KakaoRoadAddress;
 }
+
+export interface LocationType {
+  locationId: string | null;
+  locationName: string;
+  IsPrimary: boolean;
+}

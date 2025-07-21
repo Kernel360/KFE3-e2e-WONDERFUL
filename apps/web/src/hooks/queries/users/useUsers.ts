@@ -1,8 +1,6 @@
-// apps/web/src/hooks/queries/users/useUsers.ts
 import { useQuery } from '@tanstack/react-query';
 
 import { getUsers } from '@/lib/api/users';
-
 import { UsersResponse } from '@/lib/types/users';
 
 export const useUsers = () => {

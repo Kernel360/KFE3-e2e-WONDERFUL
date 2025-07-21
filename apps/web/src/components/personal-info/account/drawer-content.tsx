@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 
-import { AccountItem, ButtonSelect, DrawerHeader } from '@/components/personal-info';
-import ButtonManage from '@/components/personal-info/button-manage';
+import { AccountItem, ButtonManage, ButtonSelect, DrawerHeader } from '@/components/personal-info';
 import { Button, DrawerContent } from '@/components/ui';
 
 import { ACCOUNT_DRAWER_HEADER } from '@/constants/personal-info';
@@ -63,7 +62,7 @@ const AccountDrawerContent = () => {
           </li>
         ))}
       </ul>
-      <ButtonManage url="/chat/123" title="계좌 관리" />
+      <ButtonManage title="계좌 관리" url="/account" />
       <Button variant="solid" size="lg">
         공유하기
       </Button>

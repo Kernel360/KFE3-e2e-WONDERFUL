@@ -2,7 +2,7 @@ import { createClient } from './client';
 
 const supabase = createClient();
 
-export type StorageBucket = 'auction-images';
+export type StorageBucket = 'auction-images' | 'profile-images';
 
 export interface UploadResult {
   success: boolean;
@@ -11,7 +11,7 @@ export interface UploadResult {
   path?: string;
 }
 
-//이미지 업로드
+//옥션 이미지 업로드
 export const uploadImage = async (
   file: File,
   bucket: StorageBucket,
@@ -54,7 +54,7 @@ export const uploadImage = async (
   }
 };
 
-//이미지 삭제
+//옥션 이미지 삭제
 export const deleteImage = async (
   bucket: StorageBucket,
   path: string
@@ -131,7 +131,7 @@ export const deleteFolder = async (
   }
 };
 
-//이미지 URL 가져오기
+//옥션 이미지 URL 가져오기
 export const getImageUrl = (bucket: StorageBucket, path: string): string => {
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
 
@@ -164,7 +164,7 @@ export const listImages = async (
   }
 };
 
-//여러 이미지 업로드
+//여러 옥션 이미지 업로드
 export const uploadMultipleImages = async (
   files: File[],
   bucket: StorageBucket,
@@ -172,4 +172,38 @@ export const uploadMultipleImages = async (
 ): Promise<UploadResult[]> => {
   const results = await Promise.all(files.map((file) => uploadImage(file, bucket, folder)));
   return results;
+};
+
+// 프로필 이미지 업로드
+export const uploadProfileImage = async (file: File, userId: string): Promise<string> => {
+  try {
+    const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `profile-${userId}_${timestamp}_${randomStr}.${fileExt}`;
+
+    // 프로필 이미지는 사용자 별 폴더에 저장
+    const filePath = `${userId}/${fileName}`;
+
+    // profile-images 버킷 사용
+    const { data, error } = await supabase.storage.from('profile-images').upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if (error) {
+      console.error('프로필 이미지 업로드 에러:', error);
+      throw new Error(`이미지 업로드 실패: ${error.message}`);
+    }
+
+    // 공개 URL 생성
+    const { data: urlData } = supabase.storage.from('profile-images').getPublicUrl(data.path);
+
+    return urlData.publicUrl;
+  } catch (error) {
+    console.error(`프로필 이미지 업로드 실패: ${error as Error}.message`);
+    throw new Error(
+      `프로필 이미지 업로드 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`
+    );
+  }
 };

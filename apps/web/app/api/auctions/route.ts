@@ -1,6 +1,8 @@
-import { AuctionListResponse, SortOption } from '@/types/auction-prisma';
-import { prisma } from '@repo/db';
 import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@repo/db';
+
+import { AuctionListResponse, SortOption } from '@/types/auction-prisma';
 
 export async function GET(request: NextRequest) {
   try {
