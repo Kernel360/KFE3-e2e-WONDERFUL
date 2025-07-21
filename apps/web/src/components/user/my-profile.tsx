@@ -1,14 +1,7 @@
-//apps/web/src/components/user/my-profile.tsx
-import Link from 'next/link';
-
-import { Pen } from 'lucide-react';
-
 import { MenuList, ProfileCard } from '@/components/common/profile';
-import { Button } from '@/components/ui/button';
 
-import { signOutAction } from '@/lib/actions/auth.action';
+import ButtonEdit from '@/components/user/button-edit';
 
-import ButtonEdit from './button-edit';
 import ButtonSignOut from './button-sign-out';
 
 const ProfilePage = () => {

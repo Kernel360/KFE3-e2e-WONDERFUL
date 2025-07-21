@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 import { EllipsisVertical } from 'lucide-react';
@@ -42,9 +44,13 @@ const ChatListItem = () => {
 
   console.log(test);
 
+  // TODO: 기능 연결 시 roomId 로 연결 해서 해당 태그 내에서 작성할 것.
+  const roomId = '123';
+  const link = `/chat/${roomId}`;
+
   return (
     <div className="flex h-fit w-full items-center justify-between gap-2.5">
-      <Link href={'/'} className="flex w-full shrink items-center gap-2.5 py-1">
+      <Link href={link} className="flex w-full shrink items-center gap-2.5 py-1">
         <Thumbnail url={dummyUrls[0]!} alt={'sample'} className="w-15 h-15 shrink-0" />
         <div className="flex w-full shrink flex-col">
           <div className="">

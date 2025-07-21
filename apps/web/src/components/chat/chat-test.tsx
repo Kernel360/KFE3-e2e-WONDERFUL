@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import ChatRoom from './chat-room';
+import TestChatRoom from './test-chat-room';
 // 두 사용자의 실제 UUID 사용
 const user1Id = '550e8400-e29b-41d4-a716-446655440001'; // 판매자
 const user2Id = '550e8400-e29b-41d4-a716-446655440002'; // 구매자
@@ -62,7 +62,7 @@ const ChatTest = () => {
       </div>
 
       {/* 실제 채팅방 - Props 명시적으로 전달 */}
-      <ChatRoom roomId={testRoomId} currentUserId={testUserId} auctionTitle="아이폰 15 Pro" />
+      <TestChatRoom roomId={testRoomId} currentUserId={testUserId} auctionTitle="아이폰 15 Pro" />
 
       {/* 안내 메시지 */}
       <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">

@@ -1,101 +1,69 @@
+'use client';
+
 import React, { useState } from 'react';
 
-import { MapPin } from 'lucide-react';
+import MapLocationPicker from '@/components/location/map-location-picker';
+import SearchLocationPicker from '@/components/location/search-location-picker';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useGeolocation } from '@/hooks/common/useGeolocation';
 
-const LocationSearchForm = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredResults, setFilteredResults] = useState<string[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
+import { createLocation } from '@/lib/actions/location';
+import type { UserLocation } from '@/lib/types/location';
 
-  const seoulDistricts = [
-    '서울시 중로구',
-    '서울시 중구',
-    '서울시 용산구',
-    '서울시 성동구',
-    '서울시 광진구',
-    '서울시 동대문구',
-    '서울시 중랑구',
-    '서울시 성북구',
-    '서울시 강북구',
-    '서울시 도봉구',
-    '서울시 노원구',
-    '서울시 은평구',
-    '서울시 서대문구',
-    '서울시 마포구',
-    '서울시 양천구',
-    '서울시 강서구',
-    '서울시 구로구',
-    '서울시 금천구',
-    '서울시 영등포구',
-    '서울시 동작구',
-    '서울시 관악구',
-    '서울시 서초구',
-    '서울시 강남구',
-    '서울시 송파구',
-    '서울시 강동구',
-  ];
+interface LocationSearchFormProps {
+  onClose?: () => void;
+}
 
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      const filtered = seoulDistricts.filter(
-        (district) =>
-          district.toLowerCase().includes(searchTerm.toLowerCase()) || district.includes(searchTerm)
-      );
-      setFilteredResults(filtered);
-    } else {
-      setFilteredResults(seoulDistricts);
-    }
-    setHasSearched(true);
-  };
+type ViewType = 'search' | 'map';
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+const LocationSearchForm = ({ onClose }: LocationSearchFormProps) => {
+  const { location: currentLocation } = useGeolocation();
+  const [currentView, setCurrentView] = useState<ViewType>('search');
+
+  const handleLocationSelect = async (location: UserLocation, address: string) => {
+    // 위치 정보 서버에 저장
+    try {
+      const result = await createLocation({
+        location_name: address,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        is_primary: true,
+      });
+
+      if (result.success) {
+        onClose?.();
+      } else {
+        alert(result.error || '위치 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('❌ 위치 저장 중 오류:', error);
     }
   };
+
+  const handleShowMapPicker = () => {
+    setCurrentView('map');
+  };
+
+  const handleBackToSearch = () => {
+    setCurrentView('search');
+  };
+
+  if (currentView === 'map') {
+    return (
+      <MapLocationPicker
+        currentLocation={currentLocation}
+        onLocationSelect={handleLocationSelect}
+        onClose={handleBackToSearch}
+      />
+    );
+  }
 
   return (
-    <div className="mx-auto w-full max-w-sm p-4">
-      <div className="mb-4">
-        <Input
-          type="text"
-          placeholder="동명(읍, 면)으로 검색 (ex. 서초동)"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-[345px]"
-        />
-      </div>
-
-      <div className="mb-6">
-        <Button onClick={handleSearch} size="medium" color="primary" className="w-[345px]">
-          <MapPin className="h-4 w-4" />
-          검색하기
-        </Button>
-      </div>
-
-      {hasSearched && (
-        <div className="w-[345px]">
-          {filteredResults.length > 0 ? (
-            filteredResults.map((district, index) => (
-              <div
-                key={index}
-                className="flex cursor-pointer items-center px-4 py-2 text-base font-normal text-neutral-900 transition-colors hover:bg-neutral-50"
-              >
-                {district}
-              </div>
-            ))
-          ) : (
-            <div className="flex items-center px-4 py-2 text-base font-normal text-neutral-400">
-              검색 결과가 없습니다.
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    <SearchLocationPicker
+      onLocationSelect={handleLocationSelect}
+      onShowMapPicker={handleShowMapPicker}
+      onClose={onClose}
+    />
   );
 };
 

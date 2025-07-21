@@ -32,7 +32,7 @@ const SelectBox = ({
   return (
     <>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className={className}>
+        <SelectTrigger className={className} id={name}>
           <SelectValue defaultValue={value} placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

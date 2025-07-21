@@ -6,6 +6,7 @@ export { default as BadgeBidStatus } from './auction-card/badge-bid-status';
 export { default as AuctionCard } from './auction-card/card';
 export { default as AuctionItemList } from './auction-card/list';
 
+export { default as BackButton } from './button/back';
 export { default as CreateAuctionButton } from './button/create-auction';
 export { default as ButtonMore } from './button/more';
 
@@ -16,6 +17,7 @@ export { default as FormErrorMessage } from './messages/error-msg';
 export { default as Notice } from './messages/notice';
 
 export { default as ProfileCard } from './profile/card';
+export { default as ProfileEditForm } from './profile/edit/form-edit';
 export { default as ProfileImage } from './profile/image';
 export { default as MenuList } from './profile/menu-list';
 

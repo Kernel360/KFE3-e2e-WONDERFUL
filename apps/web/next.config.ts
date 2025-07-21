@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@repo/db', '@repo/ui'],
   output: 'standalone', // 배포용
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb', // 5MB로 증가
+    },
+  },
+
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

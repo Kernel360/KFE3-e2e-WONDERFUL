@@ -15,6 +15,7 @@ import ProfileImageUploader from './profile-image-uploader';
 
 const ProfileEditForm = () => {
   const { data: profile, isLoading } = useMyProfile(); // 프로필 데이터 가져오기
+  
   const { showToast } = useToastStore(); // 토스트 store
 
   const {
@@ -25,6 +26,8 @@ const ProfileEditForm = () => {
     error,
   } = useUpdateProfile();
 
+  const { mutate: updateProfileMutation, isPending } = useUpdateProfile();
+  
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState<string>('');
@@ -66,12 +69,14 @@ const ProfileEditForm = () => {
     // 닉네임 필드가 비어 있을 때 오류 메시지 추가
     if (!nickname.trim()) {
       setNicknameError('닉네임을 입력해주세요.');
+
       showToast({
         status: 'error',
         title: '입력 오류',
         subtext: '닉네임을 입력해주세요.',
         autoClose: true,
       });
+
       return;
     }
     setNicknameError('');
