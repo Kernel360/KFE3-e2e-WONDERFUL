@@ -1,11 +1,13 @@
 import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
+import { Toaster } from 'sonner';
 
 import Navigation from '@/components/layout/navigation';
 
 import LocationModalProvider from '@/providers/location-modal-provider';
 import QueryProvider from '@/providers/query-provider';
+
 import './globals.css';
 
 const pretendard = localFont({
@@ -75,6 +77,23 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             style={{ position: 'relative' }}
           >
             {children}
+
+            <Toaster
+              position="top-center"
+              richColors
+              offset={20} // 상단에서 20px 떨어진 위치에 표시
+              toastOptions={{
+                style: {
+                  background: '#fff',
+                  color: '#181818',
+                  border: '1px solid #555',
+                  fontSize: '16px',
+                },
+              }}
+              expand={true}
+              duration={3000}
+            />
+
             <LocationModalProvider />
             <Navigation />
           </div>

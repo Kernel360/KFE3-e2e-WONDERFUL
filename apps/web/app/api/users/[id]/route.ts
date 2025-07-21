@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getUserProfile } from '@/lib/api/users';
+import { getUserProfile } from '@/lib/api/profile';
 import { ErrorResponse, UserProfile } from '@/lib/types';
 
 type ApiResponse = UserProfile | ErrorResponse;
