@@ -21,8 +21,6 @@ export const useBidMutation = () => {
     },
 
     onSuccess: (data, variables) => {
-      console.log('✅ [Optimistic] 입찰 성공, 실제 데이터로 갱신');
-
       // 성공 시 실제 데이터로 갱신
       queryClient.invalidateQueries({
         queryKey: auctionKeys.detail(variables.auctionId),
@@ -36,8 +34,6 @@ export const useBidMutation = () => {
     },
 
     onError: (err, variables, context) => {
-      console.log('❌ [Optimistic] 입찰 실패, 롤백 시작');
-
       const errorMessage = err instanceof Error ? err.message : '입찰 중 오류가 발생했습니다.';
       console.error('입찰 실패:', errorMessage);
     },

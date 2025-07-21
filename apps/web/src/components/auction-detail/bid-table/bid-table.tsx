@@ -19,12 +19,6 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
   const [animationParent] = useAutoAnimate();
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // 실시간 입찰 데이터 구독
-  // const { bids: realtimeBids, isConnected } = useRealtimeBids({
-  //   auctionId,
-  //   initialBids: initialBids || [],
-  // });
-
   const queryClient = useQueryClient();
 
   // TanStack Query 캐시에서 실시간 데이터 가져오기
@@ -43,9 +37,6 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
       .slice(0, 5); // 상위 5개만
   }, [currentBids]);
 
-  // 애니메이션 제어용 ref
-  // const animationRef = hasAnimated ? null : animationParent;
-
   useEffect(() => {
     if (currentBids.length > 0 && !hasAnimated) {
       setHasAnimated(true);
@@ -56,18 +47,8 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
   // const isConnected = true;
   return (
     <div className="bg-primary-50/60 rounded-sm p-3 [&_p]:flex-1">
-      {/* 연결 상태 표시 */}
-      {/* <div className="mb-2 flex items-center justify-end">
-        <div className="flex items-center gap-2">
-          <div className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-          <span className="text-xs text-gray-500">{isConnected ? '실시간 연결' : '연결 끊김'}</span>
-        </div>
-      </div> */}
-
       {/* 입찰 목록 */}
-
       <BidTableHead />
-
       {currentBids.length < 1 ? (
         <p className="py-8 text-center">아직 입찰 내역이 없습니다.</p>
       ) : (

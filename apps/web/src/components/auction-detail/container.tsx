@@ -1,12 +1,4 @@
 'use client';
-/**
- * Todo
- * 1. Item 데이터 변환 : 내려줘야하는 컴포넌트 별 prop 기준으로 다시 재작성.
- * 2. error 케이스별 컴포넌트로 error 상황 처리하기 (재사용성))
- * 3. suspense 컴포넌트 따로 만들어서 lazy.loading 처리
- * 4. 현재 로그인한 유저의 ID를 가져오는 로직 필요 (useAuthStore)
- * 5. ItemImages prioty 처리
- */
 
 import { useEffect, useRef } from 'react';
 
