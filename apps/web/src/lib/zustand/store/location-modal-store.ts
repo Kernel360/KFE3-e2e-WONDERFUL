@@ -4,81 +4,57 @@ import type { UserLocation } from '@/lib/types/location';
 
 interface LocationModalState {
   isOpen: boolean;
-  onLocationSelect?: (location: UserLocation, address: string) => void;
-  onClose?: () => void;
   selectedLocation: UserLocation | null;
   selectedAddress: string;
-}
+  isSaving: boolean;
+  saveError: string;
 
-interface LocationModalActions {
-  openLocationModal: (
-    onLocationSelect?: (location: UserLocation, address: string) => void,
-    onClose?: () => void
-  ) => void;
+  // Actions
+  openLocationModal: () => void;
   closeLocationModal: () => void;
   setSelectedLocation: (location: UserLocation, address: string) => void;
-  resetModal: () => void;
+  setSaving: (saving: boolean) => void;
+  setSaveError: (error: string) => void;
+  reset: () => void;
 }
 
-type LocationModalStore = LocationModalState & LocationModalActions;
-
-export const useLocationModalStore = create<LocationModalStore>((set, get) => ({
+export const useLocationModalStore = create<LocationModalState>((set, get) => ({
   // 상태
   isOpen: false,
-  onLocationSelect: undefined,
-  onClose: undefined,
   selectedLocation: null,
   selectedAddress: '',
+  isSaving: false,
+  saveError: '',
 
   // 액션들
-  openLocationModal: (onLocationSelect, onClose) => {
-    set({
-      isOpen: true,
-      onLocationSelect,
-      onClose,
-      selectedLocation: null,
-      selectedAddress: '',
-    });
-  },
+  openLocationModal: () => set({ isOpen: true }),
 
-  closeLocationModal: () => {
-    const { onClose } = get();
+  closeLocationModal: () =>
     set({
       isOpen: false,
-      onLocationSelect: undefined,
-      onClose: undefined,
       selectedLocation: null,
       selectedAddress: '',
-    });
-    onClose?.();
-  },
+      saveError: '',
+    }),
 
-  setSelectedLocation: (location, address) => {
-    const { onLocationSelect } = get();
+  setSelectedLocation: (location: UserLocation, address: string) => {
     set({
       selectedLocation: location,
       selectedAddress: address,
+      saveError: '', // 새로운 위치 선택 시 에러 초기화
     });
-
-    // 콜백 실행
-    onLocationSelect?.(location, address);
-
-    // 성공 알림
-    alert(
-      `위치가 설정되었습니다!\n${address}\n위도: ${location.latitude}, 경도: ${location.longitude}`
-    );
-
-    // 모달 닫기
-    get().closeLocationModal();
   },
 
-  resetModal: () => {
+  setSaving: (saving: boolean) => set({ isSaving: saving }),
+
+  setSaveError: (error: string) => set({ saveError: error }),
+
+  reset: () =>
     set({
       isOpen: false,
-      onLocationSelect: undefined,
-      onClose: undefined,
       selectedLocation: null,
       selectedAddress: '',
-    });
-  },
+      isSaving: false,
+      saveError: '',
+    }),
 }));

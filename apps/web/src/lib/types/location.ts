@@ -1,3 +1,10 @@
+export interface Location {
+  location_name: string;
+  latitude: number;
+  longitude: number;
+  is_primary: boolean;
+}
+
 export interface UserLocation {
   latitude: number; //위도
   longitude: number; //경도

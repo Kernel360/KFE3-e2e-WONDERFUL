@@ -15,7 +15,7 @@ import { useLocationModalStore } from '@/lib/zustand/store/location-modal-store'
  */
 const LocationModalProvider = () => {
   const { modalStack, openModal, closeModal } = useModal();
-  const { isOpen, closeLocationModal, setSelectedLocation } = useLocationModalStore();
+  const { isOpen, closeLocationModal } = useLocationModalStore();
 
   // Zustand 상태와 useModal 동기화
   React.useEffect(() => {
@@ -36,18 +36,9 @@ const LocationModalProvider = () => {
     closeModal(id);
   };
 
-  const handleLocationSelect = (location: any, address: string) => {
-    setSelectedLocation(location, address);
-  };
-
   const renderModalContent = (modal: any) => {
     if (modal.id === 'location-modal') {
-      return (
-        <LocationSearchForm
-          onLocationSelect={handleLocationSelect}
-          onClose={() => handleCloseModal('location-modal')}
-        />
-      );
+      return <LocationSearchForm onClose={() => handleCloseModal('location-modal')} />;
     }
     return null;
   };
