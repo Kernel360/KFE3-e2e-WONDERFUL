@@ -1,5 +1,5 @@
-import Badge from '@repo/ui/components/common/Badge';
-import type { StoryObj, Meta } from '@storybook/nextjs';
+import Badge from '@repo/ui/components/Badge';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
 export default {
   component: Badge,
