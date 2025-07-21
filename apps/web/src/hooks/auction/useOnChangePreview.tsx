@@ -1,10 +1,12 @@
-import { SetStateAction, useCallback } from 'react';
+import { SetStateAction, useCallback, useRef } from 'react';
 
 const useOnChagePreview = (
   setImgLength: React.Dispatch<SetStateAction<number>>,
   setPreviewImages: React.Dispatch<SetStateAction<string[]>>,
   setFiles: React.Dispatch<SetStateAction<File[]>>
 ) => {
+  const alertShownRef = useRef(false);
+
   return useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { files } = e.target;
@@ -17,33 +19,46 @@ const useOnChagePreview = (
         return;
       }
 
-      // 현재 파일 개수 확인을 위한 함수
-      setFiles((prevFiles) => {
-        const combinedFiles = [...prevFiles, ...imageFiles];
-        const currentLength = prevFiles.length;
+      // 현재 파일 개수를 먼저 확인
+      let currentFileCount = 0;
+      setFiles((prev) => {
+        currentFileCount = prev.length;
+        return prev;
+      });
 
-        if (combinedFiles.length > 8) {
+      // 조건 확인 후 처리
+      const combinedLength = currentFileCount + imageFiles.length;
+
+      if (combinedLength > 8) {
+        // alert 중복 방지
+        if (!alertShownRef.current) {
+          alertShownRef.current = true;
           alert('이미지는 최대 8개까지 등록할 수 있습니다.');
-          const limitedFiles = combinedFiles.slice(0, 8);
-          const actualNewFiles = limitedFiles.slice(currentLength);
-
-          // 새로운 파일들만 프리뷰 생성
-          const newUrls = actualNewFiles.map((file) => URL.createObjectURL(file));
-
-          // 별도로 프리뷰와 길이 업데이트
-          setPreviewImages((prev) => [...prev, ...newUrls]);
-          setImgLength(8);
-
-          return limitedFiles;
+          // 잠시 후 플래그 리셋
+          setTimeout(() => {
+            alertShownRef.current = false;
+          }, 1000);
         }
 
-        // 정상 케이스
-        const newUrls = imageFiles.map((file) => URL.createObjectURL(file));
-        setPreviewImages((prev) => [...prev, ...newUrls]);
-        setImgLength(currentLength + imageFiles.length);
+        // 8개까지만 허용
+        const availableSlots = 8 - currentFileCount;
+        const filesToAdd = imageFiles.slice(0, availableSlots);
 
-        return combinedFiles;
-      });
+        if (filesToAdd.length > 0) {
+          const newUrls = filesToAdd.map((file) => URL.createObjectURL(file));
+
+          setFiles((prev) => [...prev, ...filesToAdd]);
+          setPreviewImages((prev) => [...prev, ...newUrls]);
+          setImgLength(8);
+        }
+      } else {
+        // 정상 처리
+        const newUrls = imageFiles.map((file) => URL.createObjectURL(file));
+
+        setFiles((prev) => [...prev, ...imageFiles]);
+        setPreviewImages((prev) => [...prev, ...newUrls]);
+        setImgLength(combinedLength);
+      }
 
       e.target.value = '';
     },
