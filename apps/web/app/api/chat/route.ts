@@ -24,8 +24,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log('현재 사용자:', user.id);
-
     // 사용자가 참여한 채팅방들 조회
     const chatRooms = await prisma.chatRoom.findMany({
       where: {
@@ -53,7 +51,7 @@ export async function GET(request: NextRequest) {
             senderId: true,
           },
         },
-        // 상대방 정보 (판매자/구매자)
+        // 채팅 참여자 정보
         seller: {
           select: {
             id: true,
@@ -74,18 +72,20 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // 상대방 정보 추가
-    const chatRoomsWithOtherUser = chatRooms.map((room) => ({
-      ...room,
-      // 상대방 정보 결정 (현재 사용자가 아닌 쪽)
-      otherUser: user.id === room.sellerId ? room.buyer : room.seller,
-    }));
+    const optimizedChatRooms = chatRooms.map((room) => {
+      // seller, buyer는 계산용으로만 사용하고 최종 응답에서 제외
+      const { sellerId, buyerId, seller, buyer, ...cleanRoom } = room;
 
-    console.log(`성공: ${chatRoomsWithOtherUser.length}개 채팅방 반환`);
+      return {
+        ...cleanRoom, // id, auctionId, createdAt, lastMessageAt, isDeleted, auction, messages
+        myRole: user.id === sellerId ? 'seller' : 'buyer',
+        otherUser: user.id === sellerId ? buyer : seller, // 대화 상대방 데이터
+      };
+    });
 
     return NextResponse.json({
-      data: chatRoomsWithOtherUser,
-      total: chatRoomsWithOtherUser.length,
+      data: optimizedChatRooms,
+      total: optimizedChatRooms.length,
     });
   } catch (error) {
     console.error('채팅방 목록 조회 에러:', error);
