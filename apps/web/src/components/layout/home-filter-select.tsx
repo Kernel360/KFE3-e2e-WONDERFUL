@@ -4,46 +4,86 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, MapPin } from 'lucide-react';
 import { tv } from 'tailwind-variants';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 
+import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
+
+import { setPrimaryLocation } from '@/lib/actions/location';
 import { cn } from '@/lib/cn';
-import { LOCATION_DUMMY } from '@/lib/constants/location-list';
 import { LocationType } from '@/lib/types/location';
 import { useLocationStore } from '@/lib/zustand/store';
 
-/** Todo
- * 1. 등록된 위치가 없을 경우 : 강남구 역삼동으로 설정 -> 버튼 클릭시 바로 내 동네 설정 페이지로 이동
- * 2. 등록된 위치가 있을 경우 : 최대 3개까지 등록가능 + 내 동네 설정 이동
- * 3. 전역상태로 업데이트 후 List가 전달받게끔
- */
-
 const HomeFilterSelect = () => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [locationList, setLocationList] = useState<LocationType[] | []>([]);
+  const [isUpdatingPrimary, setIsUpdatingPrimary] = useState<string | null>(null);
 
   const { selectedLocation, setLocation } = useLocationStore();
-  const phaseName = selectedLocation.locationName.split(' ').at(-1);
 
-  const handleLocateChange = (locate: LocationType) => {
-    setLocation(locate);
-    setIsSelectOpen(false);
-    return;
+  // 실제 사용자 위치 데이터 조회
+  const { data: userLocations, isLoading, error, refetch } = useUserLocations();
+
+  // 위치명에서 마지막 "동"만 표시하는 함수
+  const getDisplayName = (locationName: string) => {
+    const parts = locationName.trim().split(' ');
+    const lastPart = parts[parts.length - 1];
+    return lastPart || locationName;
   };
 
+  const handleLocationChange = async (location: LocationType) => {
+    try {
+      // locationId가 null인 경우 처리
+      if (!location.locationId) {
+        console.error('❌ 위치 ID가 없습니다.');
+        return;
+      }
+      // 로딩 상태 시작
+      setIsUpdatingPrimary(location.locationId);
+
+      // 먼저 UI 상태 업데이트 (즉시 피드백)
+      setLocation(location);
+      setIsSelectOpen(false);
+
+      // 서버에 기본 위치 변경 요청
+      const result = await setPrimaryLocation(location.locationId);
+
+      if (result.success) {
+        console.log('✅ 기본 위치 변경 성공:', location.locationName);
+      } else {
+        console.error('❌ 기본 위치 변경 실패:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ 기본 위치 변경 중 오류:', error);
+    } finally {
+      setIsUpdatingPrimary(null);
+    }
+  };
+
+  const handleRetry = () => {
+    refetch();
+  };
+
+  // 초기 로드시 기본 위치 설정
   useEffect(() => {
-    // ** 실제 데이터 호출 연결 필요 **
-    const results: LocationType[] = LOCATION_DUMMY;
+    if (userLocations && userLocations.length > 0) {
+      // 현재 선택된 위치가 없거나, 목록에 없는 경우에만 설정
+      const isCurrentLocationValid = userLocations.some(
+        (loc) => loc.locationId === selectedLocation.locationId
+      );
 
-    // 저장된 위치 정보가 없으면 기본 설정 쓰기
-    if (results.length === 0) return;
+      if (!selectedLocation.locationId || !isCurrentLocationValid) {
+        // 기본 위치(IsPrimary=true)를 찾거나 첫 번째 위치를 설정
+        const primaryLocation = userLocations.find((loc) => loc.IsPrimary);
+        const defaultLocation = primaryLocation || userLocations[0];
 
-    // 저장된 위치 정보가 있으면 저장된 위치 정보 설정 & 호출된 리스트 setLocationList
-    setLocationList(results);
-    setLocation(results.find((locate) => locate.IsPrimary) ?? results[0]!);
-  }, [setLocation]);
+        if (defaultLocation) {
+          setLocation(defaultLocation);
+        }
+      }
+    }
+  }, [userLocations, selectedLocation.locationId, setLocation]);
 
   const homeFilterIcon = tv({
     base: 'transition-all duration-400',
@@ -57,41 +97,72 @@ const HomeFilterSelect = () => {
 
   const homeFilterWrapper = cn('text-h4 flex h-10 items-center justify-between px-1 font-bold');
 
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <div className={cn(homeFilterWrapper, 'gap-2')}>
+        <div>loading...</div>
+        <ChevronDown size={24} className="text-neutral-400" />
+      </div>
+    );
+  }
+
+  // 오류 상태
+  if (error) {
+    return (
+      <button
+        onClick={handleRetry}
+        className={cn(homeFilterWrapper, 'gap-2 text-red-600 hover:text-red-700')}
+        title={`오류: ${error.message}. 다시 시도하려면 클릭하세요`}
+      >
+        <MapPin size={16} />
+        위치 오류
+        <ChevronRight size={24} />
+      </button>
+    );
+  }
+
+  // 등록된 위치가 없는 경우
+  if (!userLocations || userLocations.length === 0) {
+    return (
+      <Link href="/" className={cn(homeFilterWrapper, 'text-primary-600 gap-2')}>
+        <MapPin size={16} />
+        위치 설정
+        <ChevronRight size={24} />
+      </Link>
+    );
+  }
+
+  // 등록된 위치가 있는 경우
   return (
-    <>
-      {locationList.length >= 1 ? (
-        <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
-          <PopoverTrigger asChild>
-            <button aria-label="서비스 위치 선택" className={cn(homeFilterWrapper, `gap-2`)}>
-              {phaseName}
-              <ChevronDown size={24} className={homeFilterIcon({ open: isSelectOpen })} />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-34">
-            <ul className="space-y-3">
-              {locationList.map((locate) => {
-                const locateName = locate.locationName.split(' ').at(-1);
-                return (
-                  <li key={locate.locationId}>
-                    <button onClick={() => handleLocateChange(locate)}>{locateName}</button>
-                  </li>
-                );
-              })}
-              <li>
-                {/* /위치설정 페이지로 이동 */}
-                <Link href={'/'}>내 동네 설정</Link>
+    <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
+      <PopoverTrigger asChild>
+        <button
+          aria-label="서비스 위치 선택"
+          className={cn(homeFilterWrapper, 'hover:text-primary-600 gap-2 transition-colors')}
+        >
+          {getDisplayName(selectedLocation.locationName)}
+          <ChevronDown size={24} className={homeFilterIcon({ open: isSelectOpen })} />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-34">
+        <ul className="space-y-3">
+          {userLocations.map((location) => {
+            const displayName = getDisplayName(location.locationName);
+
+            return (
+              <li key={location.locationId}>
+                <button onClick={() => handleLocationChange(location)}>{displayName}</button>
               </li>
-            </ul>
-          </PopoverContent>
-        </Popover>
-      ) : (
-        // 위치설정 페이지로 이동
-        <Link href={'/'} className={cn(homeFilterWrapper, `w-22 justify-between`)}>
-          {phaseName}
-          <ChevronRight size={24} />
-        </Link>
-      )}
-    </>
+            );
+          })}
+          <li>
+            {/* /위치설정 페이지로 이동 */}
+            <Link href={'/'}>내 동네 설정</Link>
+          </li>
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 };
 
