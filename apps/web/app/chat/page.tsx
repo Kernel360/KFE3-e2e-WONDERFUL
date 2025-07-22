@@ -21,7 +21,7 @@ const Page = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="text-red-500">채팅방 목록을 불러오는데 실패했습니다</div>
+        <div className="text-gray-500">채팅방 목록을 불러오는데 실패했습니다</div>
       </div>
     );
   }
