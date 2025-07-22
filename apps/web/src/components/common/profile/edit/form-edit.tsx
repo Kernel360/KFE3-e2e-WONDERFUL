@@ -1,4 +1,3 @@
-// apps/web/src/components/common/profile/edit/form-edit.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -15,7 +14,7 @@ import ProfileImageUploader from './profile-image-uploader';
 
 const ProfileEditForm = () => {
   const { data: profile, isLoading } = useMyProfile(); // 프로필 데이터 가져오기
-  
+
   const { showToast } = useToastStore(); // 토스트 store
 
   const {
@@ -26,8 +25,6 @@ const ProfileEditForm = () => {
     error,
   } = useUpdateProfile();
 
-  const { mutate: updateProfileMutation, isPending } = useUpdateProfile();
-  
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState<string>('');
