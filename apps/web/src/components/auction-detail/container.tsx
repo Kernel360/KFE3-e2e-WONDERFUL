@@ -4,17 +4,15 @@ import { useEffect, useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
-import { MessageSquareMore } from 'lucide-react';
-
 import {
   BidForm,
   BidTable,
   ItemDescription,
   ItemImages,
   ItemSummary,
+  ButtonChat,
 } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
-import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 import { useBidsByAuction } from '@/hooks/queries/bids';
@@ -113,10 +111,7 @@ const AuctionDetailContainer = () => {
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
         >
-          <Button variant="outline">
-            <MessageSquareMore />
-            채팅하기
-          </Button>
+          <ButtonChat auctionId={auction.id} sellerId={auction.sellerId} />
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />

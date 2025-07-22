@@ -3,6 +3,7 @@ export { default as CountDown } from './countdown';
 export { default as ItemImages } from './item-images';
 export { default as ItemSummary } from './item-summary';
 export { default as ItemDescription } from './item-description';
+export { default as ButtonChat } from './button-chat';
 
 // bid table
 export { default as BidTable } from './bid-table/bid-table';

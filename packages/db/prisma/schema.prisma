@@ -160,7 +160,6 @@ model ChatRoom {
   auctionId     String        @map("auction_id") @db.Uuid
   sellerId      String        @map("seller_id") @db.Uuid
   buyerId       String        @map("buyer_id") @db.Uuid
-  roomType      String        @map("room_type") @db.VarChar(50)
   createdAt     DateTime      @map("created_at") @db.Timestamp(6)
   lastMessageAt DateTime?     @map("last_message_at") @db.Timestamp(6)
   isDeleted     Boolean       @default(false) @map("is_deleted")
