@@ -26,7 +26,7 @@ export const useToastStore = create<ToastState>((set, get) => ({
     const id = `toast_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     // 항상 최신 MAX_TOAST개만 유지
     set({
-      toasts: [...[...get().toasts, { ...toast, id }].slice(-MAX_TOAST)],
+      toasts: [...get().toasts, { ...toast, id }].slice(-MAX_TOAST),
     });
     // autoClose true면 3초 뒤 자동 삭제
     if (toast.autoClose !== false) {
