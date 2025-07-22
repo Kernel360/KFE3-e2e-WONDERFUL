@@ -10,8 +10,13 @@ import Thumbnail from '@/components/ui/thumbnail';
 import { PREVIEWCHATS } from '@/lib/constants/chat';
 import { dummyUrls } from '@/lib/constants/dummy-urls';
 
-const ChatListItem = () => {
+import { ChatRoom } from '@/types/chat';
+
+const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
   const lastMessageTime = PREVIEWCHATS[9]!.last_message_at;
+  console.log(chatInfo);
+
+  const { auction, otherUser, lastMessageAt, messages } = chatInfo;
 
   const msgElapsed = () => {
     const lastTime = new Date(lastMessageTime).getTime();
@@ -27,22 +32,26 @@ const ChatListItem = () => {
     const oneMonth = 28 * oneDay;
 
     if (gapMs < oneHour) {
+      // 방금
+      // n분 전
       const minutes = Math.floor(gapMs / oneMinute);
       return `${minutes}min`;
     } else if (gapMs < oneDay) {
+      //1시간 전
       const hours = Math.floor(gapMs / oneHour);
       return `${hours}${hours === 1 ? 'hour' : 'hours'}`;
     } else if (gapMs < oneWeek) {
+      //n일 전
       const days = Math.floor(gapMs / oneDay);
       return `${days}${days === 1 ? 'day' : 'days'}`;
     } else {
+      // n달 전
+      // n년 전
       return '일주일 초과';
     }
   };
 
-  const test = msgElapsed();
-
-  console.log(test);
+  // const test = msgElapsed();
 
   // TODO: 기능 연결 시 roomId 로 연결 해서 해당 태그 내에서 작성할 것.
   const roomId = '123';
@@ -69,4 +78,4 @@ const ChatListItem = () => {
   );
 };
 
-export default ChatListItem;
+export default ChatListCard;
