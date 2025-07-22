@@ -4,15 +4,15 @@ import apiClient from './client';
 
 // 경매 목록 조회
 export const getAuctions = async (
-  location_id?: string,
+  locationName?: string,
   category_id?: string,
   sort?: string,
   includeCompleted?: boolean
 ): Promise<AuctionListResponse> => {
   const params: Record<string, any> = {};
 
-  if (location_id) {
-    params.location_id = location_id;
+  if (locationName) {
+    params.locationName = locationName;
   }
 
   if (category_id) {
