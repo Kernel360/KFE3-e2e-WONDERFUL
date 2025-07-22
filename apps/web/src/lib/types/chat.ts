@@ -44,3 +44,8 @@ export interface ChatUser {
   profile_img?: string;
   isOnline?: boolean;
 }
+
+export interface CreateChatRoomProps {
+  auctionId: string;
+  sellerId: string;
+}

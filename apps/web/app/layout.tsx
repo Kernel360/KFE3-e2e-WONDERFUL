@@ -1,12 +1,15 @@
+// apps/web/app/layout.tsx
+
 import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
-import { Toaster } from 'sonner';
 
+import Toast from '@/components/common/toast';
 import Navigation from '@/components/layout/navigation';
 
-import LocationModalProvider from '@/providers/location-modal-provider';
 import QueryProvider from '@/providers/query-provider';
+
+import LocationModalProvider from '@/providers/location-modal-provider';
 
 import './globals.css';
 
@@ -23,7 +26,6 @@ const APP_DEFAULT_TITLE = '지역 경매 서비스';
 const APP_TITLE_TEMPLATE = '%s - 경매앱';
 const APP_DESCRIPTION = '지역 기반 실시간 경매 플랫폼';
 
-// 클라이언트 컴포넌트와 서버 컴포넌트 분리
 export const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
@@ -78,21 +80,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           >
             {children}
 
-            <Toaster
-              position="top-center"
-              richColors
-              offset={20} // 상단에서 20px 떨어진 위치에 표시
-              toastOptions={{
-                style: {
-                  background: '#fff',
-                  color: '#181818',
-                  border: '1px solid #555',
-                  fontSize: '16px',
-                },
-              }}
-              expand={true}
-              duration={3000}
-            />
+            <Toast />
 
             <LocationModalProvider />
             <Navigation />
