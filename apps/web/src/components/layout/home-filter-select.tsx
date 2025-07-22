@@ -27,22 +27,28 @@ const HomeFilterSelect = () => {
 
   // 위치명에서 마지막 "동"만 표시하는 함수
   const getDisplayName = (locationName: string) => {
+    if (!locationName || typeof locationName !== 'string' || !locationName.trim()) {
+      return '알 수 없음';
+    }
     const parts = locationName.trim().split(' ');
     const lastPart = parts[parts.length - 1];
-    return lastPart || locationName;
+    return lastPart && lastPart.length > 0 ? lastPart : '알 수 없음';
   };
 
   const handleLocationChange = async (location: LocationType) => {
+    // 이전 위치 저장 (실패시 롤백용)
+    const previousLocation = selectedLocation;
     try {
       // locationId가 null인 경우 처리
       if (!location.locationId) {
         console.error('❌ 위치 ID가 없습니다.');
         return;
       }
+
       // 로딩 상태 시작
       setIsUpdatingPrimary(location.locationId);
 
-      // 먼저 UI 상태 업데이트 (즉시 피드백)
+      // 낙관적 UI 업데이트 (즉시 피드백)
       setLocation(location);
       setIsSelectOpen(false);
 
@@ -53,10 +59,23 @@ const HomeFilterSelect = () => {
         console.log('✅ 기본 위치 변경 성공:', location.locationName);
       } else {
         console.error('❌ 기본 위치 변경 실패:', result.error);
+
+        // 실패시 이전 상태로 롤백
+        setLocation(previousLocation);
+
+        // 사용자에게 알림
+        alert(`기본 위치 변경에 실패했습니다: ${result.error}`);
       }
     } catch (error) {
       console.error('❌ 기본 위치 변경 중 오류:', error);
+
+      // 오류시 이전 상태로 롤백
+      setLocation(previousLocation);
+
+      // 사용자에게 알림
+      alert('기본 위치 변경 중 오류가 발생했습니다. 다시 시도해 주세요.');
     } finally {
+      // 로딩 상태 해제
       setIsUpdatingPrimary(null);
     }
   };
