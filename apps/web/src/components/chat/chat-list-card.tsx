@@ -2,9 +2,7 @@
 
 import Link from 'next/link';
 
-import { EllipsisVertical } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
+import ButtonChatMore from '@/components/chat/button-chat-more';
 import Thumbnail from '@/components/ui/thumbnail';
 
 import { ChatRoom } from '@/types/chat';
@@ -79,9 +77,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
           </p>
         </div>
       </Link>
-      <Button color="transparent" className="h-10 w-10">
-        <EllipsisVertical />
-      </Button>
+      <ButtonChatMore />
     </div>
   );
 };
