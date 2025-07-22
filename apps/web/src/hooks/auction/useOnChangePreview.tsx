@@ -1,69 +1,87 @@
 import { SetStateAction, useCallback, useRef } from 'react';
 
-const useOnChagePreview = (
+const MAX_IMAGE_COUNT = 8;
+
+const useOnChangePreview = (
   setImgLength: React.Dispatch<SetStateAction<number>>,
   setPreviewImages: React.Dispatch<SetStateAction<string[]>>,
   setFiles: React.Dispatch<SetStateAction<File[]>>
 ) => {
   const alertShownRef = useRef(false);
+  const currentFilesRef = useRef<File[]>([]);
 
-  return useCallback(
+  // ref와 상태를 동기화하는 함수
+  const syncCurrentFiles = useCallback((files: File[]) => {
+    currentFilesRef.current = files;
+  }, []);
+
+  const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { files } = e.target;
       if (!files) return;
 
       const imageFiles = Array.from(files).filter((file) => file.type.startsWith('image/'));
+
       if (imageFiles.length === 0) {
         alert('이미지 파일만 등록할 수 있습니다.');
         e.target.value = '';
         return;
       }
 
-      // 현재 파일 개수를 먼저 확인
-      let currentFileCount = 0;
-      setFiles((prev) => {
-        currentFileCount = prev.length;
-        return prev;
-      });
-
-      // 조건 확인 후 처리
+      // 현재 파일 개수 계산
+      const currentFileCount = currentFilesRef.current.length;
       const combinedLength = currentFileCount + imageFiles.length;
 
-      if (combinedLength > 8) {
+      if (combinedLength > MAX_IMAGE_COUNT) {
         // alert 중복 방지
         if (!alertShownRef.current) {
           alertShownRef.current = true;
-          alert('이미지는 최대 8개까지 등록할 수 있습니다.');
-          // 잠시 후 플래그 리셋
+          alert(`이미지는 최대 ${MAX_IMAGE_COUNT}개까지 등록할 수 있습니다.`);
           setTimeout(() => {
             alertShownRef.current = false;
           }, 1000);
         }
 
-        // 8개까지만 허용
-        const availableSlots = 8 - currentFileCount;
+        // 추가 가능한 슬롯만큼만 허용
+        const availableSlots = MAX_IMAGE_COUNT - currentFileCount;
         const filesToAdd = imageFiles.slice(0, availableSlots);
 
-        if (filesToAdd.length > 0) {
-          const newUrls = filesToAdd.map((file) => URL.createObjectURL(file));
-
-          setFiles((prev) => [...prev, ...filesToAdd]);
-          setPreviewImages((prev) => [...prev, ...newUrls]);
-          setImgLength(8);
+        if (filesToAdd.length === 0) {
+          e.target.value = '';
+          return;
         }
+
+        // 새로운 파일 배열 생성
+        const newFiles = [...currentFilesRef.current, ...filesToAdd];
+        const newUrls = filesToAdd.map((file) => URL.createObjectURL(file));
+
+        // ref 업데이트
+        currentFilesRef.current = newFiles;
+
+        // 상태 업데이트
+        setFiles(newFiles);
+        setPreviewImages((prevImages) => [...prevImages, ...newUrls]);
+        setImgLength(newFiles.length); // 실제 파일 개수로 설정
       } else {
-        // 정상 처리
+        // 새로운 파일 배열 생성
+        const newFiles = [...currentFilesRef.current, ...imageFiles];
         const newUrls = imageFiles.map((file) => URL.createObjectURL(file));
 
-        setFiles((prev) => [...prev, ...imageFiles]);
-        setPreviewImages((prev) => [...prev, ...newUrls]);
-        setImgLength(combinedLength);
+        // ref 업데이트
+        currentFilesRef.current = newFiles;
+
+        // 상태 업데이트
+        setFiles(newFiles);
+        setPreviewImages((prevImages) => [...prevImages, ...newUrls]);
+        setImgLength(newFiles.length); // 실제 파일 개수로 설정
       }
 
       e.target.value = '';
     },
     [setImgLength, setPreviewImages, setFiles]
   );
+
+  return { handleChange, syncCurrentFiles };
 };
 
-export default useOnChagePreview;
+export default useOnChangePreview;
