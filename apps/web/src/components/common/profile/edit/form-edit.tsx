@@ -26,8 +26,6 @@ const ProfileEditForm = () => {
     error,
   } = useUpdateProfile();
 
-  const { mutate: updateProfileMutation, isPending } = useUpdateProfile();
-
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState<string>('');

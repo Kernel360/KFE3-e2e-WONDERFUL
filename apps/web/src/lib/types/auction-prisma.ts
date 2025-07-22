@@ -4,6 +4,14 @@ import type { Prisma } from '@repo/db';
 // 화면에 보여질 필드들: 카테고리, 아이템 썸네일, 타이틀, 경매상태, 시작가, 시작시간, 마감시간, 현재 가격
 export type AuctionListItem = Prisma.AuctionItemGetPayload<{
   include: {
+    location: {
+      select: {
+        id: true;
+        locationName: true;
+        latitude: true;
+        longitude: true;
+      };
+    };
     category: {
       select: {
         id: true;
@@ -107,7 +115,7 @@ export interface AuctionDetailResponse {
 
 // 필터 및 정렬 타입들
 export interface AuctionFilters {
-  location_id?: string;
+  location_name?: string;
   category_id?: string;
 }
 

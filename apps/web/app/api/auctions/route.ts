@@ -11,12 +11,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // 쿼리 파라미터 추출
-    const location_id = searchParams.get('location_id');
+    const locationName = searchParams.get('locationName');
     const category_id = searchParams.get('category_id');
     const sort = (searchParams.get('sort') as SortOption) || 'latest';
     const includeCompleted = searchParams.get('includeCompleted') === 'true'; // 종료된 경매 포함 여부
-
-    console.log('📋 파라미터:', { location_id, category_id, sort });
 
     // 만료된 경매들의 상태를 먼저 업데이트
     await updateExpiredAuctions();
@@ -30,10 +28,11 @@ export async function GET(request: NextRequest) {
     }
 
     // 지역 필터 추가
-    if (location_id) {
-      where.locationId = location_id;
+    if (locationName) {
+      where.location = {
+        locationName: locationName,
+      };
     }
-
     // 카테고리 필터 추가
     if (category_id) {
       where.categoryId = category_id;
@@ -68,6 +67,14 @@ export async function GET(request: NextRequest) {
     const auctions = await prisma.auctionItem.findMany({
       where,
       include: {
+        location: {
+          select: {
+            id: true,
+            locationName: true,
+            latitude: true,
+            longitude: true,
+          },
+        },
         category: {
           select: {
             id: true,

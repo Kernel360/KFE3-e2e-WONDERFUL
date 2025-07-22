@@ -90,13 +90,12 @@ export const getUserLocations = async () => {
       .from('locations')
       .select('*')
       .eq('user_id', user.id)
-      .order('is_primary', { ascending: false })
-      .order('created_at', { ascending: false });
+      .order('is_primary', { ascending: false });
 
     if (selectError) {
       return {
         success: false,
-        error: '위치 정보 조회에 실패했습니다.',
+        error: `위치 정보 조회에 실패했습니다: ${selectError.message}`,
       };
     }
 

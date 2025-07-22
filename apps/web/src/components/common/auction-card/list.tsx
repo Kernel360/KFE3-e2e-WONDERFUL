@@ -26,7 +26,7 @@ const AuctionItemList = ({
   const selectedCategoryId = useFilterStore((state) => state.selectedItems.category);
 
   // 정렬은 Zustand 전역 상태로 관리 (헤더와 공유)
-  const selectedLocationId = useLocationStore((state) => state.selectedLocation.locationId);
+  const selectedLocationName = useLocationStore((state) => state.selectedLocation.locationName);
   includeCompleted = true;
 
   // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
@@ -36,7 +36,9 @@ const AuctionItemList = ({
     error,
     refetch,
   } = useAuctions(
-    selectedLocationId || undefined,
+    selectedLocationName && selectedLocationName !== '위치 설정 필요'
+      ? selectedLocationName
+      : undefined,
     selectedCategoryId || undefined,
     sortOption,
     includeCompleted
