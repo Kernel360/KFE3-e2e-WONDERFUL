@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { AttachImagesInput, AttachImagesThumbnail } from '@/components/common';
 
 import deletePreviewImage from '@/hooks/auction/useDeletePreview';
-import useOnChagePreview from '@/hooks/auction/useOnChangePreview';
+import useOnChangePreview from '@/hooks/auction/useOnChangePreview';
 
 interface ImagesUploaderProps {
   id: string;
@@ -16,30 +16,36 @@ const AttachImages = ({ id, setFiles }: ImagesUploaderProps) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [imgLength, setImgLength] = useState<number>(0);
 
-  const attachImageHandler = useOnChagePreview(setImgLength, setPreviewImages, setFiles);
+  // 올바른 훅 사용법
+  const { handleChange, syncCurrentFiles } = useOnChangePreview(
+    setImgLength,
+    setPreviewImages,
+    setFiles
+  );
 
-  useEffect(() => {
-    if (previewImages.length > 8) {
-      alert('이미지는 최대 8개까지 등록할 수 있습니다.');
-      setPreviewImages((prev) => prev.slice(0, 8)); // 8개까지만 유지
-      setImgLength(8);
-    }
-  }, [previewImages]);
+  // 이미지 삭제 핸들러 (ref 동기화 포함)
+  const handleDeleteImage = (index: number) => {
+    deletePreviewImage({
+      setImgLength,
+      setPreviewImages,
+      setFiles,
+      index,
+      onFilesChange: syncCurrentFiles, // ref 동기화 콜백 추가
+    });
+  };
 
   return (
     <div className="flex h-20 items-center gap-2">
-      <AttachImagesInput onChange={attachImageHandler} imgLength={imgLength} id={id} />
+      <AttachImagesInput onChange={handleChange} imgLength={imgLength} id={id} />
       <div className="scrollbar-hide-x flex w-full gap-1">
         {previewImages.length < 1
           ? ''
-          : previewImages!.map((item, index) => {
+          : previewImages.map((item, index) => {
               return (
                 <AttachImagesThumbnail
                   key={index}
                   url={item}
-                  handleDelete={() =>
-                    deletePreviewImage({ setImgLength, setPreviewImages, setFiles, index })
-                  }
+                  handleDelete={() => handleDeleteImage(index)}
                 />
               );
             })}

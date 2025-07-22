@@ -8,7 +8,6 @@ import { HeaderWrapper } from '@/components/layout/';
 
 const ProfileHeader = () => {
   const pathname = usePathname();
-
   return (
     <HeaderWrapper className={'bg-white'}>
       {pathname === '/profile' && (
