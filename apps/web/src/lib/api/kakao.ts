@@ -47,9 +47,39 @@ const kakaoFetch = async (url: string): Promise<any> => {
 };
 
 // 주소 포맷팅 유틸리티
-const formatAddressDisplay = (region1: string, region2: string, region3: string): string => {
-  const formatRegion1 = region1.replace('특별시', '시').replace('광역시', '시');
-  return `${formatRegion1} ${region2} ${region3}`;
+const formatAddressDisplay = (
+  region1: string,
+  region2: string,
+  region3: string,
+  fallbackAddress?: string
+): string => {
+  const formatRegion1 = region1.replace(/특별시|광역시/g, '').trim();
+  const formatRegion2 = region2.trim();
+  let formatRegion3 = region3.replace(/(\d+)/g, '').replace(/\s+/g, ' ').trim();
+
+  // region3이 빈 문자열이면 fallbackAddress에서 추출 시도
+  if (!formatRegion3 && fallbackAddress) {
+    const addressParts = fallbackAddress.split(' ');
+    if (addressParts.length >= 3) {
+      const lastPart = addressParts[addressParts.length - 1]; // "역삼2동"
+      if (lastPart) {
+        formatRegion3 = lastPart.replace(/(\d+)/g, '').trim(); // "역삼동"
+      }
+    }
+  }
+
+  //빈 문자열이나 너무 짧은 경우 원본 사용
+  if (!formatRegion1 || !formatRegion2 || !formatRegion3 || formatRegion3.length < 1) {
+    // fallbackAddress가 있으면 그것을 정리해서 사용
+    if (fallbackAddress) {
+      return fallbackAddress.replace(/(\d+)/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    // 원본 주소를 간단히 정리해서 반환
+    return `${region1.replace(/특별시|광역시/g, '')} ${region2} ${region3.replace(/\d+/g, '')}`.trim();
+  }
+
+  return `${formatRegion1} ${formatRegion2} ${formatRegion3}`;
 };
 
 /**
@@ -76,7 +106,8 @@ export const searchAddressByKeyword = async (query: string): Promise<SearchResul
       display_name: formatAddressDisplay(
         doc.address.region_1depth_name,
         doc.address.region_2depth_name,
-        doc.address.region_3depth_name
+        doc.address.region_3depth_name,
+        doc.address_name // fallback으로 완전한 주소 전달
       ),
     }));
   } catch (error) {

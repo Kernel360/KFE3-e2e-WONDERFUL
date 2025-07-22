@@ -5,7 +5,7 @@ import React from 'react';
 import { LocationDisplay } from '@/components/auth/signup';
 import { Button } from '@/components/ui/button';
 
-import { openLocationModal } from '@/lib/utils/location-modal';
+import { useLocationModalStore } from '@/lib/zustand/store/location-modal-store';
 interface LocationSetupProps {
   onSaveLocation: () => void;
 }
@@ -13,10 +13,10 @@ interface LocationSetupProps {
 const LocationSetup = ({ onSaveLocation }: LocationSetupProps) => {
   // 위치 저장 시 처리
   const handleSaveLocation = () => {
+    const { openLocationModal } = useLocationModalStore.getState();
+    openLocationModal();
+
     // 실제 저장 로직 추가 가능
-    openLocationModal((location, address) => {
-      console.log('선택됨:', location, address);
-    });
     onSaveLocation();
   };
 
