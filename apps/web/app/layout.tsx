@@ -7,9 +7,9 @@ import type { Metadata, Viewport } from 'next';
 import Toast from '@/components/common/toast';
 import Navigation from '@/components/layout/navigation';
 
-import QueryProvider from '@/providers/query-provider';
-
 import LocationModalProvider from '@/providers/location-modal-provider';
+import QueryProvider from '@/providers/query-provider';
+import UserProvider from '@/providers/user-provider';
 
 import './globals.css';
 
@@ -74,17 +74,19 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="ko" className={pretendard.variable}>
       <body className={pretendard.className} suppressHydrationWarning>
         <QueryProvider>
-          <div
-            className="relative mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col"
-            style={{ position: 'relative' }}
-          >
-            {children}
+          <UserProvider>
+            <div
+              className="relative mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col"
+              style={{ position: 'relative' }}
+            >
+              {children}
 
-            <Toast />
+              <Toast />
 
-            <LocationModalProvider />
-            <Navigation />
-          </div>
+              <LocationModalProvider />
+              <Navigation />
+            </div>
+          </UserProvider>
         </QueryProvider>
       </body>
     </html>
