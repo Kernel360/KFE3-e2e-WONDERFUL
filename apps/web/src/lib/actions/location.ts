@@ -56,7 +56,7 @@ export const createLocation = async (data: Location) => {
       };
     }
 
-    revalidatePath('/profile');
+    revalidatePath('/location');
     revalidatePath('/');
 
     return {
@@ -90,7 +90,7 @@ export const getUserLocations = async () => {
       .from('locations')
       .select('*')
       .eq('user_id', user.id)
-      .order('is_primary', { ascending: false });
+      .order('id', { ascending: true });
 
     if (selectError) {
       return {
@@ -125,6 +125,43 @@ export const deleteLocation = async (locationId: string) => {
 
     const supabase = await createClient();
 
+    //삭제할 위치 정보 확인
+    const { data: locationInfo } = await supabase
+      .from('locations')
+      .select('*')
+      .eq('id', locationId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!locationInfo) {
+      return {
+        success: false,
+        error: '위치 정보를 찾을 수 없거나 권한이 없습니다.',
+      };
+    }
+
+    //기본 위치 삭제 시도
+    if (locationInfo.is_primary) {
+      return {
+        success: false,
+        error: '기본 위치는 삭제할 수 없습니다. 다른 위치를 기본으로 설정한 후 삭제해주세요.',
+      };
+    }
+
+    //참조하는 경매가 있는지 확인
+    const { data: referencedAuctions } = await supabase
+      .from('auction_items')
+      .select('id')
+      .eq('location_id', locationId);
+
+    if (referencedAuctions && referencedAuctions.length > 0) {
+      return {
+        success: false,
+        error: `이 위치로 등록된 경매가 ${referencedAuctions.length}개 있어 삭제할 수 없습니다. 먼저 해당 경매를 삭제하거나 완료하세요.`,
+      };
+    }
+
+    //삭제
     const { data: deletedLocation, error: deleteError } = await supabase
       .from('locations')
       .delete()
@@ -134,9 +171,20 @@ export const deleteLocation = async (locationId: string) => {
       .single();
 
     if (deleteError) {
+      console.error('❌ [Server Action] Supabase 삭제 오류:', deleteError);
+
+      // Foreign Key 오류인 경우
+      if (deleteError.code === '23503') {
+        return {
+          success: false,
+          error:
+            '이 위치로 등록된 경매가 있어 삭제할 수 없습니다. 먼저 해당 경매를 삭제하거나 완료하세요.',
+        };
+      }
+
       return {
         success: false,
-        error: '위치 정보 삭제에 실패했습니다.',
+        error: `위치 정보 삭제에 실패했습니다: ${deleteError.message}`,
       };
     }
 
@@ -147,8 +195,7 @@ export const deleteLocation = async (locationId: string) => {
       };
     }
 
-    revalidatePath('/profile');
-    revalidatePath('/');
+    revalidatePath('/location');
 
     return {
       success: true,
@@ -156,6 +203,7 @@ export const deleteLocation = async (locationId: string) => {
       message: '위치 정보가 삭제되었습니다.',
     };
   } catch (error) {
+    console.error('💥 [Delete] 예외 발생:', error);
     return {
       success: false,
       error: '위치 정보 삭제 중 오류가 발생했습니다.',
@@ -213,8 +261,7 @@ export const setPrimaryLocation = async (locationId: string) => {
       };
     }
 
-    revalidatePath('/profile');
-    revalidatePath('/');
+    revalidatePath('/location');
 
     return {
       success: true,

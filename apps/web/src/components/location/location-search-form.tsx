@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import MapLocationPicker from '@/components/location/map-location-picker';
 import SearchLocationPicker from '@/components/location/search-location-picker';
 
@@ -19,6 +21,7 @@ type ViewType = 'search' | 'map';
 const LocationSearchForm = ({ onClose }: LocationSearchFormProps) => {
   const { location: currentLocation } = useGeolocation();
   const [currentView, setCurrentView] = useState<ViewType>('search');
+  const queryClient = useQueryClient();
 
   const handleLocationSelect = async (location: UserLocation, address: string) => {
     // 위치 정보 서버에 저장
@@ -31,6 +34,7 @@ const LocationSearchForm = ({ onClose }: LocationSearchFormProps) => {
       });
 
       if (result.success) {
+        queryClient.invalidateQueries({ queryKey: ['user-locations'] });
         onClose?.();
       } else {
         alert(result.error || '위치 저장에 실패했습니다.');
