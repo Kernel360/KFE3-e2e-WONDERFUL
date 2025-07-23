@@ -18,7 +18,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
 
     const lastTime = new Date(lastMessageAt).getTime();
     const now = Date.now();
-    const gapMs = lastTime - now;
+    const gapMs = Math.abs(now - lastTime);
 
     const oneMinute = 60 * 1000;
     const oneHour = 60 * oneMinute;
@@ -28,7 +28,6 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
     const oneYear = 365 * oneDay;
 
     if (gapMs < oneMinute) {
-      // 방금
       return '방금';
     } else if (gapMs < oneHour) {
       // n분 전
