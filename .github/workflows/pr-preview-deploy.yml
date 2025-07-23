@@ -119,7 +119,9 @@ jobs:
           pnpm turbo lint || echo "⚠️ Lint 경고가 있지만 빌드를 계속 진행합니다"
         continue-on-error: true
       - name: Build check
-        run: pnpm turbo build
+        run: |
+          cd apps/web
+          pnpm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
