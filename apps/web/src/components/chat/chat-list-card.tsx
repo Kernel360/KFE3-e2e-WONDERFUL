@@ -8,13 +8,17 @@ import Thumbnail from '@/components/ui/thumbnail';
 import { ChatRoom } from '@/types/chat';
 
 const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
-  const { auction, otherUser, lastMessageAt, messages } = chatInfo;
+  const { auction, otherUser, messages } = chatInfo;
+
+  const lastMessage = messages[0];
 
   const msgElapsed = () => {
-    if (!lastMessageAt) return '';
+    const lastMessageAt = lastMessage?.sentAt;
+    if (!lastMessageAt) return null;
+
     const lastTime = new Date(lastMessageAt).getTime();
     const now = Date.now();
-    const gapMs = now - lastTime;
+    const gapMs = lastTime - now;
 
     const oneMinute = 60 * 1000;
     const oneHour = 60 * oneMinute;
@@ -67,13 +71,13 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
         />
         <div className="flex w-full shrink flex-col">
           <div>
-            <p className="flex gap-2">
+            <p className="flex items-center gap-2">
               <strong>{otherUser.nickname}</strong>
-              <span>{msgElapsed()}</span>
+              <span className="text-min text-neutral-500">{msgElapsed()}</span>
             </p>
           </div>
-          <p className="line-clamp-1 min-h-6 flex-1">
-            {!messages.length ? '' : '마지막 메세지 보여주기'}
+          <p className="text-min line-clamp-1 min-h-6 flex-1 text-neutral-500">
+            {!messages.length ? '' : messages[0]?.content}
           </p>
         </div>
       </Link>
