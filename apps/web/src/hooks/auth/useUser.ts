@@ -1,4 +1,4 @@
-import { useUserStore } from '@/lib/zustand/user-store';
+import { useUserStore } from '@/lib/zustand/store/user-store';
 
 export const useUser = () => {
   const { user, isInitialized } = useUserStore();

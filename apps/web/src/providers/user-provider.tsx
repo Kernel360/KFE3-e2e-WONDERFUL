@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useUserStore } from '@/lib/zustand/user-store';
+import { useUserStore } from '@/lib/zustand/store/user-store';
 
 interface UserProviderProps {
   children: React.ReactNode;
