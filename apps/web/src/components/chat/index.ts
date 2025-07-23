@@ -11,7 +11,7 @@ export { default as ReceivedMessage } from './messages/received-message';
 export { default as DateMessage } from './messages/date-message';
 export { default as ChatContainer } from './messages/chat-container';
 
-export { default as ChatListItem } from './chat-list-item';
+export { default as ChatListCard } from './chat-list-card';
 export { default as TestChatRoom } from './test-chat-room';
 export { default as ProductInfoCard } from './product-info-card';
 
