@@ -15,27 +15,32 @@ export interface ChatMessage {
 
 export interface ChatRoom {
   id: string;
-  auction_id: string;
-  seller_id: string;
-  buyer_id: string;
-  room_type: string;
-  created_at: string;
-  last_message_at: string | null;
-  is_deleted: boolean;
-  // 추가 정보
-  auction_item?: {
+  auctionId: string;
+  createdAt: string;
+  lastMessageAt: string | null;
+  isDeleted: boolean;
+  myRole: 'seller' | 'buyer';
+  otherUser: {
+    id: string;
+    nickname: string;
+  };
+  auction: {
     id: string;
     title: string;
-    thumbnail_url?: string;
+    thumbnailUrl: string | null;
+    status: string;
   };
-  seller?: {
+  messages: {
     id: string;
-    nickname: string;
-  };
-  buyer?: {
-    id: string;
-    nickname: string;
-  };
+    content: string;
+    sentAt: string;
+    senderId: string;
+  }[];
+}
+
+export interface ChatRoomsResponse {
+  data: ChatRoom[];
+  total: number;
 }
 
 export interface ChatUser {
