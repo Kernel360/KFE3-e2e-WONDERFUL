@@ -1,4 +1,4 @@
-import { LocationList } from '@/components/location-setting';
+import { LocationList } from '@/components/personal-info';
 const Page = () => {
   return (
     <>

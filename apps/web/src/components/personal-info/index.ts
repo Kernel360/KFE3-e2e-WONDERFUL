@@ -17,3 +17,8 @@ export { default as ButtonCreate } from './button/button-create';
 export { default as BankIcon } from './icon-bank';
 export { default as DrawerHeader } from './drawer-header';
 export { default as InputPersonal } from './input';
+
+export { default as LocationList } from './location/location-list';
+export { default as LocationItem } from './location/location-item';
+export { default as LocationButtonBox } from './location/button-box';
+export { default as LocationButtonCreate } from './location/button-create';

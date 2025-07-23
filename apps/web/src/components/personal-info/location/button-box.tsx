@@ -14,7 +14,7 @@ interface ButtonBoxProps {
   locationId: string;
 }
 
-const ButtonBox = ({ locationId }: ButtonBoxProps) => {
+const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingPrimary, setIsSettingPrimary] = useState(false);
   const { refetch } = useUserLocations();
@@ -87,4 +87,4 @@ const ButtonBox = ({ locationId }: ButtonBoxProps) => {
   );
 };
 
-export default ButtonBox;
+export default LocationButtonBox;

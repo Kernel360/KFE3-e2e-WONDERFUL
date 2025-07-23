@@ -1,6 +1,6 @@
 'use client';
 
-import { LocationItem, ButtonBox, ButtonCreate } from '@/components/location-setting';
+import { LocationItem, LocationButtonBox, LocationButtonCreate } from '@/components/personal-info';
 
 import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
 
@@ -30,12 +30,12 @@ const LocationList = () => {
         {userLocations?.map((location) => (
           <li key={location.locationId}>
             <LocationItem location={location}>
-              <ButtonBox locationId={location.locationId!} />
+              <LocationButtonBox locationId={location.locationId!} />
             </LocationItem>
           </li>
         ))}
       </ul>
-      <ButtonCreate status={status}>위치 추가하기</ButtonCreate>
+      <LocationButtonCreate status={status}>위치 추가하기</LocationButtonCreate>
     </div>
   );
 };
