@@ -11,14 +11,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 
 import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
 
-import { setPrimaryLocation } from '@/lib/actions/location';
 import { cn } from '@/lib/cn';
 import { LocationType } from '@/lib/types/location';
 import { useLocationStore } from '@/lib/zustand/store';
 
 const HomeFilterSelect = () => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [isUpdatingPrimary, setIsUpdatingPrimary] = useState<string | null>(null);
 
   const { selectedLocation, setLocation } = useLocationStore();
 
@@ -35,49 +33,9 @@ const HomeFilterSelect = () => {
     return lastPart && lastPart.length > 0 ? lastPart : '알 수 없음';
   };
 
-  const handleLocationChange = async (location: LocationType) => {
-    // 이전 위치 저장 (실패시 롤백용)
-    const previousLocation = selectedLocation;
-    try {
-      // locationId가 null인 경우 처리
-      if (!location.locationId) {
-        console.error('❌ 위치 ID가 없습니다.');
-        return;
-      }
-
-      // 로딩 상태 시작
-      setIsUpdatingPrimary(location.locationId);
-
-      // 낙관적 UI 업데이트 (즉시 피드백)
-      setLocation(location);
-      setIsSelectOpen(false);
-
-      // 서버에 기본 위치 변경 요청
-      const result = await setPrimaryLocation(location.locationId);
-
-      if (result.success) {
-        console.log('✅ 기본 위치 변경 성공:', location.locationName);
-      } else {
-        console.error('❌ 기본 위치 변경 실패:', result.error);
-
-        // 실패시 이전 상태로 롤백
-        setLocation(previousLocation);
-
-        // 사용자에게 알림
-        alert(`기본 위치 변경에 실패했습니다: ${result.error}`);
-      }
-    } catch (error) {
-      console.error('❌ 기본 위치 변경 중 오류:', error);
-
-      // 오류시 이전 상태로 롤백
-      setLocation(previousLocation);
-
-      // 사용자에게 알림
-      alert('기본 위치 변경 중 오류가 발생했습니다. 다시 시도해 주세요.');
-    } finally {
-      // 로딩 상태 해제
-      setIsUpdatingPrimary(null);
-    }
+  const handleLocationChange = (location: LocationType) => {
+    setLocation(location);
+    setIsSelectOpen(false);
   };
 
   const handleRetry = () => {
