@@ -1,9 +1,7 @@
-// src/lib/zustand/store/user-store.ts
 import { User } from '@supabase/supabase-js';
 import { create } from 'zustand';
 
 import { createClient } from '@/lib/supabase/client';
-
 interface UserState {
   user: User | null;
   isInitialized: boolean;
