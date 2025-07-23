@@ -9,7 +9,12 @@ interface UserState {
   isInitialized: boolean;
   setUser: (user: User | null) => void;
   initialize: () => Promise<void>;
+  cleanup: () => void;
 }
+
+const supabase = createClient();
+
+let authSubscription: { data: { subscription: any } } | null = null;
 
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,
@@ -17,11 +22,16 @@ export const useUserStore = create<UserState>((set, get) => ({
 
   setUser: (user) => set({ user }),
 
+  cleanup: () => {
+    if (authSubscription) {
+      authSubscription.data.subscription.unsubscribe();
+      authSubscription = null;
+    }
+  },
+
   // 앱 시작시 유저 정보 초기화
   initialize: async () => {
     if (get().isInitialized) return;
-
-    const supabase = createClient();
 
     try {
       const {
@@ -40,8 +50,13 @@ export const useUserStore = create<UserState>((set, get) => ({
         isInitialized: true,
       });
 
-      // 인증 상태 변화 감지
-      supabase.auth.onAuthStateChange((event, session) => {
+      // 기존 구독이 있다면 해제
+      if (authSubscription) {
+        authSubscription.data.subscription.unsubscribe();
+      }
+
+      // 인증 상태 변화 감지 및 구독 참조 저장
+      authSubscription = supabase.auth.onAuthStateChange((event, session) => {
         if (process.env.NODE_ENV === 'development') {
           console.log('🔄 Auth state changed:', event, session?.user?.email);
         }
