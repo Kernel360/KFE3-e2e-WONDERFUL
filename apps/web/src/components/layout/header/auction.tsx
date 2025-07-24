@@ -61,18 +61,12 @@ const AuctionHeader = () => {
     try {
       setIsDeleting(true);
 
-      console.log('🔄 경매 삭제 시작...');
-
       // 삭제된 경매 상세 정보 먼저 제거
       await queryClient.removeQueries({
         queryKey: ['auctions', 'detail', id],
       });
 
       await deleteAuction(id as string);
-      console.log('✅ 서버 삭제 완료');
-
-      // 쿼리 캐시 무효화
-      console.log('🔄 쿼리 캐시 무효화 시작...');
 
       // 경매 목록 쿼리만 무효화(상세 쿼리 제외)
       await queryClient.invalidateQueries({
@@ -83,8 +77,6 @@ const AuctionHeader = () => {
       await queryClient.refetchQueries({
         queryKey: ['auctions', 'list'],
       });
-
-      console.log('✅ 쿼리 캐시 무효화 완료');
 
       // 모든 작업 완료 후 페이지 이동
       routes.replace('/');
