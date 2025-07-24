@@ -163,7 +163,7 @@ const CreateAuctionForm = ({
               className="bg-gray-100"
             />
             {/* 실제 submit용 hidden input */}
-            <input type="hidden" name="end_time" value={defaultValues?.end_time || '24'} />
+            <input type="hidden" name="end_time" value={defaultValues?.end_time || ''} />
           </>
         ) : (
           /* 등록 모드: 일반 input */
@@ -174,7 +174,7 @@ const CreateAuctionForm = ({
             max={99}
             min={1}
             placeholder="최대 시간은 경매 시작 후 99시간입니다."
-            defaultValue={defaultValues?.end_time || '24'}
+            defaultValue={defaultValues?.end_time || ''}
           />
         )}
 

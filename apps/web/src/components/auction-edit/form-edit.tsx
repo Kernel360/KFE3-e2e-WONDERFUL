@@ -31,36 +31,53 @@ const FormEdit = ({ itemId }: FormEditProps) => {
   // 이제 안전하게 데이터 접근
   const auction = auctionData.data;
 
+  // 입찰 여부 확인
+  const hasBids =
+    (auction.auctionPrice?.currentPrice || 0) > (auction.auctionPrice?.startPrice || 0);
+  const isEditable = !hasBids; // 입찰이 없어야 수정 가능
+
+  console.log('📊 수정 가능 여부:', {
+    startPrice: auction.auctionPrice?.startPrice,
+    currentPrice: auction.auctionPrice?.currentPrice,
+    bidCount: auction._count.bids,
+    hasBids,
+    isEditable,
+  });
+
   // API 응답 구조에 맞게 수정
   const defaultValues = {
     title: auction.title,
     description: auction.description || '',
-    category_id: auction.category.id, // category.id로 수정
-    start_price: auction.auctionPrice?.startPrice || 0, // auctionPrice.startPrice로 수정
-    min_bid_unit: auction.auctionPrice?.minBidUnit || 1000, // auctionPrice.minBidUnit로 수정
+    category_id: auction.category.id,
+    // 입찰이 있으면 현재가, 없으면 시작가 표시
+    start_price: hasBids
+      ? auction.auctionPrice?.currentPrice || 0 // 입찰 있음: 현재가 표시
+      : auction.auctionPrice?.startPrice || 0, // 입찰 없음: 시작가 표시
+    min_bid_unit: auction.auctionPrice?.minBidUnit || 1000,
     // 시간 차이를 계산해서 숫자로 변환
     end_time: (() => {
       try {
         const endTime = new Date(auction.endTime);
         const now = new Date();
-        // 종료시간까지 남은 시간 계산 (시간 단위)
         const hoursRemaining = Math.ceil((endTime.getTime() - now.getTime()) / (1000 * 60 * 60));
-        const validHours = Math.max(1, Math.min(99, hoursRemaining)); // 1-99 범위로 제한
+        const validHours = Math.max(1, Math.min(99, hoursRemaining));
         return validHours.toString();
       } catch (error) {
         console.error('⏰ 종료시간 계산 에러:', error);
-        return '24'; // 기본값
+        return ''; // 기본값
       }
     })(),
     images:
-      auction.auctionImages?.flatMap((image: { id: string; urls: string[] }) => image.urls) || [], // 이미 배열로 가져옴
+      auction.auctionImages?.flatMap((image: { id: string; urls: string[] }) => image.urls) || [],
   };
 
-  // 현재가 정보를 별도로 전달
+  // 현재가 정보를 별도로 전달 (입찰 상태 포함)
   const currentPriceInfo = {
     startPrice: auction.auctionPrice?.startPrice || 0,
     currentPrice: auction.auctionPrice?.currentPrice || 0,
     bidCount: auction._count.bids || 0,
+    hasBids, // 입찰 여부
+    isEditable, // 수정 가능 여부
   };
 
   // 초기화 호출
@@ -74,15 +91,15 @@ const FormEdit = ({ itemId }: FormEditProps) => {
         <CreateAuctionForm
           errors={errors}
           setFiles={setFiles}
-          defaultValues={defaultValues} // images 포함된 기본값
+          defaultValues={defaultValues}
           isEdit={true}
-          existingImages={existingImages} // 기존 이미지 URL 배열(useEditAuction의 상태 전달)
-          onRemoveExistingImage={removeExistingImage} // 기존 이미지 삭제 콜백 전달
-          currentPriceInfo={currentPriceInfo} // 현재가 정보 전달
+          existingImages={existingImages}
+          onRemoveExistingImage={removeExistingImage}
+          currentPriceInfo={currentPriceInfo} // 입찰 상태 정보 포함
         />
       </section>
       <section className="backdrop-blur-xs sticky bottom-0 bg-white/70 px-[15px] pb-9 pt-4">
-        <Button size="lg" className="flex w-full">
+        <Button size="lg" className="flex w-full" disabled={isSubmitting} type="submit">
           {isSubmitting ? '수정 중...' : '수정하기'}
         </Button>
       </section>

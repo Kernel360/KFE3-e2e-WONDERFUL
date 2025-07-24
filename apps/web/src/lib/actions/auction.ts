@@ -17,7 +17,21 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       error: authError,
     } = await supabase.auth.getUser();
 
-    // 1. auction_items 삽입
+    // 1. 유저의 기본 위치 조회
+    const { data: primaryLocation, error: locationError } = await supabase
+      .from('locations')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('is_primary', true)
+      .single();
+
+    if (locationError && locationError.code !== 'PGRST116') {
+      // PGRST116: No rows found (데이터 없음)
+      console.error('❌ 기본 위치 조회 에러:', locationError);
+      throw new Error(`기본 위치 조회 실패: ${locationError.message}`);
+    }
+
+    // auction_items 삽입
     const { data: itemInsertResult, error: itemError } = await supabase
       .from('auction_items')
       .insert({
@@ -25,7 +39,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
         title: data.title,
         description: data.description,
         category_id: data.category_id,
-        location_id: data.location_id ?? null,
+        location_id: primaryLocation?.id ?? null, // 기본 위치 ID 사용
         start_time: data.start_time ?? null,
         end_time: convertHoursToTimestamp(data.end_time),
         auction_type: data.auction_type || 'NORMAL',
@@ -43,7 +57,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
 
     const itemId = itemInsertResult.id;
 
-    // 2. auction_prices 삽입
+    // auction_prices 삽입
     const { error: priceError } = await supabase.from('auction_prices').insert({
       item_id: itemId,
       start_price: data.prices.start_price,
@@ -57,7 +71,7 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       throw new Error(`auction_prices 저장 실패: ${priceError.message}`);
     }
 
-    // 3. auction_images 삽입 (이미지가 있는 경우)
+    // auction_images 삽입 (이미지가 있는 경우)
     if (data.images && data.images.length > 0) {
       const { error: imageError } = await supabase.from('auction_images').insert({
         item_id: itemId,
@@ -83,7 +97,28 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
   const endtime = convertHoursToTimestamp(data.end_time);
 
   try {
-    // 1. 이미지 처리 먼저 완료
+    // 1. 현재 경매 상태 확인
+    const { data: currentAuction, error: fetchError } = await supabase
+      .from('auction_prices')
+      .select('start_price, current_price')
+      .eq('item_id', itemId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(`현재 경매 정보 조회 실패: ${fetchError.message}`);
+    }
+
+    // 2. 입찰 여부 확인
+    const hasBids = currentAuction.current_price > currentAuction.start_price;
+
+    console.log('📊 경매 상태 확인:', {
+      originalStartPrice: currentAuction.start_price,
+      currentPrice: currentAuction.current_price,
+      hasBids,
+      newStartPrice: data.prices.start_price,
+    });
+
+    // 3. 이미지 처리 먼저 완료
     if (Array.isArray(data.images) && data.images.length > 0 && data.images[0]) {
       console.log('🔄 이미지 처리 시작...');
 
@@ -108,7 +143,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       console.log('✅ 이미지 처리 완료');
     }
 
-    // 2. auction_items 업데이트
+    // 4. auction_items 업데이트
     const { error: itemError } = await supabase
       .from('auction_items')
       .update({
@@ -117,7 +152,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
         category_id: data.category_id,
         location_id: data.location_id ?? null,
         end_time: endtime,
-        thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
+        thumbnail_url: data.images?.[0] || '',
       })
       .eq('id', itemId);
 
@@ -125,15 +160,24 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       throw new Error(`auction_items 수정 실패: ${itemError.message}`);
     }
 
-    // 3. auction_prices 업데이트
+    // 5. ✅ auction_prices 안전한 업데이트
+    const priceUpdateData: any = {
+      instant_price: data.prices.instant_price,
+      min_bid_unit: data.prices.min_bid_unit,
+    };
+
+    // ✅ 입찰이 없는 경우에만 start_price와 current_price 업데이트
+    if (!hasBids) {
+      priceUpdateData.start_price = data.prices.start_price;
+      priceUpdateData.current_price = data.prices.start_price;
+      console.log('✅ 입찰 없음 - 시작가/현재가 업데이트');
+    } else {
+      console.log('⚠️ 입찰 존재 - 시작가/현재가 보존');
+    }
+
     const { error: priceError } = await supabase
       .from('auction_prices')
-      .update({
-        start_price: data.prices.start_price,
-        instant_price: data.prices.instant_price,
-        min_bid_unit: data.prices.min_bid_unit,
-        current_price: data.prices.start_price,
-      })
+      .update(priceUpdateData)
       .eq('item_id', itemId);
 
     if (priceError) {
@@ -142,7 +186,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
 
     console.log('✅ 모든 DB 작업 완료');
 
-    // 4. Next.js 캐시 무효화
+    // 6. Next.js 캐시 무효화
     revalidatePath(`/auction/${itemId}`);
     revalidatePath('/');
 
