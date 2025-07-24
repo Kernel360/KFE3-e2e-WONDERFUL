@@ -1,97 +1,45 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { useEffect, useRef } from 'react';
 
 import { DateMessage, ReceivedMessage, SentMessage } from '@/components/chat';
 
-import { supabase } from '@/lib/supabase/client';
+import { useChatMessages } from '@/hooks/chat/useChatMessages';
 
-import type { ChatMessage } from '@/types/chat';
+import { useUserStore } from '@/lib/zustand/store/user-store';
 
-const ChatContainer = (roomId: { roomId: string }) => {
-  const date = '2025년 9월 20일';
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [connectionStatus, setConnectionStatus] = useState<
-    'connecting' | 'connected' | 'disconnected'
-  >('connecting');
-  const channelRef = useRef<RealtimeChannel | null>(null);
+const ChatContainer = ({ roomId }: { roomId: string }) => {
+  const { messages } = useChatMessages(roomId);
+  const currentUserId = useUserStore((state) => state.user?.id);
 
-  // TODO: 기능 연결 시 user Id 체크 후 알맞은 컴포넌트 return 하는 로직 추가
-  // - 날짜가 넘어가면 백엔드 측에서 날짜 변경 감지하여 date message 쏴주기
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const loadMessages = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('chat_messages')
-        .select(
-          `
-          *,
-          sender:users(id, nickname, profile_img)
-        `
-        )
-        .eq('room_id', roomId)
-        .order('sent_at', { ascending: true });
-
-      if (error) {
-        console.error('메시지 로드 에러:', error);
-        return;
-      }
-
-      setMessages(data || []);
-    } catch (error) {
-      console.error('메시지 로드 실패:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    loadMessages();
+    scrollToBottom();
+  }, [messages]);
 
-    const channel = supabase
-      .channel(`chat-room-${roomId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'chat_messages',
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          console.log('🆕 새 메시지 수신:', payload);
-          const newMessage = payload.new as ChatMessage;
-
-          setMessages((prev) => [...prev, newMessage]);
-        }
-      )
-      .subscribe((status) => {
-        console.log('📡 채팅방 구독 상태:', status);
-        if (status === 'SUBSCRIBED') {
-          setConnectionStatus('connected');
-        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          setConnectionStatus('disconnected');
-        }
-      });
-
-    channelRef.current = channel;
-
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
-      }
-    };
-  }, [roomId]);
+  // TODO: 날짜가 넘어가면 백엔드 측에서 날짜 변경 감지하여 date message 쏘는 거 연결하기
 
   return (
-    <div className="flex h-auto flex-col overflow-y-auto px-4">
-      <DateMessage date={date} />
-      <ReceivedMessage />
-      <SentMessage />
+    <div className="scrollbar-hide-y flex flex-1 flex-col overflow-y-auto px-4">
+      {messages.map((msg) => {
+        const isMine = msg.type === 'common' && msg.sender_id === currentUserId;
+
+        if (msg.type === 'notice') {
+          return <DateMessage key={msg.id} date={msg.content} />;
+        }
+
+        return isMine ? (
+          <SentMessage key={msg.id} message={msg} />
+        ) : (
+          <ReceivedMessage key={msg.id} message={msg} />
+        );
+      })}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

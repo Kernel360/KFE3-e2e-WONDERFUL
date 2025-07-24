@@ -7,12 +7,13 @@ import { SendHorizontal } from 'lucide-react';
 import { Button, Textarea } from '@/components/ui';
 
 import { supabase } from '@/lib/supabase/client';
+import { useUserStore } from '@/lib/zustand/store/user-store';
 
 const InputForm = (roomId: { roomId: string }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  const currentUserId = '1234';
+  const currentUserId = useUserStore((state) => state.user?.id);
 
   const sendMessage = async () => {
     if (!newMessage.trim() || isSending) return;
@@ -20,7 +21,7 @@ const InputForm = (roomId: { roomId: string }) => {
     setIsSending(true);
     try {
       const { error } = await supabase.from('chat_messages').insert({
-        room_id: roomId,
+        room_id: roomId.roomId,
         sender_id: currentUserId,
         content: newMessage.trim(),
         sent_at: new Date().toISOString(),
@@ -49,7 +50,7 @@ const InputForm = (roomId: { roomId: string }) => {
   };
 
   return (
-    <div className="my-4 flex w-full flex-row gap-2">
+    <div className="my-4 flex w-full flex-row items-stretch gap-2 overflow-x-hidden">
       <Textarea
         variant="chat"
         placeholder="메세지를 입력하세요. "

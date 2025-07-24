@@ -26,6 +26,18 @@ export const getMyProfile = async () => {
   }
 };
 
+export const getUserProfile = async (userId: string) => {
+  try {
+    const profile = await getUserProfileFromDB(userId);
+    if (!profile) {
+      throw new Error('프로필을 찾을 수 없습니다.');
+    }
+    return profile;
+  } catch (error) {
+    throw new Error('프로필 조회 실패');
+  }
+};
+
 export const updateProfile = async (formData: FormData) => {
   try {
     // 현재 사용자 확인
