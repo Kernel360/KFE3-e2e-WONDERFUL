@@ -19,7 +19,7 @@ const minUnitOptions = [
 
 const MinUnitSelectBox = ({ className, name, defaultValue }: MinUnitSelectBoxProps) => {
   const [selectedState, setSelectedState] = useState(
-    defaultValue ? String(defaultValue) || minUnitOptions[0]?.label || '' : ''
+    String(defaultValue ?? minUnitOptions[0]?.value ?? '')
   );
 
   return (
