@@ -53,13 +53,23 @@ const AuctionHeader = () => {
     }
   };
 
+  // 경매 마감 여부 확인
+  const isAuctionExpired = auctionData?.data?.endTime
+    ? new Date() > new Date(auctionData.data.endTime)
+    : false;
+
   // 더보기 메뉴 아이템들
   const moreItems = [
-    {
-      id: 'edit',
-      title: '수정하기',
-      onClick: () => routes.push(`/auction/${id}/edit`),
-    },
+    // 경매가 마감되지 않았을 때만 수정하기 버튼 표시
+    ...(isAuctionExpired
+      ? []
+      : [
+          {
+            id: 'edit',
+            title: '수정하기',
+            onClick: () => routes.push(`/auction/${id}/edit`),
+          },
+        ]),
     {
       id: 'delete',
       title: '삭제하기',
