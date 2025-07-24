@@ -97,7 +97,18 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
   const endtime = convertHoursToTimestamp(data.end_time);
 
   try {
-    // 1. 현재 경매 상태 확인
+    // 1. 현재 경매 정보 조회 (location_id 포함)
+    const { data: currentAuctionItem, error: fetchItemError } = await supabase
+      .from('auction_items')
+      .select('location_id')
+      .eq('id', itemId)
+      .single();
+
+    if (fetchItemError) {
+      throw new Error(`현재 경매 정보 조회 실패: ${fetchItemError.message}`);
+    }
+
+    // 2. 현재 경매 상태 확인
     const { data: currentAuction, error: fetchError } = await supabase
       .from('auction_prices')
       .select('start_price, current_price')
@@ -108,7 +119,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       throw new Error(`현재 경매 정보 조회 실패: ${fetchError.message}`);
     }
 
-    // 2. 입찰 여부 확인
+    // 3. 입찰 여부 확인
     const hasBids = currentAuction.current_price > currentAuction.start_price;
 
     console.log('📊 경매 상태 확인:', {
@@ -118,7 +129,7 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       newStartPrice: data.prices.start_price,
     });
 
-    // 3. 이미지 처리 먼저 완료
+    // 4. 이미지 처리 먼저 완료
     if (Array.isArray(data.images) && data.images.length > 0 && data.images[0]) {
       console.log('🔄 이미지 처리 시작...');
 
@@ -143,14 +154,14 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       console.log('✅ 이미지 처리 완료');
     }
 
-    // 4. auction_items 업데이트
+    // 5. auction_items 업데이트
     const { error: itemError } = await supabase
       .from('auction_items')
       .update({
         title: data.title,
         description: data.description,
         category_id: data.category_id,
-        location_id: data.location_id ?? null,
+        location_id: currentAuctionItem.location_id, // 기존 location_id 유지
         end_time: endtime,
         thumbnail_url: data.images?.[0] || '',
       })
@@ -160,13 +171,13 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
       throw new Error(`auction_items 수정 실패: ${itemError.message}`);
     }
 
-    // 5. ✅ auction_prices 안전한 업데이트
+    // 6. auction_prices 안전한 업데이트
     const priceUpdateData: any = {
       instant_price: data.prices.instant_price,
       min_bid_unit: data.prices.min_bid_unit,
     };
 
-    // ✅ 입찰이 없는 경우에만 start_price와 current_price 업데이트
+    // 입찰이 없는 경우에만 start_price와 current_price 업데이트
     if (!hasBids) {
       priceUpdateData.start_price = data.prices.start_price;
       priceUpdateData.current_price = data.prices.start_price;
