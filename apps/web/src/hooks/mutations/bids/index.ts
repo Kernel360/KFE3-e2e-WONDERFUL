@@ -35,23 +35,14 @@ export const useBidMutation = () => {
         return { previousAuction: null, previousBids: null };
       }
 
-      // 🔍 캐시에 있는 모든 쿼리 확인
-      const allQueries = queryClient.getQueryCache().getAll();
-      console.log(
-        '📦 [Cache] 전체 쿼리들:',
-        allQueries.map((q) => ({
-          queryKey: q.queryKey,
-          hasData: !!q.state.data,
-        }))
-      );
-
-      // 🔍 정확한 쿼리 키로 데이터 찾기
-      const auctionQueries = allQueries.filter(
-        (q) => q.queryKey[0] === 'auction' && q.queryKey[1] === 'detail'
-      );
-      console.log('🎯 [Cache] 경매 쿼리들:', auctionQueries);
-
+      // ✅ 정확한 쿼리 키 생성
       const auctionQueryKey = auctionKeys.detail(auctionId);
+      const bidQueryKey = bidKeys.list(auctionId, 10);
+
+      console.log('🎯 [Cache] 사용할 쿼리 키들:', {
+        auctionQueryKey,
+        bidQueryKey,
+      });
 
       await queryClient.cancelQueries({ queryKey: auctionQueryKey });
 
