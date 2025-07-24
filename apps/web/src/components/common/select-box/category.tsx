@@ -18,13 +18,17 @@ const stateOptions = FALLBACK_CATEGORIES.slice(1).map((category) => ({
 }));
 
 const CategorySelectBox = ({ className, name, defaultValue }: CategorySelectBoxProps) => {
-  const [selectedState, setSelectedState] = useState(defaultValue || stateOptions[0]?.value || '');
+  // 초기값 로직을 명확히 분리
+  const getInitialValue = (value?: string) => {
+    if (value !== undefined) return value;
+    return stateOptions[0]?.value || '';
+  };
 
-  // defaultValue가 변경될 때마다 선택 상태를 업데이트
+  const [selectedState, setSelectedState] = useState(getInitialValue(defaultValue));
+
+  // defaultValue의 모든 변경사항을 반영 (빈 문자열 포함)
   useEffect(() => {
-    if (defaultValue) {
-      setSelectedState(defaultValue);
-    }
+    setSelectedState(getInitialValue(defaultValue));
   }, [defaultValue]);
 
   return (
