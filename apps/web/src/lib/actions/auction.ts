@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { createClient } from '@/lib/supabase/server';
 import { convertHoursToTimestamp } from '@/lib/utils/date';
 
@@ -140,6 +142,11 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
 
     console.log('✅ 모든 DB 작업 완료');
 
+    // 4. Next.js 캐시 무효화
+    revalidatePath(`/auction/${itemId}`);
+    revalidatePath('/');
+
+    console.log('✅ 캐시 무효화 완료');
     return itemId;
   } catch (error) {
     console.error('❌ updateAuction 전체 에러:', error);
