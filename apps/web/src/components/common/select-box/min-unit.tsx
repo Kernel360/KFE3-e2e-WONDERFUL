@@ -4,21 +4,27 @@ import { useState } from 'react';
 
 import { SelectBox } from '@/components/common';
 
-import { AuctionFormSelectProps } from '@/lib/types/auction';
+interface MinUnitSelectBoxProps {
+  className?: string;
+  name?: string;
+  defaultValue?: string;
+}
 
-const stateOptions = [
-  { value: '500', label: '500' },
+const minUnitOptions = [
   { value: '1000', label: '1,000' },
-  { value: '5000', label: '5,000' },
   { value: '10000', label: '10,000' },
+  { value: '50000', label: '50,000' },
+  { value: '100000', label: '100,000' },
 ];
 
-const MinUnitSelectBox = ({ className, name }: AuctionFormSelectProps) => {
-  const [selectedState, setSelectedState] = useState(stateOptions[0]?.label);
+const MinUnitSelectBox = ({ className, name, defaultValue }: MinUnitSelectBoxProps) => {
+  const [selectedState, setSelectedState] = useState(
+    defaultValue ? String(defaultValue) || minUnitOptions[0]?.label || '' : ''
+  );
 
   return (
     <SelectBox
-      options={stateOptions}
+      options={minUnitOptions}
       value={selectedState}
       onValueChange={setSelectedState}
       className={className}

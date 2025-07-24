@@ -80,77 +80,71 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
   const supabase = await createClient();
   const endtime = convertHoursToTimestamp(data.end_time);
 
-  const { error: itemError } = await supabase
-    .from('auction_items')
-    .update({
-      title: data.title,
-      description: data.description,
-      category_id: data.category_id,
-      location_id: data.location_id ?? null,
-      end_time: endtime,
-      thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
-    })
-    .eq('id', itemId);
+  try {
+    // 1. 이미지 처리 먼저 완료
+    if (Array.isArray(data.images) && data.images.length > 0 && data.images[0]) {
+      console.log('🔄 이미지 처리 시작...');
 
-  if (itemError) {
-    throw new Error(`auction_items 수정 실패: ${itemError.message}`);
-  }
+      const { error: imageDeleteError } = await supabase
+        .from('auction_images')
+        .delete()
+        .eq('item_id', itemId);
 
-  const { error: priceError } = await supabase
-    .from('auction_prices')
-    .update({
-      start_price: data.prices.start_price,
-      instant_price: data.prices.instant_price,
-      min_bid_unit: data.prices.min_bid_unit,
-      current_price: data.prices.start_price,
-    })
-    .eq('item_id', itemId);
-
-  if (priceError) {
-    throw new Error(`auction_prices 수정 실패: ${priceError.message}`);
-  }
-
-  if (Array.isArray(data.images) && data.images.length > 0 && data.images[0]) {
-    // 1. 기존 이미지 백업
-    const { data: backupImages, error: backupError } = await supabase
-      .from('auction_images')
-      .select('urls')
-      .eq('item_id', itemId);
-
-    if (backupError) {
-      throw new Error(`기존 이미지 백업 실패: ${backupError.message}`);
-    }
-
-    // 2. 기존 이미지 삭제
-    const { error: imageDeleteError } = await supabase
-      .from('auction_images')
-      .delete()
-      .eq('item_id', itemId);
-
-    if (imageDeleteError) {
-      throw new Error(`auction_image 삭제 실패: ${imageDeleteError.message}`);
-    }
-
-    // 3. 새 이미지 삽입
-    const { error: imageInsertError } = await supabase.from('auction_images').insert({
-      item_id: itemId,
-      urls: data.images,
-    });
-
-    if (imageInsertError) {
-      // 4. 삽입 실패 → 백업 이미지로 복원
-      if (backupImages?.length > 0) {
-        await supabase.from('auction_images').insert({
-          item_id: itemId,
-          urls: backupImages[0]?.urls,
-        });
+      if (imageDeleteError) {
+        throw new Error(`auction_image 삭제 실패: ${imageDeleteError.message}`);
       }
 
-      throw new Error(`auction_images 삽입 실패 및 복원됨: ${imageInsertError.message}`);
-    }
-  }
+      const { error: imageInsertError } = await supabase.from('auction_images').insert({
+        item_id: itemId,
+        urls: data.images,
+      });
 
-  return itemId;
+      if (imageInsertError) {
+        throw new Error(`auction_images 삽입 실패: ${imageInsertError.message}`);
+      }
+
+      console.log('✅ 이미지 처리 완료');
+    }
+
+    // 2. auction_items 업데이트
+    const { error: itemError } = await supabase
+      .from('auction_items')
+      .update({
+        title: data.title,
+        description: data.description,
+        category_id: data.category_id,
+        location_id: data.location_id ?? null,
+        end_time: endtime,
+        thumbnail_url: data.images?.[0] || '', // 첫 번째 이미지를 썸네일로 사용
+      })
+      .eq('id', itemId);
+
+    if (itemError) {
+      throw new Error(`auction_items 수정 실패: ${itemError.message}`);
+    }
+
+    // 3. auction_prices 업데이트
+    const { error: priceError } = await supabase
+      .from('auction_prices')
+      .update({
+        start_price: data.prices.start_price,
+        instant_price: data.prices.instant_price,
+        min_bid_unit: data.prices.min_bid_unit,
+        current_price: data.prices.start_price,
+      })
+      .eq('item_id', itemId);
+
+    if (priceError) {
+      throw new Error(`auction_prices 수정 실패: ${priceError.message}`);
+    }
+
+    console.log('✅ 모든 DB 작업 완료');
+
+    return itemId;
+  } catch (error) {
+    console.error('❌ updateAuction 전체 에러:', error);
+    throw error;
+  }
 };
 
 // Delete
