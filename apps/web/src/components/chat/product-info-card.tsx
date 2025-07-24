@@ -9,7 +9,7 @@ import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 import { dummyUrls } from '@/constants/dummy-urls';
 
-const ProductInfoCard = () => {
+const ProductInfoCard = (roomId: { roomId: string }) => {
   const [isDone, setIsDone] = useState(false);
 
   const dummy = {

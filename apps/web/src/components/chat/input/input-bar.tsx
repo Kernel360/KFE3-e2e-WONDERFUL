@@ -13,7 +13,7 @@ import {
 } from '@/components/chat';
 import { Button } from '@/components/ui';
 
-const InputBar = () => {
+const InputBar = ({ roomId }: { roomId: string }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = () => {
@@ -28,7 +28,7 @@ const InputBar = () => {
         <Button color="transparent" size="medium" onClick={handleClick}>
           <Plus className={`duration-600 text-neutral-500 transition-transform ${rotate}`} />
         </Button>
-        <ChatInputForm />
+        <ChatInputForm roomId={roomId} />
       </div>
       {isClicked && (
         <div className="flex justify-around gap-2 px-4 pb-[15%] pt-2">

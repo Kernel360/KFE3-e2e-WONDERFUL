@@ -1,30 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ChatBubble } from '@/components/chat';
 import { ProfileImage } from '@/components/common';
 
-import { dummyUrls } from '@/constants/dummy-urls';
+import { getUserProfile } from '@/lib/actions/profile';
+import { UserProfile } from '@/lib/types';
+import { formatTo12HourTime } from '@/lib/utils/chat';
 
-const ReceivedMessage = () => {
+const ReceivedMessage = ({ message }: { message: Message }) => {
   // TODO: 실시간 데이터 연동해서 상태값에 따라 bubble 달라질 수 있도록 수정하기
   const [isDone, setIsDone] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  const type = 'image';
+  const type = message.type !== 'notice' ? message.type : 'common';
   const color = isDone ? 'disabled' : 'secondary';
-  const content = dummyUrls[0]!;
-  // const content = isDone
-  //   ? DONE_MESSAGE
-  //   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.';
+  const time = formatTo12HourTime(message.sent_at);
 
-  const url = dummyUrls[0]!;
+  const sender = message.type !== 'notice' ? message.sender_id : null;
+
+  useEffect(() => {
+    if (!sender) return;
+    (async () => {
+      const profileData = await getUserProfile(sender);
+      setProfile(profileData);
+    })();
+  }, [sender]);
 
   return (
     <div className="flex justify-start gap-2 py-2">
-      <ProfileImage src={url} alt="content" className="size-10" />
-      <ChatBubble type={type} color={color} content={content} />
-      <p className="flex items-end text-xs font-light text-neutral-500">12:00 AM</p>
+      <ProfileImage src={profile?.profileImg ?? ''} alt="content" className="size-10" />
+      <ChatBubble type={type} color={color} content={message.content} />
+      <p className="flex items-end text-xs font-light text-neutral-500">{time}</p>
     </div>
   );
 };
