@@ -32,12 +32,28 @@ const AuctionHeader = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // 경매 상세 정보 조회
-  const { data: auctionData } = useAuctionDetail(id as string);
+  // 경매 상세 정보 조회 (등록 페이지가 아닐 때만)
+  const shouldFetchAuction = id && id !== 'createAuction';
+  const { data: auctionData } = useAuctionDetail(shouldFetchAuction ? (id as string) : '');
 
   // 현재 사용자가 경매 작성자인지 확인
   const isOwner =
     auctionData?.currentUserId && auctionData?.data?.sellerId === auctionData?.currentUserId;
+
+  // 뒤로가기
+  const handleBackClick = () => {
+    if (pathname.includes('createAuction')) {
+      // 경매 등록 페이지 → 메인 페이지로
+      routes.push('/');
+    } else if (pathname.includes('edit') && id && id !== 'createAuction') {
+      // 경매 수정 페이지 → 해당 경매 상세 페이지로
+      routes.push(`/auction/${id}`);
+    } else {
+      // 기타 경우 → 메인 페이지로
+      routes.push('/');
+    }
+  };
+
   // 삭제 처리 함수
   const handleDelete = async () => {
     try {
@@ -81,9 +97,10 @@ const AuctionHeader = () => {
       <HeaderWrapper
         className={`${id && !pathname.includes('edit') ? 'absolute z-10 text-white' : 'bg-white'}`}
       >
-        <button type="button" onClick={() => routes.back()}>
+        <button type="button" onClick={handleBackClick}>
           <ChevronLeftIcon />
         </button>
+
         {(pathname.includes('edit') || pathname.includes('create')) && (
           <h2 className="text-h4 absolute left-1/2 -translate-x-1/2 font-bold">
             {pathname.includes('edit') ? '경매 상품 수정' : '경매 상품 등록'}
