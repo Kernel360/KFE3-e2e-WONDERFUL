@@ -84,6 +84,13 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
       }
     }
 
+    // 5. ✅ 캐시 무효화 - 경매 목록 관련 모든 페이지
+    revalidatePath('/', 'layout'); // 메인 레이아웃 및 하위 모든 페이지
+    revalidatePath('/'); // 메인 페이지
+    revalidatePath('/auction'); // 경매 목록 페이지들
+
+    console.log('✅ 캐시 무효화 완료');
+
     return itemId;
   } catch (error) {
     console.error('❌ createAuction 전체 에러:', error);
@@ -219,7 +226,12 @@ export const deleteAuction = async (id: string) => {
     console.error('경매 삭제 실패:', error.message);
     throw new Error(`경매 삭제 중 오류가 발생했습니다: ${error.message}`);
   }
+  // ✅ 캐시 무효화 추가
+  revalidatePath('/', 'layout'); // 메인 레이아웃과 하위 모든 페이지 무효화
+  revalidatePath('/'); // 메인 페이지
+  revalidatePath('/auction'); // 경매 관련 페이지들
 
+  console.log('✅ 삭제 후 캐시 무효화 완료');
   return data;
 };
 

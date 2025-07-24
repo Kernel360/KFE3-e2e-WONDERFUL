@@ -98,14 +98,22 @@ const useEditAuction = (itemId: string) => {
         await updateAuction({ ...result.data, images: finalImages }, itemId);
         console.log('✅ 서버액션 완료');
 
+        // 경매 목록 관련 쿼리만 무효화 (상세 쿼리 제외)
+        await queryClient.invalidateQueries({
+          queryKey: ['auctions', 'list'],
+        });
+        // 수정된 경매 상세 정보도 무효화
         await queryClient.invalidateQueries({
           queryKey: ['auctions', 'detail', itemId],
         });
-
+        // 경매 목록만 리패치 (다른 상세 쿼리 제외)
+        await queryClient.refetchQueries({
+          queryKey: ['auctions', 'list'],
+        });
         await queryClient.fetchQuery({
           queryKey: ['auctions', 'detail', itemId],
         });
-        console.log('✅ 최신 데이터 fetch 완료');
+        console.log('✅ 쿼리 캐시 무효화 완료');
 
         console.log('✅ 모든 처리 완료, 페이지 이동...');
         router.push(`/auction/${itemId}`);

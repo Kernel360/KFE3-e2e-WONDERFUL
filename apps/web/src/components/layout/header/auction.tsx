@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { ChevronLeftIcon } from 'lucide-react';
 
 import { ButtonMore } from '@/components/common';
@@ -28,6 +29,7 @@ const AuctionHeader = () => {
   const pathname = usePathname();
   const params = useParams();
   const { id } = params;
+  const queryClient = useQueryClient();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -58,8 +60,34 @@ const AuctionHeader = () => {
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
+
+      console.log('🔄 경매 삭제 시작...');
+
+      // 삭제된 경매 상세 정보 먼저 제거
+      await queryClient.removeQueries({
+        queryKey: ['auctions', 'detail', id],
+      });
+
       await deleteAuction(id as string);
-      routes.push('/');
+      console.log('✅ 서버 삭제 완료');
+
+      // 쿼리 캐시 무효화
+      console.log('🔄 쿼리 캐시 무효화 시작...');
+
+      // 경매 목록 쿼리만 무효화(상세 쿼리 제외)
+      await queryClient.invalidateQueries({
+        queryKey: ['auctions', 'list'],
+      });
+
+      // 경매 목록만 리패치 (상세 쿼리 제외)
+      await queryClient.refetchQueries({
+        queryKey: ['auctions', 'list'],
+      });
+
+      console.log('✅ 쿼리 캐시 무효화 완료');
+
+      // 모든 작업 완료 후 페이지 이동
+      routes.replace('/');
     } catch (error) {
       alert('삭제 중 오류가 발생했습니다.');
       console.error('경매 삭제 오류:', error as Error);
