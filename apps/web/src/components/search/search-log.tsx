@@ -7,7 +7,7 @@ import { AlarmClock, X } from 'lucide-react';
 import { useSearchHistory } from '@/hooks/common/useSearchHistory';
 
 export const SearchLog = () => {
-  const { history, removeSearchQuery, clearAllHistory } = useSearchHistory();
+  const { history, removeSearchQuery, clearAllHistory, addSearchQuery } = useSearchHistory();
   const router = useRouter();
 
   const handleDelete = (id: string) => {
@@ -19,6 +19,7 @@ export const SearchLog = () => {
   };
 
   const handleSearchItemClick = (query: string) => {
+    addSearchQuery(query);
     router.push(`/search?q=${encodeURIComponent(query)}`);
   };
 

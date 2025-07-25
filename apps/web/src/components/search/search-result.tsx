@@ -56,9 +56,7 @@ const SearchResult = ({ query }: SearchResultsProps) => {
     }
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      observer.disconnect();
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
