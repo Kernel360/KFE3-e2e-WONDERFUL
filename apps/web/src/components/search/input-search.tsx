@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { CircleX, Search } from 'lucide-react';
 
+import { useSearchHistory } from '@/hooks/common/useSearchHistory';
+
 interface InputSearchProps {
   id: string;
   onSearch?: (query: string) => void;
@@ -22,6 +24,7 @@ const InputSearch = ({
 }: InputSearchProps) => {
   const [value, setValue] = useState(defaultValue);
   const router = useRouter();
+  const { addSearchQuery } = useSearchHistory();
 
   const handleClear = useCallback(() => {
     setValue('');
@@ -33,36 +36,40 @@ const InputSearch = ({
     }
   }, [onSearch, router]);
 
+  const performSearch = useCallback(
+    (searchQuery: string) => {
+      const trimmedQuery = searchQuery.trim();
+      if (!trimmedQuery) return;
+
+      // 검색 기록에 추가
+      addSearchQuery(trimmedQuery);
+
+      if (onSearch) {
+        onSearch(trimmedQuery);
+      } else {
+        // URL 방식으로 동작
+        router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+      }
+    },
+    [onSearch, router, addSearchQuery]
+  );
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (value.trim()) {
-        if (onSearch) {
-          onSearch(value.trim());
-        } else {
-          // URL 방식으로 동작
-          router.push(`/search?q=${encodeURIComponent(value.trim())}`);
-        }
-      }
+      performSearch(value);
     },
-    [value, onSearch, router]
+    [value, performSearch]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (value.trim()) {
-          if (onSearch) {
-            onSearch(value.trim());
-          } else {
-            // URL 방식으로 동작
-            router.push(`/search?q=${encodeURIComponent(value.trim())}`);
-          }
-        }
+        performSearch(value);
       }
     },
-    [value, onSearch, router]
+    [value, performSearch]
   );
 
   return (
