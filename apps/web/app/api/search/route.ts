@@ -11,12 +11,20 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('q');
     const status = searchParams.get('status'); // 'all', 'active', 'completed'
     const sort = searchParams.get('sort') || 'latest';
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '6');
 
     // 검색어가 없으면 빈 결과 반환
     if (!query || !query.trim()) {
       return NextResponse.json({
         data: [],
-        total: 0,
+        pagination: {
+          page: 1,
+          limit,
+          total: 0,
+          totalPages: 0,
+          hasNext: false,
+        },
         message: '검색어를 입력해주세요.',
       });
     }
@@ -71,6 +79,16 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    // 전체 개수 조회
+    const totalCount = await prisma.auctionItem.count({
+      where: whereConditions,
+    });
+
+    // 페이지네이션 계산
+    const skip = (page - 1) * limit;
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNext = page < totalPages;
+
     // 검색 실행
     const auctions = await prisma.auctionItem.findMany({
       where: whereConditions,
@@ -116,7 +134,8 @@ export async function GET(request: NextRequest) {
         }),
       },
       orderBy,
-      take: 100, // 검색 결과 최대 100개
+      skip,
+      take: limit,
     });
 
     // 응답 데이터 가공
@@ -129,7 +148,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       data: processedAuctions,
-      total: processedAuctions.length,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        totalPages,
+        hasNext,
+      },
       query: searchQuery,
     });
   } catch (error) {

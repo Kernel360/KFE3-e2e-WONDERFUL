@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -25,6 +25,10 @@ const InputSearch = ({
   const [value, setValue] = useState(defaultValue);
   const router = useRouter();
   const { addSearchQuery } = useSearchHistory();
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const handleClear = useCallback(() => {
     setValue('');

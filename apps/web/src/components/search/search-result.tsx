@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
 import { AuctionCard, FilterTab } from '@/components/common';
 
 import { useSearch } from '@/hooks/queries/search';
@@ -23,28 +25,46 @@ const SEARCH_TAB_TO_STATUS_MAP = {
 const SearchResult = ({ query }: SearchResultsProps) => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.search) ?? 'all') as TabId;
   const sortOption = useSortStore((state) => state.sortOption);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // 탭 ID를 API 파라미터로 변환
   const statusParam =
     SEARCH_TAB_TO_STATUS_MAP[selectedTab as keyof typeof SEARCH_TAB_TO_STATUS_MAP] || 'all';
 
   // 검색 API 호출
-  const {
-    data: searchData,
-    isLoading,
-    error,
-    refetch,
-  } = useSearch(
-    query,
-    {
-      status: statusParam as 'all' | 'active' | 'completed',
-      sort: sortOption,
-    },
-    !!query?.trim()
-  );
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useSearch(
+      query,
+      {
+        status: statusParam as 'all' | 'active' | 'completed',
+        sort: sortOption,
+      },
+      !!query?.trim()
+    );
 
-  // API에서 이미 필터링된 데이터를 받으므로 클라이언트 필터링 불필요
-  const filteredData = searchData?.data || [];
+  // 모든 페이지의 데이터를 하나로 합치기
+  const allAuctions = data?.pages.flatMap((page) => page.data) || [];
+
+  // Intersection Observer로 무한 스크롤 구현
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const target = entries[0];
+      if (target?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // 로딩 상태
   if (isLoading) {
@@ -71,7 +91,7 @@ const SearchResult = ({ query }: SearchResultsProps) => {
   }
 
   // 검색 결과 없음
-  if (!searchData?.data || searchData.data.length === 0) {
+  if (allAuctions.length === 0) {
     return (
       <div className="flex flex-col gap-4">
         <FilterTab filterKey={'search'} items={AUCTION_TABS_BASIC} />
@@ -119,25 +139,25 @@ const SearchResult = ({ query }: SearchResultsProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* 상태별 필터 탭 */}
       <FilterTab filterKey={'search'} items={AUCTION_TABS_BASIC} />
-      {/* 검색 결과 개수 표시 */}
-      <div className="text-sm text-neutral-600">
-        '{query}' 검색 결과 {searchData.total}개
-      </div>
       {/* 검색 결과 목록 */}
-      {filteredData.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {filteredData.map((auction: AuctionListItem) => {
-            const auctionItemProps = convertToAuctionItemProps(auction);
-            return <AuctionCard key={auction.id} {...auctionItemProps} />;
-          })}
-        </div>
-      ) : (
-        <div className="flex h-32 items-center justify-center text-neutral-600">
-          해당 조건에 맞는 검색 결과가 없습니다.
-        </div>
-      )}
+      <div className="flex flex-col gap-3">
+        {allAuctions.map((auction: AuctionListItem) => {
+          const auctionItemProps = convertToAuctionItemProps(auction);
+          return <AuctionCard key={auction.id} {...auctionItemProps} />;
+        })}
+      </div>
+
+      {/* 무한 스크롤 트리거 & 로딩 표시 */}
+      <div ref={loadMoreRef} className="flex justify-center py-4">
+        {isFetchingNextPage ? (
+          <div className="text-neutral-600">불러오는 중...</div>
+        ) : hasNextPage ? (
+          <div className="text-neutral-400">스크롤해서 더 보기</div>
+        ) : allAuctions.length > 0 ? (
+          <div className="text-neutral-400">마지막 게시글</div>
+        ) : null}
+      </div>
     </div>
   );
 };

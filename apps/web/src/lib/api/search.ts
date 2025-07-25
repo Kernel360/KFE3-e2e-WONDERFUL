@@ -1,5 +1,3 @@
-import { AuctionListResponse } from '@/types/auction-prisma';
-
 import apiClient from './client';
 
 export interface SearchFilters {
@@ -7,17 +5,30 @@ export interface SearchFilters {
   sort?: string;
 }
 
-export interface SearchResponse extends AuctionListResponse {
+export interface SearchPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+export interface SearchResponse {
+  data: any[];
+  pagination: SearchPagination;
   query: string;
 }
 
 // 경매 검색
 export const searchAuctions = async (
   query: string,
+  page: number = 1,
   filters?: SearchFilters
 ): Promise<SearchResponse> => {
   const params: Record<string, any> = {
     q: query,
+    page: page.toString(),
+    limit: '6',
   };
 
   if (filters?.status && filters.status !== 'all') {

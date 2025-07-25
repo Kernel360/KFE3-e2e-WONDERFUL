@@ -8,7 +8,7 @@ export const useFilterStore = create<FilterState>((set) => ({
     auctionBasic: 'all',
     auctionExtended: 'all',
     chatStatus: 'all',
-    search: '',
+    search: 'all',
   },
   setSelectedItem: (filterKey, itemId) =>
     set((state) => ({
