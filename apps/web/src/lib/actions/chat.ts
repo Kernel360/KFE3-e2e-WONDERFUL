@@ -52,7 +52,9 @@ export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProp
       throw new Error(`채팅방 생성 실패: ${createError.message}`);
     }
 
-    return newRoom.id;
+    const data = { roomId: newRoom.id, auctionId: auctionId };
+
+    return data;
   } catch (error) {
     console.error('createChatRoom 전체 에러:', error);
     throw error;

@@ -18,8 +18,9 @@ const ButtonChat = ({ auctionId, sellerId }: ButtonChatProps) => {
 
   const handleChatClick = async () => {
     try {
-      const roomId = await createChatRoom({ auctionId, sellerId });
-      router.push(`/chat/${roomId}`);
+      const data = await createChatRoom({ auctionId, sellerId });
+      router.push(`/chat/${data.roomId}?auctionId=${data.auctionId}`);
+      console.log(data.roomId, data.auctionId);
     } catch {
       alert('잠시 후 다시 시도해주세요.');
     }
