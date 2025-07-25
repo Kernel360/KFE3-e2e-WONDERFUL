@@ -2,14 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-export interface SearchHistoryItem {
-  id: string;
-  query: string;
-  timestamp: number;
-}
-
-const STORAGE_KEY = 'auction_search_history';
-const MAX_HISTORY = 10; // 최대 저장 개수
+import { SEARCH_HISTORY_STORAGE_KEY, SEARCH_HISTORY_MAX_SIZE } from '@/lib/constants/search';
+import { SearchHistoryItem } from '@/lib/types/search';
 
 export const useSearchHistory = () => {
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
@@ -22,7 +16,7 @@ export const useSearchHistory = () => {
   // 로컬스토리지에서 검색 기록 불러오기
   const loadHistory = () => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(SEARCH_HISTORY_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as SearchHistoryItem[];
         // 최신순으로 정렬
@@ -38,7 +32,7 @@ export const useSearchHistory = () => {
   // 로컬스토리지에 검색 기록 저장
   const saveHistory = (newHistory: SearchHistoryItem[]) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory));
+      localStorage.setItem(SEARCH_HISTORY_STORAGE_KEY, JSON.stringify(newHistory));
       setHistory(newHistory);
     } catch (error) {
       console.error('검색 기록 저장 실패:', error);
@@ -65,7 +59,7 @@ export const useSearchHistory = () => {
     };
 
     // 최대 개수 제한하여 새 배열 생성
-    const newHistory = [newItem, ...filteredHistory].slice(0, MAX_HISTORY);
+    const newHistory = [newItem, ...filteredHistory].slice(0, SEARCH_HISTORY_MAX_SIZE);
 
     saveHistory(newHistory);
   };
@@ -79,7 +73,7 @@ export const useSearchHistory = () => {
   // 모든 검색 기록 삭제
   const clearAllHistory = () => {
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(SEARCH_HISTORY_STORAGE_KEY);
       setHistory([]);
     } catch (error) {
       console.error('검색 기록 전체 삭제 실패:', error);

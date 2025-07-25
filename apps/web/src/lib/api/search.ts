@@ -1,25 +1,9 @@
+import { SEARCH_PAGE_SIZE } from '@/lib/constants/search';
+import { SearchFilters, SearchResponse } from '@/lib/types/search';
+
 import apiClient from './client';
 
-export interface SearchFilters {
-  status?: 'all' | 'active' | 'completed';
-  sort?: string;
-}
-
-export interface SearchPagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-}
-
-export interface SearchResponse {
-  data: any[];
-  pagination: SearchPagination;
-  query: string;
-}
-
-// 경매 검색
+// 경매 검색 (페이지네이션)
 export const searchAuctions = async (
   query: string,
   page: number = 1,
@@ -28,7 +12,7 @@ export const searchAuctions = async (
   const params: Record<string, any> = {
     q: query,
     page: page.toString(),
-    limit: '6',
+    limit: SEARCH_PAGE_SIZE.toString(),
   };
 
   if (filters?.status && filters.status !== 'all') {

@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { searchAuctions, SearchFilters } from '@/lib/api/search';
+import { searchAuctions } from '@/lib/api/search';
+import { SearchFilters } from '@/lib/types/search';
 
 import { searchKeys } from './keys';
 
-// 검색 훅
+//검색 훅
 export const useSearch = (query: string, filters?: SearchFilters, enabled: boolean = true) => {
   return useInfiniteQuery({
     queryKey: searchKeys.search(query, filters),

@@ -1,4 +1,4 @@
-import { SearchFilters } from '@/lib/api/search';
+import { SearchFilters } from '@/lib/types/search';
 
 export const searchKeys = {
   all: ['search'] as const,

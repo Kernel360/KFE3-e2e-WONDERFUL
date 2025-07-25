@@ -11,7 +11,7 @@ const SearchHeader = () => {
 
   return (
     <HeaderWrapper className="border-b-1 border-b-neutral-100 bg-white">
-      <InputSearch id="search" defaultValue={query} placeholder="경매 상품을 검색해보세요" />
+      <InputSearch id="search" defaultValue={query} />
     </HeaderWrapper>
   );
 };

@@ -6,21 +6,17 @@ import { AuctionCard, FilterTab } from '@/components/common';
 
 import { useSearch } from '@/hooks/queries/search';
 
+import { SEARCH_TAB_TO_STATUS_MAP } from '@/lib/constants/search';
 import { AUCTION_TABS_BASIC } from '@/lib/constants/tabs';
 import { AuctionListItem } from '@/lib/types/auction-prisma';
 import { TabId } from '@/lib/types/filter';
+import { SearchTabStatus } from '@/lib/types/search';
 import { convertToAuctionItemProps } from '@/lib/utils/auction';
 import { useFilterStore, useSortStore } from '@/lib/zustand/store';
+
 interface SearchResultsProps {
   query: string;
 }
-
-// 검색 탭 ID를 API 상태 파라미터로 매핑
-const SEARCH_TAB_TO_STATUS_MAP = {
-  all: 'all',
-  ongoing: 'active',
-  completed: 'completed',
-} as const;
 
 const SearchResult = ({ query }: SearchResultsProps) => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.search) ?? 'all') as TabId;
@@ -36,7 +32,7 @@ const SearchResult = ({ query }: SearchResultsProps) => {
     useSearch(
       query,
       {
-        status: statusParam as 'all' | 'active' | 'completed',
+        status: statusParam as SearchTabStatus,
         sort: sortOption,
       },
       !!query?.trim()
