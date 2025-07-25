@@ -20,6 +20,10 @@ const bidInputWrapper = tv({
   },
 });
 
+interface ExtendedBidInputProps extends BidInputProps {
+  validationError?: string;
+}
+
 const BidFormInput = ({
   auctionId,
   currentPrice,
@@ -27,7 +31,8 @@ const BidFormInput = ({
   bidPrice,
   // isBidInputOpen,
   onChange,
-}: BidInputProps) => {
+  validationError = '',
+}: ExtendedBidInputProps) => {
   const { data } = useAuctionDetail(auctionId);
   const minBidUnit = data?.data.auctionPrice?.minBidUnit || 1000;
 
@@ -61,9 +66,13 @@ const BidFormInput = ({
         placeholder={placeholder}
         onChange={handleChange}
         minBidUnit={minBidUnit}
+        className={validationError ? 'border-red-500' : ''}
       >
         <UserRound />
       </InputIcon>
+
+      {/* 검증 에러 메시지 */}
+      {validationError && <div className="mt-1 text-sm text-red-500">{validationError}</div>}
 
       <div className="grid grid-cols-4 gap-2 py-2">
         {increaseButtons.map(({ label, amount }) => (

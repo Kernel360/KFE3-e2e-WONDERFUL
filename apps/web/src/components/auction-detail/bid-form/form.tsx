@@ -6,14 +6,20 @@ import { BidFormBottom, BidFormInput, ButtonDirectDeal } from '@/components/auct
 
 import useCountdown from '@/hooks/common/useCountdown';
 import { useBidMutation } from '@/hooks/mutations/bids';
+import { useAuctionDetail } from '@/hooks/queries/auction';
 
 import { cn } from '@/lib/cn';
+import { validateBidPrice } from '@/lib/utils/bid-validation';
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 import { BidFormProps } from '@/types/bid';
 
 const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps) => {
   const [bidPrice, setBidPrice] = useState<number | null>(null);
+  const [validationError, setValidationError] = useState<string>('');
+
+  const { data } = useAuctionDetail(auctionId);
+  const minBidUnit = data?.data.auctionPrice?.minBidUnit || 1000;
 
   // 입찰 뮤테이션
   const bidMutation = useBidMutation();
@@ -21,6 +27,19 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
   // 경매 종료 시간까지의 카운트다운
   const { isExpired } = useCountdown(new Date(endTime));
   const directPrice = formatCurrencyWithUnit(currentPrice * 1.2); // 20% 증가한 가격
+
+  // 입찰 가격 변경 시 검증
+  const handleBidPriceChange = (price: number | null) => {
+    setBidPrice(price);
+
+    // 실시간 검증
+    if (price !== null) {
+      const validation = validateBidPrice(price, currentPrice, minBidUnit);
+      setValidationError(validation.isValid ? '' : validation.message);
+    } else {
+      setValidationError('');
+    }
+  };
 
   const handleBidClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +55,13 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
       return;
     }
 
+    // 클라이언트 검증
+    const validation = validateBidPrice(bidPrice, currentPrice, minBidUnit || 1000);
+    if (!validation.isValid) {
+      setValidationError(validation.message);
+      return;
+    }
+
     try {
       // 현재 스크롤 위치 저장
       const currentScrollY = window.scrollY;
@@ -46,6 +72,10 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         bidPrice,
       });
 
+      // 성공 시 에러 메시지 초기화
+      setValidationError('');
+      setBidPrice(null);
+
       // 스크롤만 처리
       setTimeout(() => {
         window.scrollTo(0, currentScrollY);
@@ -55,7 +85,8 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         });
       }, 100);
     } catch (error) {
-      alert(error instanceof Error ? error.message : '입찰 중 오류가 발생했습니다.');
+      const errorMessage = error instanceof Error ? error.message : '입찰 중 오류가 발생했습니다.';
+      setValidationError(errorMessage);
     }
   };
 
@@ -73,9 +104,10 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         <BidFormInput
           auctionId={auctionId}
           currentPrice={currentPrice}
-          minUnit={1000}
+          minUnit={minBidUnit}
           bidPrice={bidPrice}
-          onChange={setBidPrice}
+          onChange={handleBidPriceChange}
+          validationError={validationError}
         />
       </div>
 
@@ -84,6 +116,7 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         currentPrice={currentPrice}
         endTime={endTime}
         isExpired={isExpired}
+        isValid={!validationError && bidPrice !== null}
       />
     </form>
   );

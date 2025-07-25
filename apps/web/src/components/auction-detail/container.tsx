@@ -117,6 +117,7 @@ const AuctionDetailContainer = () => {
       <aside className="sticky bottom-0 z-50 w-full">
         <BidForm
           auctionId={auction.id}
+          minBidUnit={item.minBidUnit}
           currentPrice={item.currentPrice}
           endTime={item.endTime}
           bidTableRef={bidTableRef}
