@@ -20,7 +20,6 @@ const InputSearch = ({
   onSearch,
   placeholder = '검색어를 입력하세요.',
   defaultValue = '',
-  ...props
 }: InputSearchProps) => {
   const [value, setValue] = useState(defaultValue);
   const router = useRouter();
