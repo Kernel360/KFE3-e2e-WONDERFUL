@@ -9,8 +9,8 @@ import { useSearch } from '@/hooks/queries/search';
 import { AUCTION_TABS_BASIC } from '@/lib/constants/tabs';
 import { AuctionListItem } from '@/lib/types/auction-prisma';
 import { TabId } from '@/lib/types/filter';
+import { convertToAuctionItemProps } from '@/lib/utils/auction';
 import { useFilterStore, useSortStore } from '@/lib/zustand/store';
-
 interface SearchResultsProps {
   query: string;
 }
@@ -115,27 +115,6 @@ const SearchResult = ({ query }: SearchResultsProps) => {
       </div>
     );
   }
-
-  // AuctionItemProps 변환 함수
-  const convertToAuctionItemProps = (auction: AuctionListItem) => {
-    const now = new Date();
-    const endTime = new Date(auction.endTime);
-    const isAuctionActive = auction.status === 'ACTIVE' && now < endTime;
-    const auctionStatus = isAuctionActive ? '경매중' : '경매종료';
-
-    return {
-      id: auction.id,
-      title: auction.title,
-      status: auctionStatus as '경매중' | '경매종료',
-      originalPrice: auction.auctionPrice?.startPrice || 0,
-      currentPrice: auction.auctionPrice?.currentPrice || 0,
-      deadline:
-        auction.endTime instanceof Date
-          ? auction.endTime.toISOString()
-          : auction.endTime || new Date().toISOString(),
-      thumbnailUrl: auction.thumbnailUrl || '',
-    };
-  };
 
   return (
     <div className="flex flex-col gap-4">
