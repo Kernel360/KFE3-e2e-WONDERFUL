@@ -31,6 +31,7 @@ export interface BidFormProps extends BidBaseProps {
 }
 
 export interface BidInputProps {
+  auctionId: string;
   currentPrice: number;
   minUnit: number;
   bidPrice: number | null;

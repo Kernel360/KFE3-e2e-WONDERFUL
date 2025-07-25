@@ -4,6 +4,8 @@ import { tv } from 'tailwind-variants';
 import { InputIcon } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
+import { useAuctionDetail } from '@/hooks/queries/auction';
+
 import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 import { BidInputProps } from '@/types/bid';
@@ -19,12 +21,16 @@ const bidInputWrapper = tv({
 });
 
 const BidFormInput = ({
+  auctionId,
   currentPrice,
-  minUnit,
+  minUnit, // 최소 입찰 단위
   bidPrice,
   // isBidInputOpen,
   onChange,
 }: BidInputProps) => {
+  const { data } = useAuctionDetail(auctionId);
+  const minBidUnit = data?.data.auctionPrice?.minBidUnit || 1000;
+
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +60,7 @@ const BidFormInput = ({
         label="희망입찰가"
         placeholder={placeholder}
         onChange={handleChange}
+        minBidUnit={minBidUnit}
       >
         <UserRound />
       </InputIcon>

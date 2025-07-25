@@ -71,6 +71,7 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
         {!isExpired && <ButtonDirectDeal directPrice={directPrice} />}
 
         <BidFormInput
+          auctionId={auctionId}
           currentPrice={currentPrice}
           minUnit={1000}
           bidPrice={bidPrice}
