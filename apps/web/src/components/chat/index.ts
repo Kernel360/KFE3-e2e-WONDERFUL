@@ -14,5 +14,3 @@ export { default as ChatContainer } from './messages/chat-container';
 export { default as ChatListCard } from './chat-list-card';
 export { default as TestChatRoom } from './test-chat-room';
 export { default as ProductInfoCard } from './product-info-card';
-
-export { default as ChatRoom } from './chat-room';

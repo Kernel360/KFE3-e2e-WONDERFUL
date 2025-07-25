@@ -23,7 +23,7 @@ interface SelectBoxProps {
 
 const SelectBox = ({
   options,
-  placeholder = 'Select an option',
+  placeholder = '선택해 주세요.',
   className,
   value,
   name,

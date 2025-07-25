@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants';
 import Thumbnail from '@/components/ui/thumbnail';
 
 const style = tv({
-  base: 'inline-block p-3 rounded-xl text-sm',
+  base: 'inline-block p-3 rounded-xl text-sm break-words',
   variants: {
     color: {
       secondary: 'bg-primary-50/70 text-primary-950 max-w-3/5',
@@ -11,20 +11,20 @@ const style = tv({
       disabled: 'bg-neutral-100 text-primary-950',
     },
     type: {
-      text: '',
+      common: '',
       image: 'p-0 rounded-2xl overflow-hidden bg-neutral-100 w-[60%]',
     },
   },
   defaultVariants: {
     color: 'primary',
-    type: 'text',
+    type: 'common',
   },
 });
 
 interface ChatBubbleProps {
   color: 'primary' | 'secondary' | 'disabled';
   content: string;
-  type?: 'text' | 'image';
+  type: 'common' | 'image';
 }
 
 const ChatBubble = ({ color, content, type }: ChatBubbleProps) => {
