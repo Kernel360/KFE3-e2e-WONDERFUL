@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { AuctionCard } from '@/components/common';
 
@@ -52,10 +52,6 @@ const AuctionItemList = ({
       selectedStatuses.includes(auction.status as AuctionStatus)
     );
   }, [auctionsData?.data, selectedStatuses]);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   const convertToAuctionItemProps = (auction: AuctionListItem): AuctionItemProps => {
     // 기존 코드 동일

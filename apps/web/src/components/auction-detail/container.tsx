@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
 import {
   BidForm,
   BidTable,
+  ButtonChat,
   ItemDescription,
   ItemImages,
   ItemSummary,
-  ButtonChat,
 } from '@/components/auction-detail';
 import { ProfileCard } from '@/components/common';
 
@@ -32,10 +32,6 @@ const AuctionDetailContainer = () => {
     error,
     refetch: refetchAuction,
   } = useAuctionDetail(id as string);
-
-  useEffect(() => {
-    refetchAuction();
-  }, [refetchAuction]);
 
   // 초기 입찰 데이터 로드 추가
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
@@ -103,8 +99,6 @@ const AuctionDetailContainer = () => {
 
   return (
     <>
-      {/* // 개발 환경에서만 표시 */}
-      {/* {process.env.NODE_ENV === 'development' && <TimezoneTest />} */}
       <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
         <ItemImages urls={images} />
         <ProfileCard

@@ -54,12 +54,6 @@ export interface AttachImageInputProps {
   id: string;
 }
 
-//경매 폼 select 타입
-export interface AuctionFormSelectProps {
-  name: string;
-  className: string;
-}
-
 //경매 폼 errormessage 타입
 export interface FormErrorMessageType {
   [key: string]: string;

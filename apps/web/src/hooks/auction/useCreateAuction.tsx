@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { addAuctionImages, createAuction, updateThumbnailOnly } from '@/lib/actions/auction';
 import { CreateAuctionFormData, createAuctionSchema } from '@/lib/schema/auction.schema';
 import { createClient } from '@/lib/supabase/client';
@@ -15,6 +17,7 @@ const useCreateAuction = () => {
   const [isPending, setIsPending] = useState(false);
 
   const router = useRouter(); // Next.js router 추가
+  const queryClient = useQueryClient();
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -112,6 +115,21 @@ const useCreateAuction = () => {
           await updateThumbnailOnly(successUrls[0] || '', auctionId);
         }
 
+        // ✅ 4. 쿼리 캐시 무효화 (페이지 이동 전에 실행)
+        console.log('🔄 쿼리 캐시 무효화 시작...');
+
+        // 경매 목록 관련 쿼리만 무효화 (상세 쿼리 제외)
+        await queryClient.invalidateQueries({
+          queryKey: ['auctions', 'list'],
+        });
+
+        // 경매 목록만 리패치 (상세 쿼리 제외)
+        await queryClient.refetchQueries({
+          queryKey: ['auctions', 'list'],
+        });
+        console.log('✅ 쿼리 캐시 무효화 완료');
+
+        // 5. 페이지 이동
         router.push(`/auction/${auctionId}`);
       } catch (error) {
         // catch 블록 추가
