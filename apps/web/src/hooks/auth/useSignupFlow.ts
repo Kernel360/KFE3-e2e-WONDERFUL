@@ -15,11 +15,11 @@ export const useSignupFlow = () => {
   const goToDone = () => setCurrentStep('done');
 
   const handleSaveLocation = () => {
-    console.log('위치 저장 완료');
     goToDone();
   };
 
   const handleStartActivity = () => {
+    document.cookie = 'signup-flow=; path=/; max-age=0';
     router.push('/');
   };
 

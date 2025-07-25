@@ -86,6 +86,15 @@ export async function updateSession(request: NextRequest) {
       console.log(`🔄 [Authenticated Redirect] ${pathname} → ${destination}`);
     }
 
+    // 회원가입 페이지의 경우 플로우 상태 확인
+    if (pathname.startsWith('/auth/signup')) {
+      const signupFlowCookie = request.cookies.get('signup-flow')?.value;
+
+      if (signupFlowCookie === 'active') {
+        return supabaseResponse;
+      }
+    }
+
     const redirectResponse = NextResponse.redirect(new URL(destination, request.url));
 
     //쿠키 복사
