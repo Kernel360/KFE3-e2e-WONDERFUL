@@ -30,6 +30,7 @@ model User {
   locations       Location[]
   sales           Sale[]
   notifications   UserNotification[]
+  addresses       Address[]
 
   @@map("users")
 }
@@ -45,6 +46,24 @@ model Location {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("locations")
+}
+
+model Address {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @db.Uuid
+  label       String?  
+  name        String?  
+  phone       String?  
+  address1    String   
+  address2    String?  
+  postalCode  String?  
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
 }
 
 model Alert {
