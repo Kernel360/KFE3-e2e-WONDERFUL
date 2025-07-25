@@ -4,14 +4,18 @@ interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
   id: string;
   label?: string;
   children: React.ReactNode;
+  minBidUnit?: number; // 입찰 단위
 }
 
-const InputIcon = ({ id, label, children, ...props }: InputIconProps) => {
+const InputIcon = ({ id, label, children, minBidUnit, ...props }: InputIconProps) => {
   return (
     <div className="flex w-full flex-col items-start justify-center gap-2">
       {label && (
         <label className="font-medium" htmlFor={id}>
-          {label}
+          {label}{' '}
+          <span className="text-xs text-neutral-500">
+            (입찰 단위: <strong>{minBidUnit || 1000}</strong>원)
+          </span>
         </label>
       )}
       <div className="shadow-xs flex h-11 w-full min-w-0 items-center justify-between rounded-md border bg-transparent px-3 py-1 text-base text-neutral-400 transition-[color,box-shadow] focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm">
