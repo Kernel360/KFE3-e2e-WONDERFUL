@@ -6,10 +6,10 @@ import { AuctionCard } from '@/components/common';
 
 import { useAuctions } from '@/hooks/queries/auction';
 
-import { AuctionListItem, SortOption } from '@/lib/types/auction-prisma';
+import { SortOption } from '@/lib/types/auction-prisma';
+import { convertToAuctionItemProps } from '@/lib/utils/auction';
 import { useFilterStore, useLocationStore } from '@/lib/zustand/store';
 
-import { AuctionItemProps } from '@/types/auction';
 import { AuctionStatus } from '@/types/filter';
 
 interface AuctionItemListProps {
@@ -52,27 +52,6 @@ const AuctionItemList = ({
       selectedStatuses.includes(auction.status as AuctionStatus)
     );
   }, [auctionsData?.data, selectedStatuses]);
-
-  const convertToAuctionItemProps = (auction: AuctionListItem): AuctionItemProps => {
-    // 기존 코드 동일
-    const now = new Date();
-    const endTime = new Date(auction.endTime);
-    const isAuctionActive = auction.status === 'ACTIVE' && now < endTime;
-    const auctionStatus = isAuctionActive ? '경매중' : '경매종료';
-
-    return {
-      id: auction.id,
-      title: auction.title,
-      status: auctionStatus,
-      originalPrice: auction.auctionPrice?.startPrice || 0,
-      currentPrice: auction.auctionPrice?.currentPrice || 0,
-      deadline:
-        auction.endTime instanceof Date
-          ? auction.endTime.toISOString()
-          : auction.endTime || new Date().toISOString(),
-      thumbnailUrl: auction.thumbnailUrl || '',
-    };
-  };
 
   if (isLoading) {
     return (

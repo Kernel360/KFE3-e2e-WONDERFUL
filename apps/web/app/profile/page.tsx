@@ -8,6 +8,7 @@ import { Button } from '@/components/ui';
 
 import { getMyProfile } from '@/lib/actions/profile';
 
+export const dynamic = 'force-dynamic';
 const ProfilePage = async () => {
   try {
     const profile = await getMyProfile();
