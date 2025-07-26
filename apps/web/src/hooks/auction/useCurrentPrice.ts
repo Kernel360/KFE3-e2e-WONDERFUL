@@ -18,7 +18,7 @@ export const useCurrentPrice = (auctionId: string, fallbackPrice: number) => {
   } = useQuery<BidListResponse>({
     queryKey,
     queryFn: async () => {
-      const res = await fetch(`/api/bids?auctionId=${auctionId}&limits=1`);
+      const res = await fetch(`/api/bids?auctionId=${auctionId}&limit=1`);
       if (!res.ok) throw new Error('Failed to fetch bids');
       return (await res.json()) as BidListResponse;
     },
