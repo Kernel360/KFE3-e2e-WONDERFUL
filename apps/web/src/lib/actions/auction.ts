@@ -5,17 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { convertHoursToTimestamp } from '@/lib/utils/date';
 
-import { AuctionFormData } from '@/types/auction';
+import { AuctionFormData, AuctionPriceUpdate } from '@/types/auction';
 
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
   try {
     const supabase = await createClient();
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
 
     // 1. 유저의 기본 위치 조회
     const { data: primaryLocation, error: locationError } = await supabase
@@ -61,9 +56,11 @@ export const createAuction = async (data: AuctionFormData, userId: string) => {
     const { error: priceError } = await supabase.from('auction_prices').insert({
       item_id: itemId,
       start_price: data.prices.start_price,
-      instant_price: data.prices.instant_price,
+      instant_price: data.prices.instant_price || null, // 즉시거래가 추가
       min_bid_unit: data.prices.min_bid_unit,
       current_price: data.prices.start_price,
+      is_instant_buy_enabled: data.is_instant_buy_enabled, // 즉시거래 활성화 여부
+      is_extended_auction: data.is_extended_auction || false, // 연장경매 여부
     });
 
     if (priceError) {
@@ -179,9 +176,11 @@ export const updateAuction = async (data: AuctionFormData, itemId: string) => {
     }
 
     // 6. auction_prices 안전한 업데이트
-    const priceUpdateData: any = {
+    const priceUpdateData: AuctionPriceUpdate = {
       instant_price: data.prices.instant_price,
       min_bid_unit: data.prices.min_bid_unit,
+      is_instant_buy_enabled: data.is_instant_buy_enabled,
+      is_extended_auction: data.is_extended_auction || false,
     };
 
     // 입찰이 없는 경우에만 start_price와 current_price 업데이트
