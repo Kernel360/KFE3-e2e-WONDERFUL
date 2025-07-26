@@ -17,7 +17,6 @@ export interface ChatRoom {
   id: string;
   auctionId: string;
   createdAt: string;
-  lastMessageAt: string | null;
   isDeleted: boolean;
   myRole: 'seller' | 'buyer';
   otherUser: {
