@@ -2,11 +2,10 @@ export interface Address {
   id: string;
   userId: string;
   label?: string | null;
-  name?: string | null;
+  userName?: string | null;
   phone?: string | null;
-  address1: string;
-  address2?: string | null;
-  postalCode?: string | null;
+  address: string;
+  addressDetail?: string | null;
   isPrimary: boolean;
   createdAt: string;
   updatedAt: string;
@@ -14,11 +13,10 @@ export interface Address {
 
 export interface CreateAddressRequest {
   label?: string;
-  name?: string;
+  userName?: string;
   phone?: string;
-  address1: string;
-  address2?: string;
-  postalCode?: string;
+  address: string;
+  addressDetail?: string;
   isPrimary?: boolean;
 }
 
