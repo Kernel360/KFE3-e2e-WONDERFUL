@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/client';
-import { getCurrentUser } from '@/lib/utils/auth';
+import { getCurrentUser } from '@/lib/utils/auth-server';
 
 import { CreateChatRoomProps } from '@/types/chat';
 
