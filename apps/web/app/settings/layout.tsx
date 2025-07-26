@@ -1,6 +1,6 @@
 import { SettingsHeader, Container } from '@/components/layout';
 
-const SettiongsLayout = ({ children }: { children: React.ReactNode }) => {
+const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <SettingsHeader />
@@ -9,4 +9,4 @@ const SettiongsLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default SettiongsLayout;
+export default SettingsLayout;
