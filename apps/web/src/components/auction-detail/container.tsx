@@ -15,6 +15,7 @@ import {
 import { ProfileCard } from '@/components/common';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
+import { useCurrentUser } from '@/hooks/queries/auth';
 import { useBidsByAuction } from '@/hooks/queries/bids';
 
 import { cn } from '@/lib/cn';
@@ -25,6 +26,9 @@ const AuctionDetailContainer = () => {
   const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
+
+  // 현재 사용자 정보 훅 사용
+  const { data: currentUser } = useCurrentUser();
 
   const {
     data: auctionDetailData,
@@ -122,6 +126,7 @@ const AuctionDetailContainer = () => {
           endTime={item.endTime}
           bidTableRef={bidTableRef}
           isExpired={false}
+          currentUserId={currentUser?.id} // 현재 사용자 ID 전달
         />
       </aside>
     </>

@@ -10,13 +10,30 @@ interface ButtonDirectDealProps {
   directPrice: string;
   auctionId: string;
   sellerId: string;
+  currentUserId?: string;
 }
 
-const ButtonDirectDeal = ({ directPrice, auctionId, sellerId }: ButtonDirectDealProps) => {
+const ButtonDirectDeal = ({
+  directPrice,
+  auctionId,
+  sellerId,
+  currentUserId,
+}: ButtonDirectDealProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // 본인 경매인지 확인
+  const isOwnAuction = currentUserId === sellerId;
+
   const handleDirectDeal = async () => {
+    // 본인 경매인 경우 안내 메시지
+    if (isOwnAuction) {
+      alert(
+        '본인의 경매 상품은 즉시거래를 할 수 없습니다.\n다른 사용자가 즉시거래를 진행할 수 있습니다.'
+      );
+      return;
+    }
+
     try {
       setIsLoading(true);
 
@@ -46,7 +63,7 @@ const ButtonDirectDeal = ({ directPrice, auctionId, sellerId }: ButtonDirectDeal
   return (
     <button
       type="button"
-      className="bg-primary-50 mb-1 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 pl-4 pr-2"
+      className={`bg-primary-50 mb-1 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 pl-4 pr-2 ${isOwnAuction ? 'opacity-60' : ''}`}
       onClick={handleDirectDeal}
       disabled={isLoading}
     >
