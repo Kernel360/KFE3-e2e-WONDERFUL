@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { prisma } from '@repo/db';
 
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
 
@@ -67,17 +67,14 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: {
-        lastMessageAt: 'desc', // 최근 메시지 순
-      },
     });
 
     const optimizedChatRooms = chatRooms.map((room) => {
       // seller, buyer는 계산용으로만 사용하고 최종 응답에서 제외
-      const { sellerId, buyerId, seller, buyer, ...cleanRoom } = room;
+      const { sellerId, seller, buyer, ...cleanRoom } = room;
 
       return {
-        ...cleanRoom, // id, auctionId, createdAt, lastMessageAt, isDeleted, auction, messages
+        ...cleanRoom, // id, auctionId, createdAt, isDeleted, auction, messages
         myRole: user.id === sellerId ? 'seller' : 'buyer',
         otherUser: user.id === sellerId ? buyer : seller, // 대화 상대방 데이터
       };
