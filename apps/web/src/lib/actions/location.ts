@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/utils/auth';
+import { getCurrentUser } from '@/lib/utils/auth-server';
 
 import type { Location } from '@/types/location';
 
