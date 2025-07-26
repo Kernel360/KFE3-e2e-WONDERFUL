@@ -115,7 +115,7 @@ const HomeFilterSelect = () => {
         <PopoverContent align="start" className="w-34">
           <ul className="space-y-3">
             <li>
-              <button>{getDisplayName(selectedLocation.locationName)}</button>
+              <span>{getDisplayName(selectedLocation.locationName)}</span>
             </li>
             <li>
               <Link href="/location">내 동네 설정</Link>
