@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Map, X } from 'lucide-react';
 
@@ -28,8 +28,19 @@ const SearchLocationPicker = ({
   const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-
+  const [isSignupFlow, setIsSignupFlow] = useState(false);
   const { error, retry } = useGeolocation();
+
+  useEffect(() => {
+    const checkSignupFlow = () => {
+      if (typeof document !== 'undefined') {
+        const hasSignupFlowCookie = document.cookie.includes('signup-flow=active');
+        setIsSignupFlow(hasSignupFlowCookie);
+      }
+    };
+
+    checkSignupFlow();
+  }, []);
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -58,12 +69,16 @@ const SearchLocationPicker = ({
     <div className="flex h-full flex-col bg-white">
       {/* 헤더 */}
       <div className="flex items-center justify-between border-b border-neutral-200 p-4">
-        <button
-          onClick={onClose}
-          className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        {!isSignupFlow ? (
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        ) : (
+          <div className="w-5"></div>
+        )}
         <h2 className="text-lg font-semibold">위치 정보 설정</h2>
         <div className="w-8"></div>
       </div>

@@ -135,7 +135,7 @@ const HomeFilterSelect = () => {
           })}
           <li>
             {/* /위치설정 페이지로 이동 */}
-            <Link href={'/'}>내 동네 설정</Link>
+            <Link href={'/location'}>내 동네 설정</Link>
           </li>
         </ul>
       </PopoverContent>

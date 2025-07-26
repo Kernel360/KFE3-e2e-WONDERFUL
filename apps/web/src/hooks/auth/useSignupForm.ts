@@ -57,6 +57,8 @@ export const useSignupForm = () => {
     }
 
     return withSubmission(async () => {
+      // 회원가입 플로우 시작 표시 (1시간 유효)
+      document.cookie = 'signup-flow=active; path=/; max-age=3600; SameSite=Lax';
       // Server Action 호출
       const result = await signUp(submitFormData);
 
@@ -65,6 +67,8 @@ export const useSignupForm = () => {
         console.log('회원가입 성공:', result.message);
         return { success: true, result };
       } else {
+        // 실패시 플로우 상태 제거
+        document.cookie = 'signup-flow=; path=/; max-age=0';
         const serverErrors: Record<string, string> = {};
 
         if (result.field === 'email') {
