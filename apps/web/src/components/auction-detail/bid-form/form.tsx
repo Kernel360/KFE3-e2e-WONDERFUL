@@ -99,7 +99,16 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
           'duration-600 relative rounded-t-sm bg-white px-5 pt-4 shadow-[var(--shadow-nav)] transition-all'
         )}
       >
-        {!isExpired && <ButtonDirectDeal directPrice={directPrice} />}
+        {/* 즉시거래 버튼 - 경매가 종료되지 않았고 즉시거래가 활성화된 경우에만 표시 */}
+        {!isExpired && data?.data.auctionPrice?.isInstantBuyEnabled && (
+          <ButtonDirectDeal
+            directPrice={formatCurrencyWithUnit(
+              data.data.auctionPrice.instantPrice || currentPrice * 1.2
+            )}
+            auctionId={auctionId}
+            sellerId={data.data.sellerId}
+          />
+        )}
 
         <BidFormInput
           auctionId={auctionId}
