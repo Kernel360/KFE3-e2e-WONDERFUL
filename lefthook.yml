@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    # 변경된 파일만 ESLint 검사 및 자동 수정
+    lint:
+      glob: '*.{js,jsx,ts,tsx}'
+      run: pnpm eslint --fix --no-warn-ignored {staged_files}
+      stage_fixed: true
+
+    # 변경된 파일만 Prettier 포맷팅
+    format:
+      glob: '**/*.{js,jsx,ts,tsx,json,md,yml,yaml}'
+      run: pnpm prettier --write {staged_files}
+      stage_fixed: true

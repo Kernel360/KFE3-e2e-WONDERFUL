@@ -1,0 +1,67 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "ui": "tui",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+    "VAPID_PRIVATE_KEY",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "@repo/db#db:generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "NODE_ENV",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ]
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "inputs": ["src/**/*.{ts,tsx}", "!src/generated/**"],
+      "env": ["DATABASE_URL", "DIRECT_URL", "NODE_ENV"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types", "@repo/db#db:generate"]
+    },
+    "dev": {
+      "dependsOn": ["@repo/db#db:generate"],
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "NODE_ENV",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ]
+    },
+    "db:generate": {
+      "cache": false,
+      "inputs": ["prisma/schema.prisma", ".env*"],
+      "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL"]
+    },
+    "db:push": {
+      "cache": false,
+      "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL"]
+    },
+    "db:migrate": {
+      "cache": false,
+      "env": ["NODE_ENV", "DATABASE_URL", "DIRECT_URL"]
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true,
+      "env": ["NODE_ENV", "DATABASE_URL"]
+    }
+  }
+}

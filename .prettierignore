@@ -1,0 +1,25 @@
+# 빌드 출력
+.next/
+dist/
+out/
+build/
+
+# 패키지 매니저
+node_modules/
+.pnpm-store/
+
+# 생성된 파일
+*.min.js
+*.min.css
+*.bundle.js
+
+# 설정 파일
+.env*
+*.lock
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# 기타
+coverage/
+.turbo/

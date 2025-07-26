@@ -1,0 +1,119 @@
+name: Sync and Deploy
+
+on:
+  push:
+    branches: [develop]
+  repository_dispatch:
+    types: [team-repo-updated, pr-preview-requested, pr-preview-cleanup]
+  workflow_dispatch:
+
+jobs:
+  notify-personal-repo:
+    if: github.repository == 'Kernel360/KFE3-e2e-WONDERFUL' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger personal repo sync
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.PERSONAL_REPO_TOKEN }}" \
+            https://api.github.com/repos/miniseung/KFE3-e2e-WONDERFUL/dispatches \
+            -d '{"event_type":"team-repo-updated"}'
+          echo "✅ 개인 레포에 동기화 요청을 보냈습니다!"
+
+  sync-upstream:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL' && github.event.action == 'team-repo-updated'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Sync with team repo
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # 팀 레포 추가
+          git remote add upstream https://github.com/Kernel360/KFE3-e2e-WONDERFUL.git || true
+          git fetch upstream
+
+          # develop 브랜치로 체크아웃 후 머지
+          git checkout develop
+          git merge upstream/develop --no-edit
+          git push origin develop
+
+          echo "✅ 팀 레포와 동기화 완료! Vercel 배포 시작됩니다."
+
+  # 새로운 PR 프리뷰 배포 작업
+  handle-pr-preview:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL' && github.event.action == 'pr-preview-requested'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Extract PR info
+        id: pr
+        run: |
+          echo "pr_number=${{ github.event.client_payload.pr_number }}" >> $GITHUB_OUTPUT
+          echo "pr_branch=${{ github.event.client_payload.pr_branch }}" >> $GITHUB_OUTPUT
+          echo "pr_sha=${{ github.event.client_payload.pr_sha }}" >> $GITHUB_OUTPUT
+          echo "pr_author=${{ github.event.client_payload.pr_author }}" >> $GITHUB_OUTPUT
+
+      - name: Create preview branch
+        run: |
+          # 팀 레포 추가
+          git remote add upstream https://github.com/Kernel360/KFE3-e2e-WONDERFUL.git || true
+          git fetch upstream
+
+          # 프리뷰 브랜치명
+          PREVIEW_BRANCH="preview/pr-${{ steps.pr.outputs.pr_number }}-${{ steps.pr.outputs.pr_author }}"
+          echo "preview_branch=${PREVIEW_BRANCH}" >> $GITHUB_ENV
+
+          # 기존 프리뷰 브랜치 삭제
+          git branch -D ${PREVIEW_BRANCH} 2>/dev/null || true
+          git push origin --delete ${PREVIEW_BRANCH} 2>/dev/null || true
+
+          # 새 프리뷰 브랜치 생성
+          git checkout -b ${PREVIEW_BRANCH} upstream/${{ steps.pr.outputs.pr_branch }}
+          git push origin ${PREVIEW_BRANCH}
+
+          echo "✅ 프리뷰 브랜치 생성: ${PREVIEW_BRANCH}"
+
+  # PR 프리뷰 정리 작업
+  handle-pr-cleanup:
+    if: github.repository == 'miniseung/KFE3-e2e-WONDERFUL' && github.event.action == 'pr-preview-cleanup'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Delete preview branch
+        run: |
+          PR_NUMBER="${{ github.event.client_payload.pr_number }}"
+          PR_AUTHOR="${{ github.event.client_payload.pr_author }}"
+          PREVIEW_BRANCH="preview/pr-${PR_NUMBER}-${PR_AUTHOR}"
+
+          git branch -D ${PREVIEW_BRANCH} 2>/dev/null || true
+          git push origin --delete ${PREVIEW_BRANCH} 2>/dev/null || true
+
+          echo "🧹 프리뷰 브랜치 정리 완료: ${PREVIEW_BRANCH}"

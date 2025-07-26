@@ -1,0 +1,18 @@
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/*": ["src/lib/*"],
+      "@/components/*": ["src/components/*"],
+      "@/hooks/*": ["src/hooks/*"]
+    },
+    "outDir": "dist"
+  },
+  "include": [
+    "src",
+    "../../apps/docs/stories/Badge.stories.tsx",
+    "../../apps/docs/stories/index.stories.tsx"
+  ],
+  "exclude": ["dist", "build", "node_modules"]
+}

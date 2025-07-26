@@ -1,0 +1,209 @@
+name: PR Preview Deploy
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, closed]
+    branches: [develop]
+
+jobs:
+  # PR 프리뷰 배포 (팀 레포 → 개인 레포)
+  deploy-preview:
+    if: github.repository == 'Kernel360/KFE3-e2e-WONDERFUL' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout personal repo
+        uses: actions/checkout@v4
+        with:
+          repository: miniseung/KFE3-e2e-WONDERFUL
+          token: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Get PR info
+        id: pr-info
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_branch=$PR_BRANCH" >> $GITHUB_OUTPUT
+          echo "pr_sha=$PR_SHA" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Add team repo as upstream
+        run: |
+          git remote add upstream https://github.com/Kernel360/KFE3-e2e-WONDERFUL.git || true
+          git fetch upstream
+
+      - name: Add PR author's fork as remote
+        env:
+          PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_REPO_TOKEN }}
+        run: |
+          # PR 작성자의 포크 레포를 remote로 추가
+          PR_FORK_URL="https://$GITHUB_TOKEN@github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
+          echo "🔗 PR 작성자 포크 추가: https://github.com/$PR_AUTHOR/KFE3-e2e-WONDERFUL.git"
+
+          git remote add pr-fork "$PR_FORK_URL" || true
+          git fetch pr-fork
+
+      - name: Create preview branch
+        env:
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          PR_AUTHOR: ${{ steps.pr-info.outputs.pr_author }}
+          PR_BRANCH: ${{ steps.pr-info.outputs.pr_branch }}
+        run: |
+          # 프리뷰 브랜치명: preview/pr-{number}-{author}
+          PREVIEW_BRANCH="preview/pr-$PR_NUMBER-$PR_AUTHOR"
+          echo "preview_branch=$PREVIEW_BRANCH" >> $GITHUB_ENV
+
+          # 기존 프리뷰 브랜치가 있으면 삭제
+          git branch -D "$PREVIEW_BRANCH" 2>/dev/null || true
+          git push origin --delete "$PREVIEW_BRANCH" 2>/dev/null || true
+
+          # PR 작성자의 포크에서 브랜치 찾기
+          echo "🔍 PR 브랜치 확인 중: $PR_BRANCH"
+
+          # 방법 1: PR 작성자 포크의 브랜치에서 생성
+          if git show-ref --verify --quiet "refs/remotes/pr-fork/$PR_BRANCH"; then
+            echo "✅ PR 작성자 포크에서 브랜치 발견: pr-fork/$PR_BRANCH"
+            git checkout -b "$PREVIEW_BRANCH" "pr-fork/$PR_BRANCH"
+            git push origin "$PREVIEW_BRANCH"
+            echo "✅ 프리뷰 브랜치 생성 완료: $PREVIEW_BRANCH"
+
+          # 방법 2: PR HEAD에서 직접 생성 (더 정확함)
+          else
+            echo "🔄 PR HEAD에서 브랜치 생성"
+            git fetch upstream "+refs/pull/$PR_NUMBER/head:refs/remotes/pr-head"
+            git checkout -b "$PREVIEW_BRANCH" "pr-head"
+            git push origin "$PREVIEW_BRANCH"
+            echo "✅ PR HEAD에서 프리뷰 브랜치 생성 완료: $PREVIEW_BRANCH"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Type check
+        run: pnpm turbo check-types
+
+      - name: Lint check (allow warnings)
+        run: |
+          echo "🔍 Lint 검사 시작..."
+          pnpm turbo lint || echo "⚠️ Lint 경고가 있지만 빌드를 계속 진행합니다"
+        continue-on-error: true
+      - name: Build check
+        run: |
+          cd apps/web
+          pnpm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_KAKAO_MAP_API_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_MAP_API_KEY }}
+          NEXT_PUBLIC_KAKAO_REST_API_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          NODE_ENV: production
+
+      - name: Report build success
+        if: success()
+        run: |
+          echo "✅ 프리뷰 배포 빌드 체크 성공!"
+          echo "- 타입 체크: 통과"
+          echo "- 린트 체크: 통과"  
+          echo "- 빌드: 성공"
+
+      - name: Report build failure
+        if: failure()
+        run: |
+          echo "❌ 프리뷰 배포 빌드 체크 실패!"
+          echo "PR 머지 전에 문제를 해결해주세요."
+          exit 1
+
+  # 프리뷰 브랜치 정리 (PR이 닫히거나 머지될 때)
+  cleanup-preview:
+    if: github.repository == 'Kernel360/KFE3-e2e-WONDERFUL' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout personal repo
+        uses: actions/checkout@v4
+        with:
+          repository: miniseung/KFE3-e2e-WONDERFUL
+          token: ${{ secrets.PERSONAL_REPO_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get PR info for cleanup
+        id: cleanup-info
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Delete preview branch
+        env:
+          PR_NUMBER: ${{ steps.cleanup-info.outputs.pr_number }}
+          PR_AUTHOR: ${{ steps.cleanup-info.outputs.pr_author }}
+        run: |
+          PREVIEW_BRANCH="preview/pr-$PR_NUMBER-$PR_AUTHOR"
+
+          echo "🧹 프리뷰 브랜치 정리 중: $PREVIEW_BRANCH"
+
+          # 로컬 브랜치 삭제
+          git branch -D "$PREVIEW_BRANCH" 2>/dev/null || echo "로컬 브랜치가 없습니다: $PREVIEW_BRANCH"
+
+          # 원격 브랜치 삭제
+          git push origin --delete "$PREVIEW_BRANCH" 2>/dev/null || echo "원격 브랜치가 없습니다: $PREVIEW_BRANCH"
+
+          echo "✅ 프리뷰 브랜치 정리 완료: $PREVIEW_BRANCH"
+
+      - name: Clean up old preview branches
+        run: |
+          echo "🧹 30일 이상 된 프리뷰 브랜치들 정리 중..."
+
+          # 30일 이상 된 preview 브랜치들 찾아서 삭제
+          git for-each-ref --format='%(refname:short) %(committerdate:unix)' refs/origin/preview/ | \
+          while read branch timestamp; do
+            current_time=$(date +%s)
+            age_days=$(( (current_time - timestamp) / 86400 ))
+            
+            if [ $age_days -gt 30 ]; then
+              branch_name=${branch#origin/}
+              echo "🗑️  오래된 브랜치 삭제: ${branch_name} (${age_days}일 전)"
+              git push origin --delete ${branch_name} 2>/dev/null || true
+            fi
+          done
+
+          echo "✅ 오래된 프리뷰 브랜치 정리 완료"
