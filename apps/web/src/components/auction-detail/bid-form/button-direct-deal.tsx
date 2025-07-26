@@ -63,7 +63,7 @@ const ButtonDirectDeal = ({
   return (
     <button
       type="button"
-      className={`bg-primary-50 mb-1 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 pl-4 pr-2 ${isOwnAuction ? 'opacity-60' : ''}`}
+      className={`bg-primary-50 mb-1 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 pl-4 pr-2`}
       onClick={handleDirectDeal}
       disabled={isLoading}
     >
