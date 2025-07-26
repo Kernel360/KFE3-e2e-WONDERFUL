@@ -5,7 +5,7 @@ import { prisma } from '@repo/db';
 
 import { getUserProfileFromDB } from '@/lib/data/user';
 import { uploadProfileImageServer } from '@/lib/supabase/storage-server';
-import { getCurrentUser } from '@/lib/utils/auth';
+import { getCurrentUser } from '@/lib/utils/auth-server';
 
 export const getMyProfile = async () => {
   try {

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 
-// 현재 인증된 사용자 정보를 가져오는 함수
+// 현재 인증된 사용자 정보를 가져오는 함수(서버용 함수)
 export const getCurrentUser = async () => {
   try {
     const supabase = await createClient();
