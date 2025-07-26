@@ -9,12 +9,15 @@ export const createAuctionSchema = z.object({
       .number({ message: '경매 시작가는 1,000원 이상이어야 합니다.' })
       .min(1000, '경매 시작가는 1,000원 이상이어야 합니다.'),
     min_bid_unit: z.coerce.number().min(1, '최소 입찰 금액을 선택해주세요.'),
+    instant_price: z.coerce.number().optional(),
   }),
   end_time: z
     .string()
     .min(1, '경매 종료시간을 입력해주세요.')
     .max(2, '최대 99시간까지 입력할 수 있어요.'),
   images: z.array(z.string()).optional(),
+  is_instant_buy_enabled: z.boolean().default(false),
+  is_extended_auction: z.boolean().default(false).optional(),
 });
 
 export type CreateAuctionFormData = z.infer<typeof createAuctionSchema>;

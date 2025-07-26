@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { CircleAlert } from 'lucide-react';
 
 import {
@@ -7,7 +9,9 @@ import {
   MinUnitSelectBox,
   Notice,
 } from '@/components/common';
-import { Input, Label, Textarea } from '@/components/ui';
+import { Input, Label, Popover, PopoverContent, PopoverTrigger, Textarea } from '@/components/ui';
+
+import { Checkbox } from '../ui/checkbox';
 const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
 
 interface DefaultValuesType {
@@ -43,6 +47,8 @@ const CreateAuctionForm = ({
   onRemoveExistingImage,
   currentPriceInfo, // 현재가 정보
 }: CreateAuctionFormProps) => {
+  const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(false);
+
   const formatPrice = (price: number) => price.toLocaleString() + '원';
 
   return (
@@ -188,6 +194,47 @@ const CreateAuctionForm = ({
         )}
 
         {errors['end_time'] && <FormErrorMessage>{errors['end_time']}</FormErrorMessage>}
+      </div>
+      <div className={`flex flex-col gap-2`}>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="instant"
+            name="instant"
+            checked={isInstantBuyEnabled}
+            onCheckedChange={(checked) => setIsInstantBuyEnabled(!!checked)}
+          />
+          <Label htmlFor="instant" className="text-md font-light">
+            즉시 구매 사용하기
+          </Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <CircleAlert className="text-xs font-thin" width={20} height={20} strokeWidth={1} />
+            </PopoverTrigger>
+            <PopoverContent side="right" align="center" className="w-64 text-sm">
+              즉시구매가 : 현재 가 * 1.2배
+              <br />
+              빠른 입찰을 원하신다면 즉시 구매를 이용해보세요.
+            </PopoverContent>
+          </Popover>
+        </div>
+        {/* 숨겨진 input으로 값 전달 */}
+        <input type="hidden" name="is_instant_buy_enabled" value={isInstantBuyEnabled.toString()} />
+      </div>
+      <div className={`flex items-center gap-2`}>
+        <Checkbox id="extend" />
+        <Label htmlFor="extend" className="text-md font-light">
+          연장 경매 사용하기
+        </Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <CircleAlert className="text-xs font-thin" width={20} height={20} strokeWidth={1} />
+          </PopoverTrigger>
+          <PopoverContent side="right" align="center" className="w-64 text-sm">
+            경매마감 1분 전에, 연장 버튼이 활성화
+            <br />
+            경매 당 3분 연장 1회 가능(1인 1회)
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

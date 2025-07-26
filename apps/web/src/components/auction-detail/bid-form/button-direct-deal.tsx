@@ -1,14 +1,54 @@
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import { AlarmClock, ChevronRight } from 'lucide-react';
+
+import { createChatRoom } from '@/lib/actions/chat';
 
 interface ButtonDirectDealProps {
   directPrice: string;
+  auctionId: string;
+  sellerId: string;
 }
 
-const ButtonDirectDeal = ({ directPrice }: ButtonDirectDealProps) => {
+const ButtonDirectDeal = ({ directPrice, auctionId, sellerId }: ButtonDirectDealProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleDirectDeal = async () => {
+    try {
+      setIsLoading(true);
+
+      // 즉시거래 확인 알림
+      const confirmed = window.confirm(
+        `${directPrice}에 즉시 구매하시겠습니까?\n구매 확정 시 채팅방으로 이동합니다.`
+      );
+
+      if (!confirmed) return;
+
+      // 채팅방 생성
+      const chatRoomId = await createChatRoom({
+        auctionId,
+        sellerId,
+      });
+
+      // 채팅방으로 이동
+      router.push(`/chat/${chatRoomId}`);
+    } catch (error) {
+      console.error('즉시거래 처리 중 오류:', error);
+      alert('즉시거래 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <button
       type="button"
       className="bg-primary-50 mb-1 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 pl-4 pr-2"
+      onClick={handleDirectDeal}
+      disabled={isLoading}
     >
       <AlarmClock className="text-indigo-500" strokeWidth={2.5} size={20} />
       <p className="flex-1 pt-0.5 text-left font-medium text-neutral-900">
