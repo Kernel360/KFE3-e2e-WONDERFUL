@@ -29,7 +29,7 @@ const BidFormInput = ({
   currentPrice,
   minUnit, // 최소 입찰 단위
   bidPrice,
-  // isBidInputOpen,
+  isBidInputOpen,
   onChange,
   validationError = '',
 }: ExtendedBidInputProps) => {
@@ -57,7 +57,7 @@ const BidFormInput = ({
   };
 
   return (
-    <div>
+    <div className={bidInputWrapper({ open: isBidInputOpen })}>
       <InputIcon
         id="price"
         type="number"
