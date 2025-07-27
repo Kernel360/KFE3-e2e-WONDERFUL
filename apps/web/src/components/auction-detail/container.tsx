@@ -109,7 +109,9 @@ const AuctionDetailContainer = () => {
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
         >
-          <ButtonChat auctionId={auction.id} sellerId={auction.sellerId} />
+          {currentUser?.id !== auction.sellerId && (
+            <ButtonChat auctionId={auction.id} sellerId={auction.sellerId} />
+          )}
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
         <ItemDescription item={item} />
