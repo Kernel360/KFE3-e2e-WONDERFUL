@@ -118,7 +118,7 @@ const HomeFilterSelect = () => {
               <span>{getDisplayName(selectedLocation.locationName)}</span>
             </li>
             <li>
-              <Link href="/location">내 동네 설정</Link>
+              <Link href="/profile/location">내 동네 설정</Link>
             </li>
           </ul>
         </PopoverContent>
@@ -150,7 +150,7 @@ const HomeFilterSelect = () => {
           })}
           <li>
             {/* /위치설정 페이지로 이동 */}
-            <Link href={'/location'}>내 동네 설정</Link>
+            <Link href={'/profile/location'}>내 동네 설정</Link>
           </li>
         </ul>
       </PopoverContent>
