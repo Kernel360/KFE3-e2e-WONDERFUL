@@ -4,6 +4,7 @@ import { Container } from '@/components/layout';
 import { PurchasesList } from '@/components/profile/purchases-list';
 
 import { getCurrentUser } from '@/lib/utils/auth-server';
+export const dynamic = 'force-dynamic';
 
 const Page = async () => {
   const user = await getCurrentUser();
