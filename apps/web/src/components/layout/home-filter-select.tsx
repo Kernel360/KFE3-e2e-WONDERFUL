@@ -102,14 +102,29 @@ const HomeFilterSelect = () => {
   // 등록된 위치가 없는 경우
   if (!userLocations || userLocations.length === 0) {
     return (
-      <Link href="/" className={cn(homeFilterWrapper, 'text-primary-600 gap-2')}>
-        <MapPin size={16} />
-        위치 설정
-        <ChevronRight size={24} />
-      </Link>
+      <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
+        <PopoverTrigger asChild>
+          <button
+            aria-label="서비스 위치 선택"
+            className={cn(homeFilterWrapper, 'hover:text-primary-600 gap-2 transition-colors')}
+          >
+            {getDisplayName(selectedLocation.locationName)}
+            <ChevronDown size={24} className={homeFilterIcon({ open: isSelectOpen })} />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent align="start" className="w-34">
+          <ul className="space-y-3">
+            <li>
+              <span>{getDisplayName(selectedLocation.locationName)}</span>
+            </li>
+            <li>
+              <Link href="/profile/location">내 동네 설정</Link>
+            </li>
+          </ul>
+        </PopoverContent>
+      </Popover>
     );
   }
-
   // 등록된 위치가 있는 경우
   return (
     <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>

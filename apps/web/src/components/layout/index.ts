@@ -6,7 +6,6 @@ export { default as SearchHeader } from './header/search';
 export { default as ChatHeader } from './header/chat';
 export { default as ProfileHeader } from './header/profile';
 export { default as AccountHeader } from './header/account';
-export { default as LocationHeader } from './header/location';
 
 export { default as HomeFilterSelect } from './home-filter-select';
 
