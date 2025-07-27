@@ -32,7 +32,6 @@ export async function GET(request: NextRequest) {
         sellerId: currentUser.id,
         status: { in: statuses },
       };
-      console.log('🛒 판매 내역 조회 - sellerId:', currentUser.id);
     } else if (type === 'purchases') {
       // 내가 입찰한 경매
       where = {
@@ -43,7 +42,6 @@ export async function GET(request: NextRequest) {
         },
         status: { in: statuses },
       };
-      console.log('💰 구매 내역 조회 - bidderId:', currentUser.id);
     } else if (type === 'wishlist') {
       // 내가 찜한 경매
       where = {
