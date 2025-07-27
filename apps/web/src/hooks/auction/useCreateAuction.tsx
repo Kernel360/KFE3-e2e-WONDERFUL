@@ -54,6 +54,8 @@ const useCreateAuction = () => {
             min_bid_unit: Number(formData.get('min_bid_unit') ?? 0),
           },
           end_time: String(formData.get('end_time') ?? ''),
+          is_instant_buy_enabled: formData.get('is_instant_buy_enabled') === 'true',
+          is_extended_auction: formData.get('is_extended_auction') === 'true',
         };
 
         // Zod 유효성 검사
@@ -83,8 +85,18 @@ const useCreateAuction = () => {
 
         setErrors({});
 
+        const startPrice = rawData.prices.start_price;
+
         const phasedData: CreateAuctionFormData = {
           ...result.data,
+          is_instant_buy_enabled: rawData.is_instant_buy_enabled,
+          is_extended_auction: rawData.is_extended_auction,
+          prices: {
+            ...result.data.prices,
+            instant_price: rawData.is_instant_buy_enabled
+              ? Math.floor(startPrice * 1.2)
+              : undefined,
+          },
         };
 
         // try 블록 제거 (이미 위에서 시작)

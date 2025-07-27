@@ -14,7 +14,13 @@ import { formatCurrencyWithUnit } from '@/lib/utils/price';
 
 import { BidFormProps } from '@/types/bid';
 
-const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps) => {
+const BidForm = ({
+  auctionId,
+  currentPrice,
+  endTime,
+  bidTableRef,
+  currentUserId,
+}: BidFormProps) => {
   const [bidPrice, setBidPrice] = useState<number | null>(null);
   const [validationError, setValidationError] = useState<string>('');
 
@@ -26,7 +32,10 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
 
   // 경매 종료 시간까지의 카운트다운
   const { isExpired } = useCountdown(new Date(endTime));
-  const directPrice = formatCurrencyWithUnit(currentPrice * 1.2); // 20% 증가한 가격
+  //const directPrice = formatCurrencyWithUnit(currentPrice * 1.2); // 20% 증가한 가격
+
+  // 본인 경매인지 확인
+  const isOwnAuction = currentUserId && data?.data.sellerId === currentUserId;
 
   // 입찰 가격 변경 시 검증
   const handleBidPriceChange = (price: number | null) => {
@@ -47,6 +56,12 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
     // 경매가 종료된 경우 입찰 불가
     if (isExpired) {
       alert('경매가 종료되어 입찰할 수 없습니다.');
+      return;
+    }
+
+    // 본인 경매 입찰 방지
+    if (isOwnAuction) {
+      alert('본인의 경매에는 입찰할 수 없습니다.');
       return;
     }
 
@@ -99,7 +114,17 @@ const BidForm = ({ auctionId, currentPrice, endTime, bidTableRef }: BidFormProps
           'duration-600 relative rounded-t-sm bg-white px-5 pt-4 shadow-[var(--shadow-nav)] transition-all'
         )}
       >
-        {!isExpired && <ButtonDirectDeal directPrice={directPrice} />}
+        {/* 즉시거래 버튼 - 경매가 종료되지 않았고 즉시거래가 활성화된 경우에만 표시 */}
+        {!isExpired && data?.data.auctionPrice?.isInstantBuyEnabled && (
+          <ButtonDirectDeal
+            directPrice={formatCurrencyWithUnit(
+              data.data.auctionPrice.instantPrice || currentPrice * 1.2
+            )}
+            auctionId={auctionId}
+            sellerId={data.data.sellerId}
+            currentUserId={currentUserId}
+          />
+        )}
 
         <BidFormInput
           auctionId={auctionId}
