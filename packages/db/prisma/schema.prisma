@@ -82,7 +82,7 @@ model FavoriteItem {
   id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String      @map("user_id") @db.Uuid
   itemId    String      @map("item_id") @db.Uuid
-  createdAt DateTime    @map("created_at") @db.Timestamptz(6)
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   item      AuctionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
