@@ -1,11 +1,20 @@
+import { redirect } from 'next/navigation';
+
 import { Container } from '@/components/layout';
+import { WishlistClient } from '@/components/profile/wishlist-client';
 
-import WishlistPage from '@/views/profile/WishlistPage';
+import { getCurrentUser } from '@/lib/utils/auth-server';
 
-const Page = () => {
+const Page = async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/auth/signin');
+  }
+
   return (
     <Container className="px-4">
-      <WishlistPage />
+      <WishlistClient userId={user.id} />
     </Container>
   );
 };
