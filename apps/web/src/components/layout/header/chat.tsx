@@ -1,26 +1,27 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 
 import { Bell } from 'lucide-react';
 
 import { BackButton, ButtonMore } from '@/components/common';
 import { HeaderWrapper } from '@/components/layout';
-const ChatHeader = () => {
+
+const item = [
+  {
+    id: 'report',
+    title: '신고하기',
+    onClick: () => {},
+  },
+];
+
+const ChatHeaderContent = () => {
   const pathname = usePathname();
   const { id } = useParams();
-
-  // TODO: chatRoome 데이터에 대한 전역처리 후 title 부분 수정
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // 여기서 사용
   const interlocutor = searchParams.get('interlocutor');
-
-  const item = [
-    {
-      id: 'report',
-      title: '신고하기',
-      onClick: () => {},
-    },
-  ];
 
   return (
     <HeaderWrapper className="bg-white">
@@ -37,6 +38,24 @@ const ChatHeader = () => {
         </>
       )}
     </HeaderWrapper>
+  );
+};
+
+const ChatHeader = () => {
+  return (
+    <Suspense
+      fallback={
+        <HeaderWrapper className="bg-white">
+          <div className="flex w-full items-center justify-between">
+            <BackButton />
+            <h2 className="text-h4 font-bold">상대방 닉네임</h2>
+            <ButtonMore items={item} />
+          </div>
+        </HeaderWrapper>
+      }
+    >
+      <ChatHeaderContent />
+    </Suspense>
   );
 };
 
