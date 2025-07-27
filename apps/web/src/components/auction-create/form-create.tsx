@@ -220,7 +220,7 @@ const CreateAuctionForm = ({
         {/* 숨겨진 input으로 값 전달 */}
         <input type="hidden" name="is_instant_buy_enabled" value={isInstantBuyEnabled.toString()} />
       </div>
-      <div className={`flex items-center gap-2`}>
+      {/* <div className={`flex items-center gap-2`}>
         <Checkbox id="extend" />
         <Label htmlFor="extend" className="text-md font-light">
           연장 경매 사용하기
@@ -235,7 +235,7 @@ const CreateAuctionForm = ({
             경매 당 3분 연장 1회 가능(1인 1회)
           </PopoverContent>
         </Popover>
-      </div>
+      </div> */}
     </div>
   );
 };
