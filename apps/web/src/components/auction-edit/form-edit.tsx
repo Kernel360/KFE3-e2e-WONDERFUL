@@ -69,6 +69,7 @@ const FormEdit = ({ itemId }: FormEditProps) => {
     })(),
     images:
       auction.auctionImages?.flatMap((image: { id: string; urls: string[] }) => image.urls) || [],
+    is_instant_buy_enabled: auction.auctionPrice?.isInstantBuyEnabled || false,
   };
 
   // 현재가 정보를 별도로 전달 (입찰 상태 포함)

@@ -52,7 +52,8 @@ const useEditAuction = (itemId: string) => {
             min_bid_unit: Number(formData.get('min_bid_unit') ?? 0),
           },
           end_time: String(formData.get('end_time') ?? ''),
-          images: [],
+          is_instant_buy_enabled: formData.get('is_instant_buy_enabled') === 'true',
+          is_extended_auction: formData.get('is_extended_auction') === 'true',
         };
 
         const result = createAuctionSchema.safeParse(rawData);
@@ -93,9 +94,24 @@ const useEditAuction = (itemId: string) => {
           finalImages = [...finalImages, ...newImageUrls];
         }
 
+        const startPrice = rawData.prices.start_price;
+
+        const phasedData = {
+          ...result.data,
+          is_instant_buy_enabled: rawData.is_instant_buy_enabled,
+          is_extended_auction: rawData.is_extended_auction,
+          prices: {
+            ...result.data.prices,
+            instant_price: rawData.is_instant_buy_enabled
+              ? Math.floor(startPrice * 1.2)
+              : undefined,
+          },
+          images: finalImages,
+        };
+
         console.log('🔄 서버액션 호출 시작...');
         // 서버 액션 호출
-        await updateAuction({ ...result.data, images: finalImages }, itemId);
+        await updateAuction(phasedData, itemId);
         console.log('✅ 서버액션 완료');
 
         // 경매 목록 관련 쿼리만 무효화 (상세 쿼리 제외)
