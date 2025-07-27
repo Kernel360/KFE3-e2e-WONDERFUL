@@ -1,7 +1,7 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 
 import { getMyProfile } from '@/lib/actions/profile';
-import { getMySales, getMyPurchases } from '@/lib/api/profile';
+import { getMySales, getMyPurchases, getMyWishlist } from '@/lib/api/profile';
 
 import { AuctionStatus } from '@/types/filter';
 
@@ -15,7 +15,7 @@ export const useMyProfile = () => {
   });
 };
 
-// 내가 등록한 경매 목록 조회 훅 (무한 스크롤)
+// 내가 등록한 경매 목록 조회 훅
 export const useMySales = (statuses?: AuctionStatus[]) => {
   return useInfiniteQuery({
     queryKey: profileKeys.sales(statuses),
@@ -29,7 +29,7 @@ export const useMySales = (statuses?: AuctionStatus[]) => {
   });
 };
 
-// 내가 입찰한 경매 목록 조회 훅 (무한 스크롤)
+// 내가 입찰한 경매 목록 조회 훅
 export const useMyPurchases = (statuses?: AuctionStatus[]) => {
   return useInfiniteQuery({
     queryKey: profileKeys.purchases(statuses),
@@ -43,5 +43,20 @@ export const useMyPurchases = (statuses?: AuctionStatus[]) => {
   });
 };
 
+// 내가 찜한 경매 목록 조회 훅
+export const useMyWishlist = (statuses?: AuctionStatus[]) => {
+  return useInfiniteQuery({
+    queryKey: profileKeys.wishlist(statuses),
+    queryFn: ({ pageParam = 1 }) => getMyWishlist(statuses, pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.pagination.hasNext ? lastPage.pagination.page + 1 : undefined;
+    },
+    staleTime: 1000 * 60 * 2, // 2분
+    gcTime: 1000 * 60 * 10, // 10분간 캐시
+  });
+};
+
 export type UseMySalesReturn = ReturnType<typeof useMySales>;
 export type UseMyPurchasesReturn = ReturnType<typeof useMyPurchases>;
+export type UseMyWishlistReturn = ReturnType<typeof useMyWishlist>;
