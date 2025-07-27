@@ -71,6 +71,13 @@ export async function POST(request: NextRequest) {
 
     // 트랜잭션으로 입찰 처리
     const result = await prisma.$transaction(async (tx) => {
+      // 기존 입찰 삭제 (해당 사용자가 이 경매에 한 입찰)
+      await tx.bid.deleteMany({
+        where: {
+          itemId: auctionId,
+          bidderId: user.id,
+        },
+      });
       // 입찰 생성
       const newBid = await tx.bid.create({
         data: {
