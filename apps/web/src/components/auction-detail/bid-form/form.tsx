@@ -73,13 +73,11 @@ const BidForm = ({
       return;
     }
 
-    if (bidPrice === null) {
-      alert('입찰 금액을 입력해주세요');
-      return;
-    }
+    // bidPrice가 null이면 기본값 사용
+    const finalBidPrice = bidPrice ?? currentPrice + minBidUnit;
 
     // 클라이언트 검증
-    const validation = validateBidPrice(bidPrice, currentPrice, minBidUnit || 1000);
+    const validation = validateBidPrice(finalBidPrice, currentPrice, minBidUnit || 1000);
     if (!validation.isValid) {
       setValidationError(validation.message);
       return;
@@ -97,7 +95,7 @@ const BidForm = ({
       // API 호출
       await bidMutation.mutateAsync({
         auctionId,
-        bidPrice,
+        bidPrice: finalBidPrice,
       });
 
       // 성공 시 에러 메시지 초기화
