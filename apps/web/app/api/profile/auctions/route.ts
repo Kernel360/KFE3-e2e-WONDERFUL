@@ -4,8 +4,6 @@ import { prisma } from '@repo/db';
 
 import { getCurrentUser } from '@/lib/utils/auth-server';
 
-import { ProfileAuctionResponse } from '@/constants/profile';
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -24,26 +22,47 @@ export async function GET(request: NextRequest) {
       ? statusesParam.split(',')
       : ['ACTIVE', 'COMPLETED', 'CANCELLED'];
 
-    const where: any = {
-      status: {
-        in: statuses,
-      },
-    };
+    let where: any = {};
+    let orderBy: any = { createdAt: 'desc' };
 
     // 타입에 따른 필터링
     if (type === 'sales') {
       // 내가 등록한 경매
-      where.sellerId = currentUser.id;
+      where = {
+        sellerId: currentUser.id,
+        status: { in: statuses },
+      };
+      console.log('🛒 판매 내역 조회 - sellerId:', currentUser.id);
     } else if (type === 'purchases') {
-      // 내가 입찰한 경매 (입찰 테이블과 조인)
-      where.bids = {
-        some: {
-          bidderId: currentUser.id,
+      // 내가 입찰한 경매
+      where = {
+        bids: {
+          some: {
+            bidderId: currentUser.id,
+          },
+        },
+        status: { in: statuses },
+      };
+      console.log('💰 구매 내역 조회 - bidderId:', currentUser.id);
+    } else if (type === 'wishlist') {
+      // 내가 찜한 경매
+      where = {
+        favoriteItems: {
+          some: {
+            userId: currentUser.id,
+          },
+        },
+        status: { in: statuses },
+      };
+      // 찜한 순서대로 정렬 (최근 찜한 것 먼저)
+      orderBy = {
+        favoriteItems: {
+          _count: 'desc',
         },
       };
     } else {
       return NextResponse.json(
-        { error: '잘못된 타입입니다. sales 또는 purchases를 사용하세요.' },
+        { error: '잘못된 타입입니다. sales, purchases, wishlist 중 하나를 사용하세요.' },
         { status: 400 }
       );
     }
@@ -112,15 +131,25 @@ export async function GET(request: NextRequest) {
             },
           },
         }),
+        // 찜 목록인 경우 찜한 날짜 포함
+        ...(type === 'wishlist' && {
+          favoriteItems: {
+            where: {
+              userId: currentUser.id,
+            },
+            select: {
+              createdAt: true,
+            },
+            take: 1,
+          },
+        }),
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy,
       skip,
       take: limit,
     });
 
-    const response: ProfileAuctionResponse = {
+    const response = {
       data: auctions,
       pagination: {
         page,
@@ -130,8 +159,6 @@ export async function GET(request: NextRequest) {
         hasNext,
       },
     };
-
-    console.log(`✅ ${type} 조회 성공: 페이지 ${page}, ${auctions.length}개 반환`);
 
     return NextResponse.json(response);
   } catch (error) {

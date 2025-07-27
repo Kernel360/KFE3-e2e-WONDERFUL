@@ -8,4 +8,7 @@ export const profileKeys = {
 
   // 구매 내역 관련 쿼리 키
   purchases: (statuses?: AuctionStatus[]) => [...profileKeys.all, 'purchases', statuses] as const,
+
+  // 찜 목록 관련 쿼리 키
+  wishlist: (statuses?: AuctionStatus[]) => [...profileKeys.all, 'wishlist', statuses] as const,
 } as const;
