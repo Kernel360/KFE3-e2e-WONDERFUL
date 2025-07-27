@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { Container } from '@/components/layout';
-import { WishlistClient } from '@/components/profile/wishlist-client';
+import { Wishlist } from '@/components/profile/wishlist';
 
 import { getCurrentUser } from '@/lib/utils/auth-server';
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ const Page = async () => {
 
   return (
     <Container className="px-4">
-      <WishlistClient userId={user.id} />
+      <Wishlist userId={user.id} />
     </Container>
   );
 };

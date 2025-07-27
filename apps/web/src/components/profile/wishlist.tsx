@@ -22,11 +22,11 @@ const TAB_STATUS_MAP: Record<BasicTabId, AuctionStatus[]> = {
   completed: ['COMPLETED', 'CANCELLED'],
 };
 
-interface WishlistClientProps {
+interface WishlistProps {
   userId: string;
 }
 
-export const WishlistClient = ({ userId }: WishlistClientProps) => {
+export const Wishlist = ({ userId }: WishlistProps) => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.trade) || 'all') as BasicTabId;
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
