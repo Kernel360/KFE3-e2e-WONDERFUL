@@ -22,6 +22,7 @@ interface DefaultValuesType {
   min_bid_unit: number;
   end_time: string;
   images: string[];
+  is_instant_buy_enabled?: boolean;
 }
 interface CurrentPriceInfo {
   startPrice: number;
@@ -47,7 +48,9 @@ const CreateAuctionForm = ({
   onRemoveExistingImage,
   currentPriceInfo, // 현재가 정보
 }: CreateAuctionFormProps) => {
-  const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(false);
+  const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(
+    defaultValues?.is_instant_buy_enabled || false
+  );
 
   const formatPrice = (price: number) => price.toLocaleString() + '원';
 
