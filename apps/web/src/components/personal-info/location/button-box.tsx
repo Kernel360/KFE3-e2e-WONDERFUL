@@ -9,6 +9,7 @@ import { Button } from '@/components/ui';
 import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
 
 import { deleteLocation, setPrimaryLocation } from '@/lib/actions/location';
+import { useToastStore } from '@/lib/zustand/store';
 
 interface ButtonBoxProps {
   locationId: string;
@@ -18,6 +19,7 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingPrimary, setIsSettingPrimary] = useState(false);
   const { refetch } = useUserLocations();
+  const { showToast } = useToastStore();
 
   // 기본 위치 설정 함수
   const handleSetPrimary = async () => {
@@ -26,11 +28,27 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
       const result = await setPrimaryLocation(locationId);
       if (result.success) {
         await refetch();
+        showToast({
+          status: 'success',
+          title: '기본 위치 설정 완료',
+          subtext: result.message || '기본 위치가 변경되었습니다.',
+          autoClose: true,
+        });
       } else {
-        console.error('❌ 기본 위치 설정 실패:', result.error);
+        showToast({
+          status: 'error',
+          title: '기본 위치 설정 실패',
+          subtext: result.error || '기본 위치 설정에 실패했습니다.',
+          autoClose: true,
+        });
       }
     } catch (error) {
-      console.error('❌ 기본 위치 설정 오류:', error);
+      showToast({
+        status: 'error',
+        title: '기본 위치 설정 오류',
+        subtext: '예상치 못한 오류가 발생했습니다.',
+        autoClose: true,
+      });
     } finally {
       setIsSettingPrimary(false);
     }
@@ -38,20 +56,32 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
 
   // 삭제 함수
   const handleDelete = async () => {
-    if (!window.confirm('이 위치를 삭제하시겠습니까?')) {
-      return;
-    }
-
     setIsDeleting(true);
     try {
       const result = await deleteLocation(locationId);
       if (result.success) {
         await refetch();
+        showToast({
+          status: 'success',
+          title: '위치 삭제 완료',
+          subtext: result.message || '위치가 성공적으로 삭제되었습니다.',
+          autoClose: true,
+        });
       } else {
-        console.error('❌ 위치 삭제 실패:', result.error);
+        showToast({
+          status: 'error',
+          title: '위치 삭제 실패',
+          subtext: result.error || '위치 삭제에 실패했습니다.',
+          autoClose: true,
+        });
       }
     } catch (error) {
-      console.error('❌ 위치 삭제 오류:', error);
+      showToast({
+        status: 'error',
+        title: '위치 삭제 오류',
+        subtext: '예상치 못한 오류가 발생했습니다.',
+        autoClose: true,
+      });
     } finally {
       setIsDeleting(false);
     }
