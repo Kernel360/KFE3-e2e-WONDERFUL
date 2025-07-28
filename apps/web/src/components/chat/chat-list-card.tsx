@@ -58,7 +58,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
 
   // TODO: 기능 연결 시 roomId 로 연결 해서 해당 태그 내에서 작성할 것.
   const roomId = chatInfo.id;
-  const link = `/chat/${roomId}?auctionId=${auctionId}`;
+  const link = `/chat/${roomId}?auctionId=${auctionId}&interlocutor=${otherUser.nickname}`;
 
   return (
     <div className="flex h-fit w-full items-center justify-between gap-2.5">
