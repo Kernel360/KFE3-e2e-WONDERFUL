@@ -1,11 +1,21 @@
+import { redirect } from 'next/navigation';
+
 import { Container } from '@/components/layout';
+import { SalesList } from '@/components/profile/sales-list';
 
-import TradeListPage from '@/views/profile/TradePage';
+import { getCurrentUser } from '@/lib/utils/auth-server';
+export const dynamic = 'force-dynamic';
 
-const Page = () => {
+const Page = async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/auth/signin');
+  }
+
   return (
     <Container className="px-4">
-      <TradeListPage />
+      <SalesList userId={user.id} />
     </Container>
   );
 };
