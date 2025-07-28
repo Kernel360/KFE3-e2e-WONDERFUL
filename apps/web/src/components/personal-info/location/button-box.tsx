@@ -9,7 +9,7 @@ import { Button } from '@/components/ui';
 import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
 
 import { deleteLocation, setPrimaryLocation } from '@/lib/actions/location';
-import { useToastStore } from '@/lib/zustand/store/toast-store';
+import { useToastStore } from '@/lib/zustand/store';
 
 interface ButtonBoxProps {
   locationId: string;

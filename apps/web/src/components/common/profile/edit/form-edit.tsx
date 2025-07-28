@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useUpdateProfile } from '@/hooks/mutations/profile';
 import { useMyProfile } from '@/hooks/queries/profile';
 
-import { useToastStore } from '@/lib/zustand/store/toast-store';
+import { useToastStore } from '@/lib/zustand/store';
 
 import NicknameInput from './nickname';
 import ProfileImageUploader from './profile-image-uploader';
