@@ -10,6 +10,11 @@ import { AuctionFormData, AuctionPriceUpdate, AuctionStatus } from '@/types/auct
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
   try {
+    // 서버에서 최대값 검증 추가
+    if (data.prices.start_price > 2147483647) {
+      throw new Error('경매 시작가는 21억원을 초과할 수 없습니다.');
+    }
+
     const supabase = await createClient();
 
     // 1. 유저의 기본 위치 조회
