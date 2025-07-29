@@ -43,7 +43,7 @@ export const useFavoriteStatus = (auctionId: string) => {
 };
 
 // 위치 정보 조회 훅
-export const useLocationById = (locationId: string | null | undefined) => {
+export const useLocationById = (locationId: string) => {
   return useQuery({
     queryKey: auctionKeys.location(locationId!),
     queryFn: () => getLocationById(locationId!),
