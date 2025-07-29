@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 
-import { formatCurrencyWithUnit } from '@/lib/utils/price';
+import { formatCurrencyWithUnit, formatToKoreanUnit } from '@/lib/utils/price';
 
 import { BidInputProps } from '@/types/bid';
 
@@ -29,7 +29,7 @@ const BidFormInput = ({
   currentPrice,
   minUnit, // 최소 입찰 단위
   bidPrice,
-  // isBidInputOpen,
+  isBidInputOpen,
   onChange,
   validationError = '',
 }: ExtendedBidInputProps) => {
@@ -38,34 +38,57 @@ const BidFormInput = ({
 
   const placeholder = `${formatCurrencyWithUnit(currentPrice + minUnit)} 부터`;
 
+  // 기본값을 현재가 + 최소입찰단위로 설정
+  const defaultBidPrice = currentPrice + minBidUnit;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replaceAll(',', '');
     const parsed = Number(value);
     onChange(isNaN(parsed) ? null : parsed);
   };
 
+  // 초기화 핸들러
+  const handleReset = () => {
+    onChange(defaultBidPrice); // 현재가 + 최소 입찰 단위로 초기화
+  };
+
+  // 최소입찰단위의 배수로 버튼 생성
   const increaseButtons = [
-    { label: '+10만', amount: 100_000 },
-    { label: '+5만', amount: 50_000 },
-    { label: '+1만', amount: 10_000 },
-    { label: '+1천원', amount: 1_000 },
+    {
+      label: `+${formatToKoreanUnit(minBidUnit * 100)}`,
+      amount: minBidUnit * 100,
+      multiplier: '100배',
+    }, // 100배
+    {
+      label: `+${formatToKoreanUnit(minBidUnit * 50)}`,
+      amount: minBidUnit * 50,
+      multiplier: '50배',
+    }, // 50배
+    {
+      label: `+${formatToKoreanUnit(minBidUnit * 10)}`,
+      amount: minBidUnit * 10,
+      multiplier: '10배',
+    }, // 10배
+    { label: `+${formatToKoreanUnit(minBidUnit)}`, amount: minBidUnit, multiplier: '1배' }, // 1배
   ];
 
   const handleIncrease = (amount: number) => {
-    const current = bidPrice ?? currentPrice;
+    const current = bidPrice ?? defaultBidPrice; // 빈 값일 때 기본값 사용
     onChange(current + amount);
   };
 
   return (
-    <div>
+    <div className={bidInputWrapper({ open: isBidInputOpen })}>
       <InputIcon
         id="price"
         type="number"
-        value={bidPrice ?? ''}
+        value={bidPrice ?? defaultBidPrice}
         label="희망입찰가"
         placeholder={placeholder}
         onChange={handleChange}
         minBidUnit={minBidUnit}
+        resetValue={defaultBidPrice} // 초기화할 값
+        onReset={handleReset} // 초기화 콜백
         className={validationError ? 'border-red-500' : ''}
       >
         <UserRound />
@@ -75,15 +98,17 @@ const BidFormInput = ({
       {validationError && <div className="mt-1 text-sm text-red-500">{validationError}</div>}
 
       <div className="grid grid-cols-4 gap-2 py-2">
-        {increaseButtons.map(({ label, amount }) => (
+        {increaseButtons.map(({ label, amount, multiplier }) => (
           <Button
             key={amount}
             size="min"
             color="secondary"
             type="button"
             onClick={() => handleIncrease(amount)}
+            className="flex h-auto flex-col items-center justify-center gap-0 px-2 py-1"
           >
-            {label}
+            <span>{label}</span>
+            <span className="text-xs opacity-70">({multiplier})</span>
           </Button>
         ))}
       </div>
