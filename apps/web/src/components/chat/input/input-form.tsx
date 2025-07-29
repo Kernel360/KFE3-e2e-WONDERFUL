@@ -1,19 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { SendHorizontal } from 'lucide-react';
 
 import { Button, Textarea } from '@/components/ui';
 
 import { supabase } from '@/lib/supabase/client';
+import { useToastStore } from '@/lib/zustand/store/toast-store';
 import { useUserStore } from '@/lib/zustand/store/user-store';
 
-const InputForm = (roomId: { roomId: string }) => {
+const InputForm = ({ roomId }: { roomId: string }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const currentUserId = useUserStore((state) => state.user?.id);
+  const { showToast } = useToastStore();
 
   const sendMessage = async () => {
     if (!newMessage.trim() || isSending) return;
@@ -21,24 +24,27 @@ const InputForm = (roomId: { roomId: string }) => {
     setIsSending(true);
     try {
       const { error } = await supabase.from('chat_messages').insert({
-        room_id: roomId.roomId,
+        room_id: roomId,
         sender_id: currentUserId,
         content: newMessage.trim(),
         sent_at: new Date().toISOString(),
       });
 
       if (error) {
-        console.error('메시지 전송 에러:', error);
-        alert('메시지 전송에 실패했습니다.');
-        return;
+        throw new Error();
       }
 
       setNewMessage('');
     } catch (error) {
-      console.error('메시지 전송 실패:', error);
-      alert('메시지 전송에 실패했습니다.');
+      showToast({
+        status: 'error',
+        title: '메세지 전송에 실패했습니다.',
+        subtext: '메세지 전송에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        autoClose: true,
+      });
     } finally {
       setIsSending(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -52,12 +58,12 @@ const InputForm = (roomId: { roomId: string }) => {
   return (
     <div className="my-4 flex w-full flex-row items-stretch gap-2 overflow-x-hidden">
       <Textarea
+        ref={inputRef}
         variant="chat"
         placeholder="메세지를 입력하세요. "
         onKeyDown={handleKeyDown}
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        disabled={isSending}
       />
       <Button
         variant="solid"
