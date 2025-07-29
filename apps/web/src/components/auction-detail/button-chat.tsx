@@ -1,5 +1,7 @@
 'use client';
 
+import { error } from 'console';
+
 import { useRouter } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
@@ -10,18 +12,24 @@ import { createChatRoom } from '@/lib/actions/chat';
 
 interface ButtonChatProps {
   auctionId: string;
-  sellerId: string;
+  seller: { id: string; nickName: string };
 }
 
-const ButtonChat = ({ auctionId, sellerId }: ButtonChatProps) => {
+const ButtonChat = ({ auctionId, seller }: ButtonChatProps) => {
   const router = useRouter();
 
   const handleChatClick = async () => {
     try {
-      const data = await createChatRoom({ auctionId, sellerId });
-      router.push(`/chat/${data.roomId}?auctionId=${data.auctionId}`);
-      console.log(data.roomId, data.auctionId);
-    } catch {
+      const data = await createChatRoom({ auctionId, seller });
+
+      if (!data) {
+        throw new Error(`채팅방 정보가 없음`);
+      }
+      router.push(
+        `/chat/${data.roomId}?auctionId=${data.auctionId}&interlocutor=${seller.nickName}`
+      );
+    } catch (error) {
+      console.error(error);
       alert('잠시 후 다시 시도해주세요.');
     }
   };

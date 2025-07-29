@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/utils/auth-server';
 
 import { CreateChatRoomProps } from '@/types/chat';
 
-export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProps) => {
+export const createChatRoom = async ({ auctionId, seller }: CreateChatRoomProps) => {
   try {
     const supabase = createClient();
 
@@ -20,7 +20,7 @@ export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProp
       .from('chat_rooms') // 테이블명 확인 필요
       .select('id')
       .eq('auction_id', auctionId)
-      .eq('seller_id', sellerId)
+      .eq('seller_id', seller.id)
       .eq('buyer_id', user.id)
       .eq('is_deleted', false)
       .single();
@@ -32,7 +32,7 @@ export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProp
     }
 
     if (existingRoom) {
-      return existingRoom.id;
+      return { roomId: existingRoom.id, auctionId: auctionId, interlocutor: seller.nickName };
     }
 
     // 새 채팅방 생성
@@ -40,7 +40,7 @@ export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProp
       .from('chat_rooms')
       .insert({
         auction_id: auctionId,
-        seller_id: sellerId,
+        seller_id: seller.id,
         buyer_id: user.id,
         created_at: new Date().toISOString(),
       })
@@ -52,8 +52,7 @@ export const createChatRoom = async ({ auctionId, sellerId }: CreateChatRoomProp
       throw new Error(`채팅방 생성 실패: ${createError.message}`);
     }
 
-    return { roomId: newRoom.id, auctionId: auctionId };
-
+    return { roomId: newRoom.id, auctionId: auctionId, interlocutor: seller.nickName };
   } catch (error) {
     console.error('createChatRoom 전체 에러:', error);
     throw error;
