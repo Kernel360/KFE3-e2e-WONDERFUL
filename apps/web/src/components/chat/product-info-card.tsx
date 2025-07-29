@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import ProductCardSkeleton from '@/components/chat/product-card-skeleton';
+import { ProductCardSkeleton } from '@/components/chat';
 import productCardStyle from '@/components/chat/style';
 import { Button } from '@/components/ui';
 import Thumbnail from '@/components/ui/thumbnail';

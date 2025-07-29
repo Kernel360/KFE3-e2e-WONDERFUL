@@ -14,3 +14,4 @@ export { default as ChatContainer } from './messages/chat-container';
 export { default as ChatListCard } from './chat-list-card';
 export { default as ChatListCardSkeleton } from './chat-list-card-skeleton';
 export { default as ProductInfoCard } from './product-info-card';
+export { default as ProductCardSkeleton } from './product-card-skeleton';
