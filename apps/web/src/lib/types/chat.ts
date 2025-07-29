@@ -49,7 +49,12 @@ export interface ChatUser {
   isOnline?: boolean;
 }
 
+export interface Seller {
+  id: string;
+  nickName: string;
+}
+
 export interface CreateChatRoomProps {
   auctionId: string;
-  seller: { id: string; nickName: string };
+  seller: Seller;
 }
