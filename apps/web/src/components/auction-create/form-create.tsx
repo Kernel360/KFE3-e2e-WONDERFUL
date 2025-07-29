@@ -63,6 +63,7 @@ const CreateAuctionForm = ({
           name="title"
           placeholder="상품명과 함께 간단한 설명이 있으면 좋아요"
           defaultValue={defaultValues?.title || ''}
+          className="text-md h-12"
         />
         {errors['title'] && <FormErrorMessage>{errors['title']}</FormErrorMessage>}
       </div>
@@ -72,7 +73,7 @@ const CreateAuctionForm = ({
         <Textarea
           id="description"
           name="description"
-          className="h-[110px] resize-none overflow-y-auto"
+          className="text-md h-[110px] resize-none overflow-y-auto"
           placeholder="상품 설명을 입력해주세요. 구매 전 알아야 할 하자나 특이사항을 남겨주세요."
           defaultValue={defaultValues?.description || ''}
         />
@@ -83,7 +84,7 @@ const CreateAuctionForm = ({
         <Label htmlFor="category_id">상품 카테고리</Label>
         <CategorySelectBox
           name="category_id"
-          className="w-full"
+          className="text-md h-12 w-full"
           defaultValue={defaultValues?.category_id || ''}
         />
       </div>
@@ -141,6 +142,7 @@ const CreateAuctionForm = ({
               min={1000}
               placeholder="최소 경매가는 1,000원 입니다."
               defaultValue={defaultValues?.start_price || ''}
+              className="text-md h-12"
             />
           )}
           {errors['prices.start_price'] && (
@@ -152,7 +154,7 @@ const CreateAuctionForm = ({
           <div className="mr-2 flex items-center gap-3">
             <MinUnitSelectBox
               name="min_bid_unit"
-              className="w-full"
+              className="text-md h-12 w-full"
               defaultValue={defaultValues?.min_bid_unit?.toString() || ''}
             />{' '}
             원
@@ -184,6 +186,7 @@ const CreateAuctionForm = ({
             min={1}
             placeholder="최대 시간은 경매 시작 후 99시간입니다."
             defaultValue={defaultValues?.end_time || ''}
+            className="text-md h-12"
           />
         )}
 

@@ -38,7 +38,7 @@ const SelectBox = ({
         <SelectContent>
           <SelectGroup>
             {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} className="text-md h-12">
                 {option.label}
               </SelectItem>
             ))}
