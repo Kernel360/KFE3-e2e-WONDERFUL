@@ -49,7 +49,7 @@ const ButtonDirectDeal = ({
       // 채팅방 생성
       const chatRoomId = await createChatRoom({
         auctionId,
-        seller: { id: seller.id, nickName: seller.nickName },
+        seller: { id: seller.id, nickname: seller.nickname },
       });
 
       // 채팅방으로 이동
