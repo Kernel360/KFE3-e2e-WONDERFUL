@@ -62,6 +62,15 @@ export type AuctionDetailItem = Prisma.AuctionItemGetPayload<{
         name: true;
       };
     };
+    // 위치 정보
+    location: {
+      select: {
+        id: true;
+        locationName: true;
+        latitude: true;
+        longitude: true;
+      };
+    };
     // 가격
     auctionPrice: {
       select: {

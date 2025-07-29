@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getAuctionDetail, getAuctions } from '@/lib/api/auction';
+import { getAuctionDetail, getAuctions, getLocationById } from '@/lib/api/auction';
 
 import { auctionKeys } from './keys';
 
@@ -42,6 +42,18 @@ export const useFavoriteStatus = (auctionId: string) => {
   });
 };
 
+// 위치 정보 조회 훅
+export const useLocationById = (locationId: string | null | undefined) => {
+  return useQuery({
+    queryKey: auctionKeys.location(locationId!),
+    queryFn: () => getLocationById(locationId!),
+    enabled: !!locationId, // locationId가 있을 때만 실행
+    staleTime: 1000 * 60 * 10, // 10분
+    gcTime: 1000 * 60 * 30, // 30분간 캐시
+  });
+};
+
 export type UseAuctionsReturn = ReturnType<typeof useAuctions>;
 export type UseAuctionDetailReturn = ReturnType<typeof useAuctionDetail>;
 export type UseFavoriteStatusReturn = ReturnType<typeof useFavoriteStatus>;
+export type UseLocationByIdReturn = ReturnType<typeof useLocationById>;
