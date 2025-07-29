@@ -9,21 +9,21 @@ import { createChatRoom } from '@/lib/actions/chat';
 interface ButtonDirectDealProps {
   directPrice: string;
   auctionId: string;
-  sellerId: string;
+  seller: { id: string; nickName: string };
   currentUserId?: string;
 }
 
 const ButtonDirectDeal = ({
   directPrice,
   auctionId,
-  sellerId,
+  seller,
   currentUserId,
 }: ButtonDirectDealProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // 본인 경매인지 확인
-  const isOwnAuction = currentUserId === sellerId;
+  const isOwnAuction = currentUserId === seller.id;
 
   const handleDirectDeal = async () => {
     // 본인 경매인 경우 안내 메시지
@@ -47,7 +47,7 @@ const ButtonDirectDeal = ({
       // 채팅방 생성
       const chatRoomId = await createChatRoom({
         auctionId,
-        sellerId,
+        seller: { id: seller.id, nickName: seller.nickName },
       });
 
       // 채팅방으로 이동
