@@ -6,10 +6,12 @@ import { AlarmClock, ChevronRight } from 'lucide-react';
 
 import { createChatRoom } from '@/lib/actions/chat';
 
+import { Seller } from '@/types/chat';
+
 interface ButtonDirectDealProps {
   directPrice: string;
   auctionId: string;
-  seller: { id: string; nickName: string };
+  seller: Seller;
   currentUserId?: string;
 }
 

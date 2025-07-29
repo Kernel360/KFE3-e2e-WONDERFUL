@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button';
 
 import { createChatRoom } from '@/lib/actions/chat';
 
+import { Seller } from '@/types/chat';
+
 interface ButtonChatProps {
   auctionId: string;
-  seller: { id: string; nickName: string };
+  seller: Seller;
 }
 
 const ButtonChat = ({ auctionId, seller }: ButtonChatProps) => {
