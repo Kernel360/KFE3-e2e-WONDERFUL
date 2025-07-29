@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import { FilterTab, AuctionCard } from '@/components/common';
 
-import { useMyWishlist } from '@/hooks/queries/profile';
+import { useMySales } from '@/hooks/queries/profile';
 
 import { AUCTION_TABS_BASIC } from '@/lib/constants/tabs';
 import { convertToAuctionItemProps } from '@/lib/utils/auction';
@@ -22,19 +22,19 @@ const TAB_STATUS_MAP: Record<BasicTabId, AuctionStatus[]> = {
   completed: ['COMPLETED', 'CANCELLED'],
 };
 
-interface WishlistProps {
+interface SalesListProps {
   userId: string;
 }
 
-export const Wishlist = ({ userId }: WishlistProps) => {
+const SalesList = ({ userId }: SalesListProps) => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.trade) || 'all') as BasicTabId;
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
-    useMyWishlist(TAB_STATUS_MAP[selectedTab]);
+    useMySales(TAB_STATUS_MAP[selectedTab]);
 
   // 모든 페이지의 데이터를 하나로 합치기
-  const allWishlist = data?.pages.flatMap((page) => page.data) || [];
+  const allSales = data?.pages.flatMap((page) => page.data) || [];
 
   // Intersection Observer로 무한 스크롤 구현
   useEffect(() => {
@@ -60,7 +60,7 @@ export const Wishlist = ({ userId }: WishlistProps) => {
       <div>
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
         <div className="flex items-center justify-center py-16">
-          <div className="text-lg text-neutral-600">찜한 상품을 불러오는 중...</div>
+          <div className="text-lg text-neutral-600">판매 내역을 불러오는 중...</div>
         </div>
       </div>
     );
@@ -72,7 +72,7 @@ export const Wishlist = ({ userId }: WishlistProps) => {
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
         <div className="flex flex-col items-center justify-center gap-4 py-16">
           <div className="text-danger-600 text-lg">
-            찜한 상품을 불러오는 중 오류가 발생했습니다.
+            판매 내역을 불러오는 중 오류가 발생했습니다.
           </div>
           <button
             onClick={() => refetch()}
@@ -90,8 +90,8 @@ export const Wishlist = ({ userId }: WishlistProps) => {
       <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
 
       <div className="flex flex-col gap-3">
-        {allWishlist.length > 0 ? (
-          allWishlist.map((auction) => {
+        {allSales.length > 0 ? (
+          allSales.map((auction) => {
             const auctionItemProps = convertToAuctionItemProps(auction);
             return <AuctionCard key={auction.id} {...auctionItemProps} />;
           })
@@ -101,13 +101,13 @@ export const Wishlist = ({ userId }: WishlistProps) => {
               <svg className="h-16 w-16" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
-                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8z"
                   clipRule="evenodd"
                 />
               </svg>
             </div>
-            <h3 className="mb-1 text-lg font-medium text-neutral-900">찜한 상품이 없습니다</h3>
-            <p className="text-neutral-600">마음에 드는 상품을 찜해보세요.</p>
+            <h3 className="mb-1 text-lg font-medium text-neutral-900">등록한 경매가 없습니다</h3>
+            <p className="text-neutral-600">아직 등록한 경매가 없습니다.</p>
           </div>
         )}
       </div>
@@ -118,10 +118,12 @@ export const Wishlist = ({ userId }: WishlistProps) => {
           <div className="text-neutral-600">불러오는 중...</div>
         ) : hasNextPage ? (
           <div className="text-neutral-400">스크롤해서 더 보기</div>
-        ) : allWishlist.length > 0 ? (
+        ) : allSales.length > 0 ? (
           <div className="text-neutral-400">마지막 게시글</div>
         ) : null}
       </div>
     </div>
   );
 };
+
+export default SalesList;

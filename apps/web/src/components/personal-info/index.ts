@@ -1,4 +1,5 @@
 export { default as AccountItem } from './account/item';
+import { Wishlist } from '@/components/profile/wishlist';
 export { default as AccountDrawerContent } from './account/drawer-content';
 export { default as AccountList } from './account/list';
 export { default as AccountForm } from './account/form';
@@ -22,3 +23,7 @@ export { default as LocationList } from './location/location-list';
 export { default as LocationItem } from './location/location-item';
 export { default as LocationButtonBox } from './location/button-box';
 export { default as LocationButtonCreate } from './location/button-create';
+
+export { default as Wishlist } from './wish/wishlist';
+export { default as SalesList } from './sales/sales-list';
+export { default as PurchasesList } from './purchases/purchases-list';
