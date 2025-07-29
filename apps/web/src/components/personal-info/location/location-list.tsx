@@ -30,7 +30,7 @@ const LocationList = () => {
         {userLocations?.map((location) => (
           <li key={location.locationId}>
             <LocationItem location={location}>
-              <LocationButtonBox locationId={location.locationId!} />
+              <LocationButtonBox locationId={location.locationId!} isPrimary={location.IsPrimary} />
             </LocationItem>
           </li>
         ))}

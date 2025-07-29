@@ -13,9 +13,10 @@ import { useToastStore } from '@/lib/zustand/store';
 
 interface ButtonBoxProps {
   locationId: string;
+  isPrimary?: boolean;
 }
 
-const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
+const LocationButtonBox = ({ locationId, isPrimary = false }: ButtonBoxProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingPrimary, setIsSettingPrimary] = useState(false);
   const { refetch } = useUserLocations();
@@ -91,14 +92,15 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
     <div className="flex">
       <button
         onClick={handleSetPrimary}
-        disabled={isSettingPrimary}
-        className="flex size-10 items-center justify-center disabled:opacity-50"
-        title="기본 위치로 설정"
+        disabled={isSettingPrimary || isPrimary}
+        className={`flex size-10 items-center justify-center ${
+          isPrimary ? 'cursor-default' : 'hover:text-primary-500'
+        }`}
       >
         <Check
           size={20}
           className={`hover:text-primary-500 text-neutral-600 ${
-            isSettingPrimary ? 'animate-pulse' : ''
+            isPrimary ? 'text-primary-500' : isSettingPrimary ? 'animate-pulse' : ''
           }`}
         />
       </button>
@@ -107,11 +109,19 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
         color="transparent"
         size="sm"
         onClick={handleDelete}
-        disabled={isDeleting}
-        className="hover:[&_svg]:text-danger-500 disabled:opacity-50"
-        title="위치 삭제"
+        disabled={isDeleting || isPrimary}
+        className={`${
+          isPrimary
+            ? 'cursor-not-allowed opacity-30'
+            : 'hover:[&_svg]:text-danger-500 disabled:opacity-50'
+        }`}
       >
-        <Trash2 size={20} className={`text-neutral-600 ${isDeleting ? 'animate-pulse' : ''}`} />
+        <Trash2
+          size={20}
+          className={`text-neutral-600 ${
+            isPrimary ? 'text-neutral-300' : isDeleting ? 'animate-pulse' : ''
+          }`}
+        />
       </Button>
     </div>
   );
