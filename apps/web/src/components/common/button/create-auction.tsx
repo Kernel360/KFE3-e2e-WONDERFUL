@@ -14,7 +14,7 @@ const CreateAuctionButton = () => {
   const { showToast } = useToastStore();
 
   const handleClick = () => {
-    if (selectedLocation.locationId === null) {
+    if (!selectedLocation.locationId) {
       router.push('/profile/location');
       showToast({
         status: 'error',
