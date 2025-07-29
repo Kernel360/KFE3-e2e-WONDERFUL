@@ -28,7 +28,7 @@ const ButtonChat = ({ auctionId, seller }: ButtonChatProps) => {
         throw new Error(`채팅방 정보가 없음`);
       }
       router.push(
-        `/chat/${data.roomId}?auctionId=${data.auctionId}&interlocutor=${seller.nickName}`
+        `/chat/${data.roomId}?auctionId=${data.auctionId}&interlocutor=${seller.nickname}`
       );
     } catch {
       alert('잠시 후 다시 시도해주세요.');

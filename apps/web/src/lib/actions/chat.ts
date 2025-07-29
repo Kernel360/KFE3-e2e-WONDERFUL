@@ -32,7 +32,7 @@ export const createChatRoom = async ({ auctionId, seller }: CreateChatRoomProps)
     }
 
     if (existingRoom) {
-      return { roomId: existingRoom.id, auctionId: auctionId, interlocutor: seller.nickName };
+      return { roomId: existingRoom.id, auctionId: auctionId, interlocutor: seller.nickname };
     }
 
     // 새 채팅방 생성
@@ -52,7 +52,7 @@ export const createChatRoom = async ({ auctionId, seller }: CreateChatRoomProps)
       throw new Error(`채팅방 생성 실패: ${createError.message}`);
     }
 
-    return { roomId: newRoom.id, auctionId: auctionId, interlocutor: seller.nickName };
+    return { roomId: newRoom.id, auctionId: auctionId, interlocutor: seller.nickname };
   } catch (error) {
     console.error('createChatRoom 전체 에러:', error);
     throw error;
