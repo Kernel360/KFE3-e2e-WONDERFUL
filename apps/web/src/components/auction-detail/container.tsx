@@ -99,7 +99,7 @@ const AuctionDetailContainer = () => {
   const { seller } = auction;
   const chatRoomSellerProps = {
     id: seller.id,
-    nickName: seller.nickname,
+    nickname: seller.nickname,
   };
 
   // 처리된 이미지 배열 가져오기
