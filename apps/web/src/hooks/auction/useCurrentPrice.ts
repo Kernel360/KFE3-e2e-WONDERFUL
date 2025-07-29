@@ -27,7 +27,10 @@ export const useCurrentPrice = (auctionId: string, fallbackPrice: number) => {
 
   const currentPrice = useMemo(() => {
     const bids = bidsData?.data ?? [];
-    return bids.length === 0 ? fallbackPrice : Math.max(...bids.map((b) => Number(b.price)));
+    if (bids.length === 0) {
+      return fallbackPrice;
+    }
+    return Math.max(...bids.map((b) => Number(b.price)));
   }, [bidsData, fallbackPrice]);
 
   return { currentPrice, refetchCurrentPrice: refetch, isFetching };

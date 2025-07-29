@@ -30,14 +30,6 @@ export interface AuctionFormData {
   is_extended_auction?: boolean;
 }
 
-export interface Auction extends AuctionFormData {
-  id: string;
-  seller_id: string;
-  status: AuctionStatus;
-  thumbnail_url: string;
-  created_at: string;
-}
-
 export interface AuctionPriceUpdate {
   instant_price?: number | null;
   min_bid_unit: number;
@@ -48,16 +40,7 @@ export interface AuctionPriceUpdate {
   current_price?: number;
 }
 
-export type AuctionStatus =
-  | 'pending'
-  | 'ongoing'
-  | 'ended'
-  | 'sold'
-  | 'canceled'
-  | 'waiting'
-  | 'live'
-  | 'paused'
-  | 'closed';
+export type AuctionStatus = 'ACTIVE' | 'COMPLETED';
 
 //경매 게시글 등록 폼 타입들
 //이미지 등록 타입

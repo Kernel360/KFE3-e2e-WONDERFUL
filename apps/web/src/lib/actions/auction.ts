@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { convertHoursToTimestamp } from '@/lib/utils/date';
 
-import { AuctionFormData, AuctionPriceUpdate } from '@/types/auction';
+import { AuctionFormData, AuctionPriceUpdate, AuctionStatus } from '@/types/auction';
 
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
@@ -270,4 +270,32 @@ export const addAuctionImages = async (itemId: string, imageUrls: string[]) => {
   });
 
   if (error) throw new Error(`이미지 저장 실패: ${error.message}`);
+};
+
+export const getAuctionStatus = async (itemId: string) => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('auction_items')
+    .select('status')
+    .eq('id', itemId)
+    .single();
+
+  if (error) throw new Error(`경매 상태 조회 실패: ${error.message}`);
+
+  return data.status;
+};
+
+export const updateAuctionStatus = async (itemId: string, status: AuctionStatus) => {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('auction_items')
+    .update({ status })
+    .eq('id', itemId)
+    .select('status')
+    .single();
+
+  if (error) {
+    throw new Error(`경매 상태 업데이트 실패: ${error.message}`);
+  }
 };
