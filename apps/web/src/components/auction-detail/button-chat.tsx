@@ -30,8 +30,7 @@ const ButtonChat = ({ auctionId, seller }: ButtonChatProps) => {
       router.push(
         `/chat/${data.roomId}?auctionId=${data.auctionId}&interlocutor=${seller.nickName}`
       );
-    } catch (error) {
-      console.error(error);
+    } catch {
       alert('잠시 후 다시 시도해주세요.');
     }
   };
