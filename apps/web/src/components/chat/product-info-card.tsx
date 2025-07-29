@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { ProductCardSkeleton } from '@/components/chat';
+import ProductCardError from '@/components/chat/product-card-error';
 import productCardStyle from '@/components/chat/style';
 import { Button } from '@/components/ui';
 import Thumbnail from '@/components/ui/thumbnail';
@@ -66,19 +67,7 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
       autoClose: true,
     });
 
-    return (
-      <div className={productCardStyle().wrapper()}>
-        <Button
-          variant="outline"
-          color={color}
-          size="min"
-          onClick={() => refetchAuction()}
-          className="w-1/5"
-        >
-          다시 시도
-        </Button>
-      </div>
-    );
+    return <ProductCardError onClick={() => refetchAuction()} />;
   }
 
   return (
