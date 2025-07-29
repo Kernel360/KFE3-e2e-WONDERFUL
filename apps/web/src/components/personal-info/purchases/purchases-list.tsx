@@ -26,7 +26,7 @@ interface PurchasesListProps {
   userId: string;
 }
 
-export const PurchasesList = ({ userId }: PurchasesListProps) => {
+const PurchasesList = ({ userId }: PurchasesListProps) => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.trade) || 'all') as BasicTabId;
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -123,3 +123,5 @@ export const PurchasesList = ({ userId }: PurchasesListProps) => {
     </div>
   );
 };
+
+export default PurchasesList;
