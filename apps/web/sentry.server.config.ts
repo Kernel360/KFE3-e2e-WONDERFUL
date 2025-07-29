@@ -8,7 +8,7 @@ Sentry.init({
   dsn: 'https://9c0dac06d753dcc69a188ba9e75ef840@o4509634509471744.ingest.us.sentry.io/4509634513928192',
 
   // 터널링 추가
-  tunnel: '/monitoring',
+  tunnel: '/api/monitoring',
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,
