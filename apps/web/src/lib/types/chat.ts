@@ -51,5 +51,5 @@ export interface ChatUser {
 
 export interface CreateChatRoomProps {
   auctionId: string;
-  sellerId: string;
+  seller: { id: string; nickName: string };
 }
