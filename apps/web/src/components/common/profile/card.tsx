@@ -3,7 +3,7 @@ import { ProfileImage } from '@/components/common';
 interface ProfileCardProps {
   nickname: string;
   profileImg?: string;
-  location?: string;
+  location?: string | null;
   children: React.ReactNode;
 }
 
