@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { Container } from '@/components/layout';
-import { SalesList } from '@/components/profile/sales-list';
+import { SalesList } from '@/components/personal-info';
 
 import { getCurrentUser } from '@/lib/utils/auth-server';
 export const dynamic = 'force-dynamic';
