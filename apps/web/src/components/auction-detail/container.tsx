@@ -65,7 +65,6 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const seller = auction.seller; // 판매자 정보
 
   // 초기 입찰 데이터 준비
   const initialBids = (initialBidsData?.data as BidType[]) || [];
@@ -96,6 +95,13 @@ const AuctionDetailContainer = () => {
     category: auction.category.name,
   };
 
+  // 판매자 정보
+  const { seller } = auction;
+  const chatRoomSellerProps = {
+    id: seller.id,
+    nickname: seller.nickname,
+  };
+
   // 처리된 이미지 배열 가져오기
   const images = processImages();
 
@@ -109,8 +115,8 @@ const AuctionDetailContainer = () => {
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
         >
-          {currentUser?.id !== auction.sellerId && (
-            <ButtonChat auctionId={auction.id} sellerId={auction.sellerId} />
+          {currentUser?.id !== seller.id && (
+            <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
           )}
         </ProfileCard>
         <ItemSummary item={item} id={id as string} />
@@ -128,6 +134,7 @@ const AuctionDetailContainer = () => {
           endTime={item.endTime}
           bidTableRef={bidTableRef}
           isExpired={false}
+          seller={chatRoomSellerProps}
           currentUserId={currentUser?.id} // 현재 사용자 ID 전달
         />
       </aside>

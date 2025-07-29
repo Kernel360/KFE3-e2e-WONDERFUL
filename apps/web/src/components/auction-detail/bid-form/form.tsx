@@ -21,6 +21,7 @@ const BidForm = ({
   currentPrice,
   endTime,
   bidTableRef,
+  seller,
   currentUserId,
 }: BidFormProps) => {
   const [isBidInputOpen, setIsBidInputOpen] = useState<boolean>(false);
@@ -139,7 +140,7 @@ const BidForm = ({
               data.data.auctionPrice.instantPrice || currentPrice * 1.2
             )}
             auctionId={auctionId}
-            sellerId={data.data.sellerId}
+            seller={seller}
             currentUserId={currentUserId}
           />
         )}
@@ -167,6 +168,7 @@ const BidForm = ({
         currentPrice={currentPrice}
         endTime={endTime}
         isExpired={isExpired}
+        seller={seller}
         isValid={!validationError && bidPrice !== null}
       />
     </form>
