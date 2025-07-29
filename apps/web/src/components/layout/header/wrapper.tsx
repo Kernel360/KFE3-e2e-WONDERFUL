@@ -1,12 +1,14 @@
-const HeaderWrapper = ({
-  children,
-  className,
-}: {
+interface HeaderWrapperProps {
   children: React.ReactNode;
   className?: string;
-}) => {
+  style?: React.CSSProperties;
+}
+const HeaderWrapper = ({ children, className, style }: HeaderWrapperProps) => {
   return (
-    <header className={`flex h-16 w-full items-center justify-between px-4 ${className}`}>
+    <header
+      className={`flex h-16 w-full items-center justify-between px-4 ${className}`}
+      style={style}
+    >
       {children}
     </header>
   );
