@@ -1,7 +1,5 @@
 'use client';
 
-import { error } from 'console';
-
 import { useRouter } from 'next/navigation';
 
 import { MessageSquareMore } from 'lucide-react';
