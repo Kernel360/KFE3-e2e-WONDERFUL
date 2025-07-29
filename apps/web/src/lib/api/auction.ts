@@ -48,7 +48,7 @@ export const getAuctionDetail = async (
 };
 
 // 위치 정보 조회
-export const getLocationById = async (locationId: string): Promise<LocationResponse> => {
+export const getLocationById = async (locationId: string): Promise<AuctionDetailResponse> => {
   const response = await apiClient.get(`/locations/${locationId}`);
   return response.data;
 };
