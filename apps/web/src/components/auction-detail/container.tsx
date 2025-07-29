@@ -134,6 +134,7 @@ const AuctionDetailContainer = () => {
           endTime={item.endTime}
           bidTableRef={bidTableRef}
           isExpired={false}
+          seller={chatRoomSellerProps}
           currentUserId={currentUser?.id} // 현재 사용자 ID 전달
         />
       </aside>
