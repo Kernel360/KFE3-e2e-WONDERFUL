@@ -116,6 +116,9 @@ const AuctionHeader = () => {
     <>
       <HeaderWrapper
         className={`${id && !pathname.includes('edit') ? 'absolute z-10 text-white' : 'bg-white'}`}
+        style={{
+          boxShadow: `${id && !pathname.includes('edit') ? 'inset 0 60px 25px -17px rgba(0, 0, 0, 0.1)' : 'none'}`,
+        }}
       >
         <button type="button" onClick={handleBackClick}>
           <ChevronLeftIcon />
