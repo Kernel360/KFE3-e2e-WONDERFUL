@@ -1,5 +1,4 @@
 export { default as AccountItem } from './account/item';
-import { Wishlist } from '@/components/profile/wishlist';
 export { default as AccountDrawerContent } from './account/drawer-content';
 export { default as AccountList } from './account/list';
 export { default as AccountForm } from './account/form';
