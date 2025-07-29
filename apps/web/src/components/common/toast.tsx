@@ -71,19 +71,22 @@ const Toast = () => {
   const getToastStyles = (status: string) => {
     const styles = {
       success: {
-        container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(39,116,255,0.12)]',
+        container:
+          'bg-white shadow-[0px_0px_18px_0px_rgba(39,116,255,0.24)] border-1 border-primary-100',
         title: 'text-primary-500',
         subtext: 'text-neutral-600',
         closeBtn: 'bg-primary-50 text-primary-500 hover:bg-primary-100',
       },
       error: {
-        container: 'bg-white shadow-[0px_6px_12px_-3px_rgba(255,76,0,0.12)]',
-        title: 'text-secondary-600',
+        container:
+          'bg-white shadow-[0px_0px_18px_0px_rgba(255,76,0,0.24)] border-1 border-danger-100',
+        title: 'text-danger-600',
         subtext: 'text-neutral-500',
-        closeBtn: 'bg-secondary-50 text-secondary-600 hover:bg-secondary-100',
+        closeBtn: 'bg-danger-50 text-danger-600 hover:bg-danger-100',
       },
       notice: {
-        container: 'bg-neutral-900 shadow-[0px_6px_12px_-3px_rgba(82,82,82,0.12)]',
+        container:
+          'bg-neutral-900 shadow-[0px_0px_18px_0px_rgba(82,82,82,0.24)] border-1 border-neutral-100',
         title: 'text-neutral-200',
         subtext: '',
         closeBtn: '',
