@@ -66,6 +66,7 @@ const AuctionDetailContainer = () => {
 
   const auction = auctionDetailData.data;
   const seller = auction.seller; // 판매자 정보
+  const location = auction.location; // 위치 정보
 
   // 초기 입찰 데이터 준비
   const initialBids = (initialBidsData?.data as BidType[]) || [];
@@ -108,6 +109,7 @@ const AuctionDetailContainer = () => {
         <ProfileCard
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
+          location={location?.locationName}
         >
           {currentUser?.id !== auction.sellerId && (
             <ButtonChat auctionId={auction.id} sellerId={auction.sellerId} />
