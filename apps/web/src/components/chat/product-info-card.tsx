@@ -51,6 +51,14 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
   const color = isDone ? 'disabled' : 'primary';
 
   const handleComplete = () => {
+    showToast({
+      status: 'success',
+      title: '거래 종료!',
+      subtext:
+        '거래가 종료되었습니다. 공유하신 주소와 계좌에 대한 메세지는 더 이상 보여지지 않습니다.',
+      autoClose: true,
+    });
+
     setIsDone(true);
     updateAuctionStatus(auctionId, 'COMPLETED');
   };
@@ -93,6 +101,7 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
           color={color}
           size="min"
           onClick={() => refetchCurrentPrice()}
+          disabled={isDone}
           className="w-1/5"
         >
           새로고침
