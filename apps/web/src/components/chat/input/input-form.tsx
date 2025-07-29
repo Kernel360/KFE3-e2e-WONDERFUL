@@ -7,6 +7,7 @@ import { SendHorizontal } from 'lucide-react';
 import { Button, Textarea } from '@/components/ui';
 
 import { supabase } from '@/lib/supabase/client';
+import { useToastStore } from '@/lib/zustand/store/toast-store';
 import { useUserStore } from '@/lib/zustand/store/user-store';
 
 const InputForm = ({ roomId }: { roomId: string }) => {
@@ -15,6 +16,7 @@ const InputForm = ({ roomId }: { roomId: string }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const currentUserId = useUserStore((state) => state.user?.id);
+  const { showToast } = useToastStore();
 
   const sendMessage = async () => {
     if (!newMessage.trim() || isSending) return;
@@ -29,14 +31,17 @@ const InputForm = ({ roomId }: { roomId: string }) => {
       });
 
       if (error) {
-        console.error('메시지 전송 에러:', error);
-        alert('메시지 전송에 실패했습니다.');
-        return;
+        throw new Error();
       }
 
       setNewMessage('');
     } catch (error) {
-      alert('메시지 전송에 실패했습니다.');
+      showToast({
+        status: 'error',
+        title: '메세지 전송에 실패했습니다.',
+        subtext: '메세지 전송에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        autoClose: true,
+      });
     } finally {
       setIsSending(false);
       inputRef.current?.focus();
