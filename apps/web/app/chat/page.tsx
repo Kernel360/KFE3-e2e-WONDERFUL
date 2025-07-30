@@ -1,15 +1,14 @@
 'use client';
 
-import { ChatListCard } from '@/components/chat';
-import { ChatListCardSkeleton } from '@/components/chat';
+import { ChatListCard, ChatListCardSkeleton } from '@/components/chat';
 import { FilterTab } from '@/components/common';
 
-import { useChatRooms } from '@/hooks/chat/useChatRoom';
+import useFilteredChatRooms from '@/hooks/chat/useFilteredChatRooms';
 
 import { CHAT_STATUS } from '@/lib/constants/chat';
 
 const Page = () => {
-  const { chatRooms, isLoading, error } = useChatRooms();
+  const { filtered: chatRooms, isLoading, error } = useFilteredChatRooms();
 
   if (isLoading) {
     return (
