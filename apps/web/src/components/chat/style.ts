@@ -3,8 +3,20 @@ import { tv } from 'tailwind-variants';
 const productCardStyle = tv({
   slots: {
     wrapper: 'border-y-1 flex h-auto w-full flex-col justify-between border-neutral-100 p-3',
-    loading: 'text-lg text-neutral-600',
-    error: 'text-danger-600 text-lg',
+    content: 'flex h-full w-full items-center gap-2',
+    infoBox: 'flex min-w-0 flex-1 flex-col',
+    buttonBox: 'flex items-center justify-end gap-2',
+  },
+  variants: {
+    loading: {
+      true: {
+        wrapper: 'animate-pulse',
+        content: 'animate-pulse',
+      },
+    },
+  },
+  defaultVariants: {
+    loading: false,
   },
 });
 

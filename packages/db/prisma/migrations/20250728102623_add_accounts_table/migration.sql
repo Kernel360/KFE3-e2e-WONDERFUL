@@ -26,6 +26,36 @@ CREATE TABLE "locations" (
 );
 
 -- CreateTable
+CREATE TABLE "addresses" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "userId" UUID NOT NULL,
+    "label" TEXT,
+    "userName" TEXT,
+    "phone" TEXT,
+    "address" TEXT NOT NULL,
+    "addressDetail" TEXT,
+    "isPrimary" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "accounts" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "userId" UUID NOT NULL,
+    "bankName" VARCHAR(50) NOT NULL,
+    "accountNumber" VARCHAR(30) NOT NULL,
+    "accountHolder" VARCHAR(50) NOT NULL,
+    "isPrimary" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "alerts" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "user_id" UUID NOT NULL,
@@ -43,7 +73,7 @@ CREATE TABLE "favorite_items" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "user_id" UUID NOT NULL,
     "item_id" UUID NOT NULL,
-    "created_at" TIMESTAMP(6) NOT NULL,
+    "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "favorite_items_pkey" PRIMARY KEY ("id")
 );
@@ -94,7 +124,7 @@ CREATE TABLE "bids" (
     "item_id" UUID NOT NULL,
     "bidder_id" UUID NOT NULL,
     "price" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(6) NOT NULL,
+    "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "bids_pkey" PRIMARY KEY ("id")
 );
@@ -127,7 +157,6 @@ CREATE TABLE "chat_rooms" (
     "auction_id" UUID NOT NULL,
     "seller_id" UUID NOT NULL,
     "buyer_id" UUID NOT NULL,
-    "room_type" VARCHAR(50) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL,
     "last_message_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
@@ -172,6 +201,9 @@ CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 CREATE UNIQUE INDEX "users_nickname_key" ON "users"("nickname");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "accounts_userId_accountNumber_key" ON "accounts"("userId", "accountNumber");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "favorite_items_user_id_item_id_key" ON "favorite_items"("user_id", "item_id");
 
 -- CreateIndex
@@ -185,6 +217,12 @@ CREATE UNIQUE INDEX "user_notifications_user_id_notification_type_key" ON "user_
 
 -- AddForeignKey
 ALTER TABLE "locations" ADD CONSTRAINT "locations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "alerts" ADD CONSTRAINT "alerts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -239,4 +277,3 @@ ALTER TABLE "chat_messages" ADD CONSTRAINT "chat_messages_sender_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "user_notifications" ADD CONSTRAINT "user_notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-

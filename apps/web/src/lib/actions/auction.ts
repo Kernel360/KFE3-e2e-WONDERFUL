@@ -5,11 +5,16 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { convertHoursToTimestamp } from '@/lib/utils/date';
 
-import { AuctionFormData, AuctionPriceUpdate } from '@/types/auction';
+import { AuctionFormData, AuctionPriceUpdate, AuctionStatus } from '@/types/auction';
 
 // Create
 export const createAuction = async (data: AuctionFormData, userId: string) => {
   try {
+    // 서버에서 최대값 검증 추가
+    if (data.prices.start_price > 2147483647) {
+      throw new Error('경매 시작가는 21억원을 초과할 수 없습니다.');
+    }
+
     const supabase = await createClient();
 
     // 1. 유저의 기본 위치 조회
@@ -270,4 +275,32 @@ export const addAuctionImages = async (itemId: string, imageUrls: string[]) => {
   });
 
   if (error) throw new Error(`이미지 저장 실패: ${error.message}`);
+};
+
+export const getAuctionStatus = async (itemId: string) => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('auction_items')
+    .select('status')
+    .eq('id', itemId)
+    .single();
+
+  if (error) throw new Error(`경매 상태 조회 실패: ${error.message}`);
+
+  return data.status;
+};
+
+export const updateAuctionStatus = async (itemId: string, status: AuctionStatus) => {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('auction_items')
+    .update({ status })
+    .eq('id', itemId)
+    .select('status')
+    .single();
+
+  if (error) {
+    throw new Error(`경매 상태 업데이트 실패: ${error.message}`);
+  }
 };

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { X } from 'lucide-react';
 
-import { useToastStore } from '@/lib/zustand/store/toast-store';
+import { useToastStore } from '@/lib/zustand/store';
 
 const Toast = () => {
   const { toasts, closeToast } = useToastStore();

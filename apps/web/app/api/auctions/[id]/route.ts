@@ -34,6 +34,15 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
             name: true,
           },
         },
+        // 위치 정보
+        location: {
+          select: {
+            id: true,
+            locationName: true,
+            latitude: true,
+            longitude: true,
+          },
+        },
         // 가격
         auctionPrice: {
           select: {

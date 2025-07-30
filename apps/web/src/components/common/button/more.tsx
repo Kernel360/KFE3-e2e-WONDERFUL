@@ -27,7 +27,7 @@ const ButtonMore = ({ items }: ButtonMoreProps) => {
           <EllipsisVertical />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-25 py-2">
+      <PopoverContent className="w-25 bg-white py-2 shadow-none">
         <ul className="space-y-2">
           {items.map((item) => (
             <li
