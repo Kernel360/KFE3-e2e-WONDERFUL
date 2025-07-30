@@ -2,6 +2,8 @@ import { tv } from 'tailwind-variants';
 
 import { BadgePrimary } from '@/components/personal-info';
 
+import { AddressListItem } from '@/types/address';
+
 const style = tv({
   base: 'flex items-center justify-between rounded-xl p-3',
   variants: {
@@ -18,15 +20,7 @@ const style = tv({
 interface AddressProps {
   color?: 'default' | 'selected';
   children: React.ReactNode;
-  address: AddressItem;
-}
-
-export interface AddressItem {
-  id: string;
-  name: string;
-  address: string;
-  phone: string;
-  isPrimary: boolean;
+  address: AddressListItem;
 }
 
 const Address = ({ color, children, address }: AddressProps) => {
@@ -34,7 +28,7 @@ const Address = ({ color, children, address }: AddressProps) => {
     <div className={style({ color })}>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <p className="text-lg font-medium text-neutral-900">{address.name}</p>
+          <p className="text-lg font-medium text-neutral-900">{address.userName}</p>
           {address.isPrimary && <BadgePrimary />}
         </div>
         <div className="text-sm font-medium">
