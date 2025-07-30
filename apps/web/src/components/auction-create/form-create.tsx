@@ -11,6 +11,8 @@ import {
 } from '@/components/common';
 import { Input, Label, Popover, PopoverContent, PopoverTrigger, Textarea } from '@/components/ui';
 
+import { useNumberInput } from '@/hooks/common/useNumberInput';
+
 import { Checkbox } from '../ui/checkbox';
 const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
 
@@ -56,6 +58,10 @@ const CreateAuctionForm = ({
   );
   const [priceError, setPriceError] = useState('');
 
+  // 각 input에 맞는 범위 설정
+  const priceHandlers = useNumberInput({ min: 1000, max: 2000000000 });
+  const timeHandlers = useNumberInput({ min: 1, max: 99 });
+
   const formatPrice = (price: number) => price.toLocaleString() + '원';
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,8 +84,9 @@ const CreateAuctionForm = ({
         <Input
           id="title"
           name="title"
-          placeholder="상품명과 함께 간단한 설명이 있으면 좋아요"
+          placeholder="상품 제목을 입력해주세요."
           defaultValue={defaultValues?.title || ''}
+          className="text-md placeholder:text-md h-12"
         />
         {errors['title'] && <FormErrorMessage>{errors['title']}</FormErrorMessage>}
       </div>
@@ -89,8 +96,8 @@ const CreateAuctionForm = ({
         <Textarea
           id="description"
           name="description"
-          className="h-[110px] resize-none overflow-y-auto"
-          placeholder="상품 설명을 입력해주세요. 구매 전 알아야 할 하자나 특이사항을 남겨주세요."
+          className="text-md placeholder:text-md h-[110px] resize-none overflow-y-auto"
+          placeholder="상품 설명을 입력해주세요."
           defaultValue={defaultValues?.description || ''}
         />
         {errors['description'] && <FormErrorMessage>{errors['description']}</FormErrorMessage>}
@@ -100,7 +107,7 @@ const CreateAuctionForm = ({
         <Label htmlFor="category_id">상품 카테고리</Label>
         <CategorySelectBox
           name="category_id"
-          className="w-full"
+          className="text-md h-12 w-full"
           defaultValue={defaultValues?.category_id || ''}
         />
         {errors['category_id'] && <FormErrorMessage>{errors['category_id']}</FormErrorMessage>}
@@ -155,11 +162,15 @@ const CreateAuctionForm = ({
             <Input
               id="start_price"
               name="start_price"
-              type="number"
-              min={1000}
-              placeholder="최소 경매가는 1,000원 입니다."
+              type="text" // type을 text로 변경
+              inputMode="numeric" // 모바일에서 숫자 키패드 표시
+              pattern="[0-9]*" // iOS에서 숫자 키패드 강제
+              placeholder="최소 1,000원, 최대 20억 원 입니다. (예) 1000"
               defaultValue={defaultValues?.start_price || ''}
-              onChange={handlePriceChange}
+              className="text-md placeholder:text-md h-12"
+              onInput={priceHandlers.handleNumberInput}
+              onKeyDown={priceHandlers.handleNumberKeyDown}
+              onPaste={priceHandlers.handleNumberPaste}
             />
           )}
 
@@ -172,14 +183,18 @@ const CreateAuctionForm = ({
           <div className="mr-2 flex items-center gap-3">
             <MinUnitSelectBox
               name="min_bid_unit"
-              className="w-full"
+              className="text-md h-12 w-full"
               defaultValue={defaultValues?.min_bid_unit?.toString() || ''}
             />{' '}
             원
           </div>
+
+          {errors['min_bid_unit'] && <FormErrorMessage>{errors['min_bid_unit']}</FormErrorMessage>}
+
           {errors['prices.min_bid_unit'] && (
             <FormErrorMessage>{errors['prices.min_bid_unit']}</FormErrorMessage>
           )}
+
         </div>
       </fieldset>
 
@@ -202,11 +217,15 @@ const CreateAuctionForm = ({
           <Input
             id="end_time"
             name="end_time"
-            type="number"
-            max={99}
-            min={1}
-            placeholder="최대 시간은 경매 시작 후 99시간입니다."
+            type="text" // type을 text로 변경
+            inputMode="numeric"
+            pattern="[0-9]*"
+            placeholder="최소 1시간, 최대 99시간입니다. (예) 1, 2, 3, ..., 99"
             defaultValue={defaultValues?.end_time || ''}
+            className="text-md placeholder:text-md h-12"
+            onInput={timeHandlers.handleNumberInput}
+            onKeyDown={timeHandlers.handleNumberKeyDown}
+            onPaste={timeHandlers.handleNumberPaste}
           />
         )}
 
