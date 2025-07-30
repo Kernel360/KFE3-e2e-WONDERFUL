@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import AuctionCardSkeleton from '@/components/auction/auction-card-skeleton';
 import { FilterTab, AuctionCard } from '@/components/common';
 
 import { useMyWishlist } from '@/hooks/queries/profile';
@@ -59,8 +60,10 @@ const Wishlist = ({ userId }: WishlistProps) => {
     return (
       <div>
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
-        <div className="flex items-center justify-center py-16">
-          <div className="text-lg text-neutral-600">찜한 상품을 불러오는 중...</div>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <AuctionCardSkeleton key={index} />
+          ))}
         </div>
       </div>
     );
