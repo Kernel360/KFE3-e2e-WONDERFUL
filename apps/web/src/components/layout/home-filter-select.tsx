@@ -78,7 +78,7 @@ const HomeFilterSelect = () => {
   if (isLoading) {
     return (
       <div className={cn(homeFilterWrapper, 'gap-2')}>
-        <div>loading...</div>
+        <div className="h-9 w-14 animate-pulse rounded-sm bg-neutral-200"></div>
         <ChevronDown size={24} className="text-neutral-400" />
       </div>
     );
