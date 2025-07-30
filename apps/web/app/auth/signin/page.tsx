@@ -6,7 +6,7 @@ import { GoogleLoginButton, SigninForm } from '@/components/auth/signin';
 
 const Page = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center overflow-hidden bg-white px-[154px] pt-[131px]">
+    <div className="flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white">
       <h1 className="text-h3 leading-h3 whitespace-nowrap text-center font-bold text-neutral-900">
         로그인
       </h1>
@@ -16,9 +16,7 @@ const Page = () => {
           <SigninForm />
         </Suspense>
 
-        <div className="mt-[40px] flex items-center justify-center gap-6 px-[98px]">
-          <GoogleLoginButton />
-          <GoogleLoginButton />
+        <div className="mt-[20px] flex w-[360px] items-center justify-center gap-6">
           <GoogleLoginButton />
         </div>
 

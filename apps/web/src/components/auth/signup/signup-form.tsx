@@ -63,7 +63,7 @@ const SignupForm = ({
       <ErrorMessage errors={fieldErrors} />
 
       {/* 제출 버튼 */}
-      <div className="mt-[26px]">
+      <div className="mt-[26px] w-[360px]">
         <SubmitButton isFormValid={isFormValid()} isSubmitting={isSubmitting}>
           회원가입
         </SubmitButton>
