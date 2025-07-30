@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import AuctionCardSkeleton from '@/components/auction/auction-card-skeleton';
 import { FilterTab, AuctionCard } from '@/components/common';
 
 import { useMyPurchases } from '@/hooks/queries/profile';
@@ -11,7 +12,6 @@ import { convertToAuctionItemProps } from '@/lib/utils/auction';
 import { useFilterStore } from '@/lib/zustand/store';
 
 import { AuctionStatus } from '@/types/filter';
-
 // 기본 탭 ID 타입 정의
 type BasicTabId = 'all' | 'ongoing' | 'completed';
 
@@ -57,8 +57,10 @@ const PurchasesList = ({ userId }: PurchasesListProps) => {
     return (
       <div>
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
-        <div className="flex items-center justify-center py-16">
-          <div className="text-lg text-neutral-600">구매 내역을 불러오는 중...</div>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <AuctionCardSkeleton key={index} />
+          ))}
         </div>
       </div>
     );
