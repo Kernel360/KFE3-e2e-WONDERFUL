@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 
+import AuctionCardSkeleton from '@/components/auction/auction-card-skeleton';
 import { AuctionCard } from '@/components/common';
 
 import { useAuctions } from '@/hooks/queries/auction';
@@ -55,8 +56,10 @@ const AuctionItemList = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <div className="text-lg text-neutral-600">경매 목록을 불러오는 중...</div>
+      <div className="flex flex-col gap-3">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <AuctionCardSkeleton key={index} />
+        ))}
       </div>
     );
   }
