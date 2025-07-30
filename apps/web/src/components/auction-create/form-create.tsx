@@ -36,8 +36,10 @@ interface CreateAuctionFormProps {
   isEdit?: boolean;
   existingImages?: string[];
   onRemoveExistingImage?: (imageUrl: string) => void; // 기존 이미지 삭제 콜백
-  currentPriceInfo?: CurrentPriceInfo; // ✅ 현재가 정보 추가
+  currentPriceInfo?: CurrentPriceInfo; // 현재가 정보 추가
+  onValidationChange?: (isValid: boolean) => void; // 유효성 검사 상태 변경 콜백
 }
+const MAX_PRICE = 2147483647;
 
 const CreateAuctionForm = ({
   errors,
@@ -47,12 +49,27 @@ const CreateAuctionForm = ({
   existingImages,
   onRemoveExistingImage,
   currentPriceInfo, // 현재가 정보
+  onValidationChange, // 유효성 검사 상태 변경 콜백
 }: CreateAuctionFormProps) => {
   const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(
     defaultValues?.is_instant_buy_enabled || false
   );
+  const [priceError, setPriceError] = useState('');
 
   const formatPrice = (price: number) => price.toLocaleString() + '원';
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    const hasError = value > MAX_PRICE;
+
+    if (hasError) {
+      setPriceError('경매 시작가는 21억원을 초과할 수 없습니다.');
+    } else {
+      setPriceError('');
+    }
+    // 부모에게 검증 상태 전달 (에러가 있으면 false, 없으면 true)
+    onValidationChange?.(!hasError);
+  };
 
   return (
     <div className="space-y-8">
@@ -86,6 +103,7 @@ const CreateAuctionForm = ({
           className="w-full"
           defaultValue={defaultValues?.category_id || ''}
         />
+        {errors['category_id'] && <FormErrorMessage>{errors['category_id']}</FormErrorMessage>}
       </div>
 
       <div className={`${colClass}`}>
@@ -141,8 +159,10 @@ const CreateAuctionForm = ({
               min={1000}
               placeholder="최소 경매가는 1,000원 입니다."
               defaultValue={defaultValues?.start_price || ''}
+              onChange={handlePriceChange}
             />
           )}
+
           {errors['prices.start_price'] && (
             <FormErrorMessage>{errors['prices.start_price']}</FormErrorMessage>
           )}
@@ -157,6 +177,9 @@ const CreateAuctionForm = ({
             />{' '}
             원
           </div>
+          {errors['prices.min_bid_unit'] && (
+            <FormErrorMessage>{errors['prices.min_bid_unit']}</FormErrorMessage>
+          )}
         </div>
       </fieldset>
 
