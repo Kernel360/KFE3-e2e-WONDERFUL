@@ -31,7 +31,7 @@ const InputBar = ({ roomId }: { roomId: string }) => {
         <ChatInputForm roomId={roomId} />
       </div>
       {isClicked && (
-        <div className="flex justify-start gap-10 px-8 pb-[15%] pt-2">
+        <div className="gap20 flex justify-around px-4 pb-[15%] pt-2">
           <InputImage />
           <InputCamera />
           <ButtonAddress />
