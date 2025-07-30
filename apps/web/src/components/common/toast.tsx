@@ -85,7 +85,7 @@ const Toast = () => {
       notice: {
         container: 'bg-neutral-900 shadow-[0px_6px_12px_-3px_rgba(82,82,82,0.12)]',
         title: 'text-neutral-200',
-        subtext: '',
+        subtext: 'text-neutral-50',
         closeBtn: '',
       },
     };
