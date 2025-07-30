@@ -28,15 +28,16 @@ const GoogleLoginButton = ({ className, disabled }: GoogleLoginButtonProps) => {
     <button
       onClick={handleGoogleLogin}
       disabled={disabled}
-      className={`inline-flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 text-neutral-800 transition-all hover:bg-neutral-300 focus-visible:ring-2 focus-visible:ring-neutral-400/50 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`text-primary-500 relative box-border flex h-[60px] w-[360px] cursor-pointer items-center justify-center rounded-[99px] border border-neutral-100 bg-white px-5 text-lg transition-all hover:bg-neutral-100 ${className}`}
     >
       <Image
         src="/icon/Google.svg"
         alt="Google 로그인"
-        width={20}
-        height={20}
-        className="h-5 w-5"
+        width={24}
+        height={24}
+        className="absolute left-5"
       />
+      <span className="text-neutral-600">Google로 시작하기</span>
     </button>
   );
 };

@@ -11,13 +11,13 @@ const SubmitButton = ({
   isFormValid,
   isSubmitting,
   children,
-  className = 'h-[60px] w-[326px]',
+  className = 'h-[60px] w-full rounded-[99px]',
 }: SubmitButtonProps) => {
   return (
     <Button
       type="submit"
       size="lg"
-      color={isFormValid ? 'primary' : 'secondary'}
+      color={isFormValid ? 'primary' : 'disabled'}
       fullWidth={false}
       disabled={isSubmitting || !isFormValid}
       className={className}
