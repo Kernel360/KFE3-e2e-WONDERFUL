@@ -100,7 +100,7 @@ const SigninForm = () => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="flex flex-col items-center">
+    <form onSubmit={handleFormSubmit} className="flex flex-col">
       <SigninFields
         formData={formData}
         showPassword={showPassword}
@@ -110,7 +110,7 @@ const SigninForm = () => {
       />
 
       {/* 자동 로그인 및 비밀번호 찾기 */}
-      <div className="mt-5 flex w-[327px] items-center justify-between pl-8">
+      <div className="mt-5 flex items-center justify-between px-4">
         <label className="flex cursor-pointer items-center gap-2">
           <input
             type="checkbox"
@@ -135,9 +135,9 @@ const SigninForm = () => {
 
       <ErrorMessage errors={fieldErrors} />
 
-      <div className="mt-[26px]">
+      <div className="mt-[20px] flex w-[360px] items-center justify-center gap-6">
         <SubmitButton isFormValid={isFormValid()} isSubmitting={isSubmitting}>
-          로그인
+          Login
         </SubmitButton>
       </div>
     </form>
