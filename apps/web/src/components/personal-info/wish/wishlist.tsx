@@ -61,7 +61,7 @@ const Wishlist = ({ userId }: WishlistProps) => {
       <div>
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 8 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <AuctionCardSkeleton key={index} />
           ))}
         </div>
