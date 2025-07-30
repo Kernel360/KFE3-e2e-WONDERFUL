@@ -20,6 +20,14 @@ export interface CreateAddressRequest {
   isPrimary?: boolean;
 }
 
+export interface AddressListItem {
+  id: string;
+  userName: string;
+  address: string;
+  phone: string;
+  isPrimary: boolean;
+}
+
 export interface AddressResponse {
   data: Address;
   error?: never;

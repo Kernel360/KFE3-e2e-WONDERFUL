@@ -31,7 +31,7 @@ const SignupFields = ({
   return (
     <div className="space-y-3">
       <div
-        className={`h-[54px] w-[327px] ${
+        className={`h-[54px] ${
           hasNameError
             ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
             : ''
@@ -41,7 +41,7 @@ const SignupFields = ({
           id="name"
           name="name"
           type="text"
-          placeholder="이름"
+          placeholder="닉네임"
           value={formData.name}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onInputChange('name', e.target.value)
@@ -53,7 +53,7 @@ const SignupFields = ({
       </div>
 
       <div
-        className={`h-[54px] w-[327px] ${
+        className={`h-[54px] ${
           hasEmailError
             ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
             : ''
@@ -75,7 +75,7 @@ const SignupFields = ({
       </div>
 
       <div
-        className={`h-[54px] w-[327px] ${
+        className={`h-[54px] ${
           hasPasswordError
             ? '[&_.shadow-xs]:border-danger-600 [&_.shadow-xs]:bg-danger-50 [&_.shadow-xs]:focus-within:border-danger-600 [&_.shadow-xs]:focus-within:ring-danger-600/50'
             : ''
