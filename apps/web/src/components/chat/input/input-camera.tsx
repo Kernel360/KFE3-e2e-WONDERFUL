@@ -20,12 +20,10 @@ const InputCamera = () => {
 
   return (
     <div className={serviceStyle().wrapper()}>
-      <label className={serviceStyle().label()}>
-        <button type="button" className={serviceStyle().label()} onClick={handleClick}>
-          {/*<input type="file" className="hidden" accept="image/*" capture="environment" />*/}
-          <Camera size={28} />
-        </button>
-      </label>
+      <button type="button" className={serviceStyle().label()} onClick={handleClick}>
+        {/*<input type="file" className="hidden" accept="image/*" capture="environment" />*/}
+        <Camera size={28} />
+      </button>
       <p className={serviceStyle().title()}>카메라</p>
     </div>
   );
