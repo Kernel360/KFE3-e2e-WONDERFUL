@@ -51,7 +51,6 @@ const SignupNicknameInput = ({
 
   return (
     <div className="flex w-full flex-col items-start justify-center gap-2">
-      {/* InputIcon과 완전히 동일한 구조 */}
       <div className="shadow-xs flex h-[54px] w-full min-w-0 items-center justify-between rounded-[33px] border bg-transparent px-4 py-1 text-base text-neutral-400 transition-[color,box-shadow] focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm">
         <div className="flex items-center gap-2 [&>svg]:h-5 [&>svg]:w-5">
           <User className="text-neutral-900" />
