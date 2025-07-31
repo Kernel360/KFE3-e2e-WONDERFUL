@@ -48,6 +48,7 @@ const SignupFlow = () => {
           onInputChange={signupForm.handleInputChange}
           onTogglePassword={signupForm.handleTogglePassword}
           onAgreeToTerms={signupForm.handleAgreeToTerms}
+          onNicknameValidationChange={signupForm.handleNicknameValidationChange} // 추가
           onSubmit={handleFormSubmit}
           isFormValid={signupForm.isFormValid}
         />
