@@ -26,9 +26,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 모든 사용자 대상 중복 확인
+    // 대소문자를 구분하지 않는 중복 확인
     const existingUser = await prisma.user.findFirst({
-      where: { nickname: trimmedNickname },
+      where: {
+        nickname: {
+          equals: trimmedNickname,
+          mode: 'insensitive',
+        },
+      },
     });
 
     if (existingUser) {
