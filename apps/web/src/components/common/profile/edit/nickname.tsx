@@ -12,6 +12,7 @@ interface NicknameInputProps {
   placeholder?: string;
   className?: string;
   initialValue?: string | null; // 프로필 수정 시 기존 닉네임
+  name?: string;
 }
 
 const NicknameInput = ({
@@ -22,6 +23,7 @@ const NicknameInput = ({
   placeholder = '닉네임을 입력하세요',
   className = '',
   initialValue, // 기존 닉네임 (변경 여부 확인용)
+  name,
 }: NicknameInputProps) => {
   const { isChecking, checkResult, checkNicknameAvailability, clearCheckResult } =
     useNicknameCheck();
@@ -74,6 +76,7 @@ const NicknameInput = ({
         <div className="relative flex-1">
           <input
             type="text"
+            name={name}
             value={value}
             onChange={handleInputChange}
             placeholder={placeholder}

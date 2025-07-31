@@ -24,6 +24,7 @@ export const useSignupForm = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [isNicknameValid, setIsNicknameValid] = useState(true); // 초기값 true
 
   const handleInputChange = createInputHandler(setFormData);
 
@@ -35,16 +36,45 @@ export const useSignupForm = () => {
     setAgreeToTerms(agreed);
   };
 
+  // 닉네임 유효성 변경 핸들러 - 에러 메시지도 함께 처리
+  const handleNicknameValidationChange = (isValid: boolean, message?: string) => {
+    setIsNicknameValid(isValid);
+
+    if (isValid) {
+      // 유효하면 기존 에러 메시지 제거
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.name;
+        return newErrors;
+      });
+    } else if (message) {
+      // 유효하지 않으면 에러 메시지 설정
+      setFieldErrors((prev) => ({
+        ...prev,
+        name: message,
+      }));
+    }
+  };
+
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const submitFormData = new FormData(event.currentTarget);
-    const name = submitFormData.get('name') as string;
-    const email = submitFormData.get('email') as string;
-    const password = submitFormData.get('password') as string;
+    const name = (submitFormData.get('name') as string) || '';
+    const email = (submitFormData.get('email') as string) || '';
+    const password = (submitFormData.get('password') as string) || '';
 
-    // 클라이언트 유효성 검사
-    const errors = validateForm({ name, email, password }, ['name', 'email', 'password']);
+    // 클라이언트 유효성 검사 - name 검증 제외
+    const errors = validateForm({ email, password }, ['email', 'password']);
+
+    // 닉네임 별도 검증
+    if (!name.trim()) {
+      errors.name = '닉네임을 입력해주세요.';
+      setIsNicknameValid(false);
+    } else if (!isNicknameValid) {
+      // 이미 에러 메시지가 fieldErrors에 설정되어 있음
+      errors.name = fieldErrors.name || '사용할 수 없는 닉네임입니다.';
+    }
 
     // 약관 동의 체크
     if (!agreeToTerms) {
@@ -77,6 +107,7 @@ export const useSignupForm = () => {
           serverErrors.password = result.error || '회원가입에 실패했습니다.';
         } else if (result.field === 'name') {
           serverErrors.name = result.error || '회원가입에 실패했습니다.';
+          setIsNicknameValid(false);
         } else {
           serverErrors.email = result.error || '회원가입에 실패했습니다.';
         }
@@ -87,8 +118,15 @@ export const useSignupForm = () => {
     });
   };
 
+  // 폼 유효성 검사
   const isFormValid = (): boolean => {
-    return !!(formData.name && formData.email && formData.password && agreeToTerms);
+    return !!(
+      formData.name &&
+      formData.email &&
+      formData.password &&
+      agreeToTerms &&
+      isNicknameValid
+    );
   };
 
   return {
@@ -97,9 +135,11 @@ export const useSignupForm = () => {
     agreeToTerms,
     isSubmitting,
     fieldErrors,
+    isNicknameValid,
     handleInputChange,
     handleTogglePassword,
     handleAgreeToTerms,
+    handleNicknameValidationChange,
     handleFormSubmit,
     isFormValid,
   };
