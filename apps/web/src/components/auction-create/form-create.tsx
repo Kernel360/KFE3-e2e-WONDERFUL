@@ -188,13 +188,11 @@ const CreateAuctionForm = ({
             />{' '}
             원
           </div>
-
           {errors['min_bid_unit'] && <FormErrorMessage>{errors['min_bid_unit']}</FormErrorMessage>}
 
           {errors['prices.min_bid_unit'] && (
             <FormErrorMessage>{errors['prices.min_bid_unit']}</FormErrorMessage>
           )}
-
         </div>
       </fieldset>
 
