@@ -71,6 +71,15 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
+  // 인증이 필요 없는 API 경로 추가
+  if (
+    pathname.startsWith('/auth/callback') ||
+    pathname.startsWith('/api/auth') ||
+    pathname.startsWith('/api/users/nickname') // 이 줄 추가
+  ) {
+    return NextResponse.next();
+  }
+
   //개발 환경 디버깅
   if (process.env.NODE_ENV === 'development') {
     console.log(`🔍 [Middleware] ${pathname} | User: ${user?.email || '❌ Anonymous'}`);
