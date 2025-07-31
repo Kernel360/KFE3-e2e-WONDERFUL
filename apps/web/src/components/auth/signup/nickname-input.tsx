@@ -2,7 +2,7 @@
 
 import { User } from 'lucide-react';
 
-import { useNicknameCheck } from '@/hooks/auth/useNicknameCheck';
+import { checkNickname } from '@/lib/api/nickname';
 
 interface SignupNicknameInputProps {
   id: string;
@@ -23,13 +23,10 @@ const SignupNicknameInput = ({
   placeholder = '닉네임',
   className = '',
 }: SignupNicknameInputProps) => {
-  const { checkNicknameAvailability, clearCheckResult } = useNicknameCheck();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e);
-    // 입력이 변경되면 검증 결과 초기화
-    clearCheckResult();
-    onValidationChange?.(true); // 입력 중에는 유효한 것으로 처리
+    // 입력이 변경되면 유효성 상태 초기화
+    onValidationChange?.(true);
   };
 
   const handleBlur = async () => {
@@ -45,11 +42,7 @@ const SignupNicknameInput = ({
 
     // 포커스가 벗어났을 때 자동으로 중복 확인
     try {
-      const isValid = await checkNicknameAvailability(value);
-      // API 응답에서 메시지도 함께 전달
-      const result = await import('@/lib/api/nickname').then((module) =>
-        module.checkNickname(value)
-      );
+      const result = await checkNickname(value);
       onValidationChange?.(result.available, result.message);
     } catch (error) {
       onValidationChange?.(false, '닉네임 확인 중 오류가 발생했습니다.');
@@ -58,6 +51,7 @@ const SignupNicknameInput = ({
 
   return (
     <div className="flex w-full flex-col items-start justify-center gap-2">
+      {/* InputIcon과 완전히 동일한 구조 */}
       <div className="shadow-xs flex h-[54px] w-full min-w-0 items-center justify-between rounded-[33px] border bg-transparent px-4 py-1 text-base text-neutral-400 transition-[color,box-shadow] focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm">
         <div className="flex items-center gap-2 [&>svg]:h-5 [&>svg]:w-5">
           <User className="text-neutral-900" />
