@@ -17,6 +17,7 @@ interface SignupFormProps {
   onInputChange: (fieldId: string, value: string | boolean) => void;
   onTogglePassword: () => void;
   onAgreeToTerms: (agreed: boolean) => void;
+  onNicknameValidationChange: (isValid: boolean, message?: string) => void; // 메시지 파라미터 추가
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   isFormValid: () => boolean;
 }
@@ -30,6 +31,7 @@ const SignupForm = ({
   onInputChange,
   onTogglePassword,
   onAgreeToTerms,
+  onNicknameValidationChange,
   onSubmit,
   isFormValid,
 }: SignupFormProps) => {
@@ -41,6 +43,7 @@ const SignupForm = ({
         fieldErrors={fieldErrors}
         onInputChange={onInputChange}
         onTogglePassword={onTogglePassword}
+        onNicknameValidationChange={onNicknameValidationChange}
       />
 
       {/* 약관 동의 체크박스 */}
@@ -63,7 +66,7 @@ const SignupForm = ({
       <ErrorMessage errors={fieldErrors} />
 
       {/* 제출 버튼 */}
-      <div className="mt-[26px]">
+      <div className="mt-[26px] w-[360px]">
         <SubmitButton isFormValid={isFormValid()} isSubmitting={isSubmitting}>
           회원가입
         </SubmitButton>

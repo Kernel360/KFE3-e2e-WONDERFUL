@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useUpdateProfile } from '@/hooks/mutations/profile';
 import { useMyProfile } from '@/hooks/queries/profile';
 
-import { useToastStore } from '@/lib/zustand/store/toast-store';
+import { useToastStore } from '@/lib/zustand/store';
 
 import NicknameInput from './nickname';
 import ProfileImageUploader from './profile-image-uploader';
@@ -28,12 +28,14 @@ const ProfileEditForm = () => {
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState<string>('');
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true); // 닉네임 유효성 상태
 
   // 프로필 데이터 로드 시, 폼 필드 초기화
   useEffect(() => {
     if (profile) {
       setNickname(profile.nickname || '');
       setNicknameError('');
+      setIsNicknameValid(true); // 기존 닉네임은 유효한 것으로 처리
     }
   }, [profile]);
 
@@ -60,23 +62,15 @@ const ProfileEditForm = () => {
     }
   }, [isError, error, showToast]);
 
+  const handleNicknameValidationChange = (isValid: boolean) => {
+    setIsNicknameValid(isValid);
+    if (isValid) {
+      setNicknameError('');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // 닉네임 필드가 비어 있을 때 오류 메시지 추가
-    if (!nickname.trim()) {
-      setNicknameError('닉네임을 입력해주세요.');
-
-      showToast({
-        status: 'error',
-        title: '입력 오류',
-        subtext: '닉네임을 입력해주세요.',
-        autoClose: true,
-      });
-
-      return;
-    }
-    setNicknameError('');
 
     const formData = new FormData();
     formData.append('nickname', nickname.trim());
@@ -105,11 +99,20 @@ const ProfileEditForm = () => {
           setProfileImage(file || null);
         }}
       />
-      <NicknameInput value={nickname} onChange={(e) => setNickname(e.target.value)} />
-      {nicknameError && <div className="px-7 text-sm text-red-500">{nicknameError}</div>}
-      <div className="mb-8 mt-auto px-4">
-        <Button type="submit" fullWidth disabled={isPending}>
-          {isPending ? '수정 중...' : '수정 완료'}
+
+      <div className="px-4">
+        <NicknameInput
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          onValidationChange={handleNicknameValidationChange}
+          error={nicknameError}
+          initialValue={profile?.nickname} // 기존 닉네임 전달
+        />
+      </div>
+
+      <div className="mb-8 mt-2 px-4">
+        <Button type="submit" fullWidth disabled={isPending || !isNicknameValid}>
+          {isNicknameValid ? (isPending ? '수정 중...' : '수정 하기') : '닉네임 중복 체크'}
         </Button>
       </div>
     </form>

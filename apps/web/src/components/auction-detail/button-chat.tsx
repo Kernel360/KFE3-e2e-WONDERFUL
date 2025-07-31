@@ -7,23 +7,35 @@ import { MessageSquareMore } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { createChatRoom } from '@/lib/actions/chat';
+import { useToastStore } from '@/lib/zustand/store';
+
+import { Seller } from '@/types/chat';
 
 interface ButtonChatProps {
   auctionId: string;
-  sellerId: string;
+  seller: Seller;
 }
 
-const ButtonChat = ({ auctionId, sellerId }: ButtonChatProps) => {
+const ButtonChat = ({ auctionId, seller }: ButtonChatProps) => {
   const router = useRouter();
 
+  const { showToast } = useToastStore();
+
   const handleChatClick = async () => {
-    try {
-      const data = await createChatRoom({ auctionId, sellerId });
-      router.push(`/chat/${data.roomId}?auctionId=${data.auctionId}`);
-      console.log(data.roomId, data.auctionId);
-    } catch {
-      alert('잠시 후 다시 시도해주세요.');
+    const results = await createChatRoom({ auctionId, seller });
+    const { data } = results;
+
+    if (!results.success) {
+      showToast({
+        status: 'error',
+        title: '채팅방 생성에 실패했습니다.',
+        autoClose: true,
+      });
     }
+
+    router.push(
+      `/chat/${data?.roomId}?auctionId=${data?.auctionId}&interlocutor=${seller.nickname}`
+    );
   };
 
   return (

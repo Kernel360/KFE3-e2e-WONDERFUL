@@ -17,7 +17,6 @@ export interface ChatRoom {
   id: string;
   auctionId: string;
   createdAt: string;
-  lastMessageAt: string | null;
   isDeleted: boolean;
   myRole: 'seller' | 'buyer';
   otherUser: {
@@ -50,7 +49,12 @@ export interface ChatUser {
   isOnline?: boolean;
 }
 
+export interface Seller {
+  id: string;
+  nickname: string;
+}
+
 export interface CreateChatRoomProps {
   auctionId: string;
-  sellerId: string;
+  seller: Seller;
 }

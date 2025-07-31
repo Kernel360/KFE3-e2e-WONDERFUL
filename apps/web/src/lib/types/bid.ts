@@ -1,3 +1,5 @@
+import { Seller } from '@/types/chat';
+
 export interface BidderInfo {
   id: string;
   nickname: string;
@@ -26,6 +28,8 @@ export interface BidBaseProps {
   endTime: string | Date; // 경매 종료 시간
   isExpired: boolean;
   isValid?: boolean; // 유효한 입찰단가로 입찰할 수 있는지 여부
+  seller: Seller;
+  currentUserId?: string; // 현재 사용자 ID (선택적)
 }
 
 export interface BidFormProps extends BidBaseProps {

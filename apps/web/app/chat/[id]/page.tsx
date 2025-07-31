@@ -1,5 +1,7 @@
 import { ChatContainer, ChatInputBar, ProductInfoCard } from '@/components/chat';
 
+import { getAuctionStatus } from '@/lib/actions/auction';
+
 const Page = async ({
   params,
   searchParams,
@@ -12,9 +14,11 @@ const Page = async ({
 
   const roomId = id;
 
+  const status = await getAuctionStatus(auctionId);
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <ProductInfoCard auctionId={auctionId} />
+      <ProductInfoCard auctionId={auctionId} status={status} />
       <ChatContainer roomId={roomId} />
       <ChatInputBar roomId={roomId} />
     </div>

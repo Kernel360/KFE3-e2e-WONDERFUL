@@ -38,7 +38,7 @@ const SelectBox = ({
         <SelectContent>
           <SelectGroup>
             {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} className="text-md h-12">
                 {option.label}
               </SelectItem>
             ))}
@@ -52,25 +52,3 @@ const SelectBox = ({
 };
 
 export default SelectBox;
-// 사용 예시:
-// export const ExampleUsage = () => {
-//   const fruitOptions = [
-//     { value: 'apple', label: 'Apple' },
-//     { value: 'banana', label: 'Banana' },
-//     { value: 'blueberry', label: 'Blueberry' },
-//     { value: 'grapes', label: 'Grapes' },
-//     { value: 'pineapple', label: 'Pineapple' },
-//   ];
-
-//   const [selectedValue, setSelectedValue] = React.useState('');
-
-//   return (
-//     <SelectBox
-//       options={fruitOptions}
-//       placeholder="Select a fruit"
-//       value={selectedValue}
-//       id={selectedValue}
-//       onValueChange={setSelectedValue}
-//     />
-//   );
-// };

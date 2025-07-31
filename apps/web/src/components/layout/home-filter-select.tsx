@@ -78,7 +78,7 @@ const HomeFilterSelect = () => {
   if (isLoading) {
     return (
       <div className={cn(homeFilterWrapper, 'gap-2')}>
-        <div>loading...</div>
+        <div className="h-9 w-14 animate-pulse rounded-sm bg-neutral-200"></div>
         <ChevronDown size={24} className="text-neutral-400" />
       </div>
     );
@@ -102,14 +102,15 @@ const HomeFilterSelect = () => {
   // 등록된 위치가 없는 경우
   if (!userLocations || userLocations.length === 0) {
     return (
-      <Link href="/" className={cn(homeFilterWrapper, 'text-primary-600 gap-2')}>
-        <MapPin size={16} />
-        위치 설정
-        <ChevronRight size={24} />
+      <Link
+        href={'/profile/location'}
+        className={cn(homeFilterWrapper, 'hover:text-primary-600 gap-2 transition-colors')}
+      >
+        {getDisplayName(selectedLocation.locationName)}
+        <ChevronRight size={24} className={homeFilterIcon({ open: isSelectOpen })} />
       </Link>
     );
   }
-
   // 등록된 위치가 있는 경우
   return (
     <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
@@ -135,7 +136,7 @@ const HomeFilterSelect = () => {
           })}
           <li>
             {/* /위치설정 페이지로 이동 */}
-            <Link href={'/location'}>내 동네 설정</Link>
+            <Link href={'/profile/location'}>내 동네 설정</Link>
           </li>
         </ul>
       </PopoverContent>

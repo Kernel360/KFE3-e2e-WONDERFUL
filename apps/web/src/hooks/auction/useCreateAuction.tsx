@@ -30,7 +30,8 @@ const useCreateAuction = () => {
       try {
         const form = e.currentTarget;
         const formData = new FormData(form);
-        const newErrors: FormErrorMessageType = {};
+        // 에러를 한 번에 모아서 처리
+        const validationErrors: FormErrorMessageType = {};
 
         //로그인된 사용자 ID 가져오기
         const supabase = createClient();
@@ -40,7 +41,8 @@ const useCreateAuction = () => {
         } = await supabase.auth.getUser();
 
         if (userError || !user) {
-          setErrors({ server: '로그인이 필요합니다. 다시 로그인해주세요.' });
+          validationErrors.server = '로그인이 필요합니다. 다시 로그인해주세요.';
+          setErrors(validationErrors); // 한 번만 호출
           return; // 이제 finally에서 setIsPending(false) 실행됨
         }
 
@@ -54,6 +56,8 @@ const useCreateAuction = () => {
             min_bid_unit: Number(formData.get('min_bid_unit') ?? 0),
           },
           end_time: String(formData.get('end_time') ?? ''),
+          is_instant_buy_enabled: formData.get('is_instant_buy_enabled') === 'true',
+          is_extended_auction: formData.get('is_extended_auction') === 'true',
         };
 
         // Zod 유효성 검사
@@ -61,7 +65,7 @@ const useCreateAuction = () => {
 
         //이미지 등록 여부 확인
         if (files.length <= 0) {
-          newErrors.images = '이미지를 꼭 한 장 이상 등록해주세요.';
+          validationErrors.images = '이미지를 꼭 한 장 이상 등록해주세요.';
         }
 
         if (!result.success) {
@@ -69,22 +73,35 @@ const useCreateAuction = () => {
           const zodErrors: FormErrorMessageType = {};
           for (const issue of result.error.errors) {
             const path = issue.path.join('.');
-            zodErrors[path] = issue.message;
+            // 이미 에러가 있으면 스킵
+            if (!zodErrors[path]) {
+              zodErrors[path] = issue.message;
+            }
           }
-          // 이미지 에러(newErrors)와 합쳐서 set
-          setErrors({ ...newErrors, ...zodErrors });
+          // 이미지 에러와  zod 에러 합쳐서 set
+          setErrors({ ...validationErrors, ...zodErrors });
           return; // 이제 finally에서 setIsPending(false) 실행됨
         }
 
-        if (Object.keys(newErrors).length > 0) {
-          setErrors(newErrors);
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
           return; // 이제 finally에서 setIsPending(false) 실행됨
         }
 
         setErrors({});
 
+        const startPrice = rawData.prices.start_price;
+
         const phasedData: CreateAuctionFormData = {
           ...result.data,
+          is_instant_buy_enabled: rawData.is_instant_buy_enabled,
+          is_extended_auction: rawData.is_extended_auction,
+          prices: {
+            ...result.data.prices,
+            instant_price: rawData.is_instant_buy_enabled
+              ? Math.floor(startPrice * 1.2)
+              : undefined,
+          },
         };
 
         // try 블록 제거 (이미 위에서 시작)

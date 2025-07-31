@@ -25,26 +25,22 @@ export interface AuctionFormData {
   end_time: string;
   auction_type?: 'normal' | 'flash';
   images?: string[];
+  // 추가된 필드
+  is_instant_buy_enabled: boolean;
+  is_extended_auction?: boolean;
 }
 
-export interface Auction extends AuctionFormData {
-  id: string;
-  seller_id: string;
-  status: AuctionStatus;
-  thumbnail_url: string;
-  created_at: string;
+export interface AuctionPriceUpdate {
+  instant_price?: number | null;
+  min_bid_unit: number;
+  is_instant_buy_enabled: boolean;
+  is_extended_auction: boolean;
+  // 입찰이 없을 때만 업데이트되는 필드들
+  start_price?: number;
+  current_price?: number;
 }
 
-export type AuctionStatus =
-  | 'pending'
-  | 'ongoing'
-  | 'ended'
-  | 'sold'
-  | 'canceled'
-  | 'waiting'
-  | 'live'
-  | 'paused'
-  | 'closed';
+export type AuctionStatus = 'ACTIVE' | 'COMPLETED';
 
 //경매 게시글 등록 폼 타입들
 //이미지 등록 타입

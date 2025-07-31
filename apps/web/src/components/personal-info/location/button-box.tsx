@@ -9,15 +9,18 @@ import { Button } from '@/components/ui';
 import { useUserLocations } from '@/hooks/queries/location/useUserLocations';
 
 import { deleteLocation, setPrimaryLocation } from '@/lib/actions/location';
+import { useToastStore } from '@/lib/zustand/store';
 
 interface ButtonBoxProps {
   locationId: string;
+  isPrimary?: boolean;
 }
 
-const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
+const LocationButtonBox = ({ locationId, isPrimary = false }: ButtonBoxProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingPrimary, setIsSettingPrimary] = useState(false);
   const { refetch } = useUserLocations();
+  const { showToast } = useToastStore();
 
   // 기본 위치 설정 함수
   const handleSetPrimary = async () => {
@@ -26,11 +29,27 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
       const result = await setPrimaryLocation(locationId);
       if (result.success) {
         await refetch();
+        showToast({
+          status: 'success',
+          title: '기본 위치 설정 완료',
+          subtext: result.message || '기본 위치가 변경되었습니다.',
+          autoClose: true,
+        });
       } else {
-        console.error('❌ 기본 위치 설정 실패:', result.error);
+        showToast({
+          status: 'error',
+          title: '기본 위치 설정 실패',
+          subtext: result.error || '기본 위치 설정에 실패했습니다.',
+          autoClose: true,
+        });
       }
     } catch (error) {
-      console.error('❌ 기본 위치 설정 오류:', error);
+      showToast({
+        status: 'error',
+        title: '기본 위치 설정 오류',
+        subtext: '예상치 못한 오류가 발생했습니다.',
+        autoClose: true,
+      });
     } finally {
       setIsSettingPrimary(false);
     }
@@ -38,20 +57,32 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
 
   // 삭제 함수
   const handleDelete = async () => {
-    if (!window.confirm('이 위치를 삭제하시겠습니까?')) {
-      return;
-    }
-
     setIsDeleting(true);
     try {
       const result = await deleteLocation(locationId);
       if (result.success) {
         await refetch();
+        showToast({
+          status: 'success',
+          title: '위치 삭제 완료',
+          subtext: result.message || '위치가 성공적으로 삭제되었습니다.',
+          autoClose: true,
+        });
       } else {
-        console.error('❌ 위치 삭제 실패:', result.error);
+        showToast({
+          status: 'error',
+          title: '위치 삭제 실패',
+          subtext: result.error || '위치 삭제에 실패했습니다.',
+          autoClose: true,
+        });
       }
     } catch (error) {
-      console.error('❌ 위치 삭제 오류:', error);
+      showToast({
+        status: 'error',
+        title: '위치 삭제 오류',
+        subtext: '예상치 못한 오류가 발생했습니다.',
+        autoClose: true,
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -61,14 +92,15 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
     <div className="flex">
       <button
         onClick={handleSetPrimary}
-        disabled={isSettingPrimary}
-        className="flex size-10 items-center justify-center disabled:opacity-50"
-        title="기본 위치로 설정"
+        disabled={isSettingPrimary || isPrimary}
+        className={`flex size-10 items-center justify-center ${
+          isPrimary ? 'cursor-default' : 'hover:text-primary-500'
+        }`}
       >
         <Check
           size={20}
           className={`hover:text-primary-500 text-neutral-600 ${
-            isSettingPrimary ? 'animate-pulse' : ''
+            isPrimary ? 'text-primary-500' : isSettingPrimary ? 'animate-pulse' : ''
           }`}
         />
       </button>
@@ -77,11 +109,19 @@ const LocationButtonBox = ({ locationId }: ButtonBoxProps) => {
         color="transparent"
         size="sm"
         onClick={handleDelete}
-        disabled={isDeleting}
-        className="hover:[&_svg]:text-danger-500 disabled:opacity-50"
-        title="위치 삭제"
+        disabled={isDeleting || isPrimary}
+        className={`${
+          isPrimary
+            ? 'cursor-not-allowed opacity-30'
+            : 'hover:[&_svg]:text-danger-500 disabled:opacity-50'
+        }`}
       >
-        <Trash2 size={20} className={`text-neutral-600 ${isDeleting ? 'animate-pulse' : ''}`} />
+        <Trash2
+          size={20}
+          className={`text-neutral-600 ${
+            isPrimary ? 'text-neutral-300' : isDeleting ? 'animate-pulse' : ''
+          }`}
+        />
       </Button>
     </div>
   );

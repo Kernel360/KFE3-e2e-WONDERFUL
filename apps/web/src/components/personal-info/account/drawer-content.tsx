@@ -3,43 +3,30 @@
 import { useState } from 'react';
 
 import { AccountItem, ButtonManage, ButtonSelect, DrawerHeader } from '@/components/personal-info';
+import { AccountListItem } from '@/components/personal-info/account/item';
 import { Button, DrawerContent } from '@/components/ui';
+
+import { useToastStore } from '@/lib/zustand/store';
 
 import { ACCOUNT_DRAWER_HEADER } from '@/constants/personal-info';
 
 const AccountDrawerContent = () => {
-  const dummyAccount = [
-    {
-      id: '1',
-      name: '김커널',
-      bank: '패스트뱅크',
-      account: '010-1234-5678',
-      isPrimary: true,
-    },
-    {
-      id: '2',
-      name: '김커널',
-      bank: '패스트뱅크',
-      account: '010-1234-5678',
-      isPrimary: false,
-    },
-    {
-      id: '3',
-      name: '김커널',
-      bank: '패스트뱅크',
-      account: '010-1234-5678',
-      isPrimary: false,
-    },
-  ];
+  const [accountList, setAccountList] = useState<AccountListItem[]>([]);
+  const { showToast } = useToastStore();
 
+  const handleClick = () => {
+    showToast({
+      status: 'notice',
+      title: '준비중인 기능',
+      subtext: '주소 공유 기능은 현재 준비중입니다.',
+      autoClose: true,
+    });
+  };
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   const handleSelect = (id: string) => {
     setSelectedAccountId(id === selectedAccountId ? null : id);
   };
-
-  // TODO: 해당하는 id 에 대하여 메세지 컴포넌트로 공유하는 onClick 함수 넣어주기
-  // TODO: manage-button 에 @modal 경로 넣어주기
 
   return (
     <DrawerContent className="flex flex-col gap-2 p-4">
@@ -48,7 +35,10 @@ const AccountDrawerContent = () => {
         description={ACCOUNT_DRAWER_HEADER.description}
       />
       <ul className="flex flex-col gap-2">
-        {dummyAccount.map((account) => (
+        {accountList.length === 0 && (
+          <p className="py-10 text-center text-neutral-600">등록된 계좌가 없습니다.</p>
+        )}
+        {accountList.map((account) => (
           <li key={account.id}>
             <AccountItem
               color={selectedAccountId === account.id ? 'selected' : 'default'}
@@ -63,7 +53,7 @@ const AccountDrawerContent = () => {
         ))}
       </ul>
       <ButtonManage title="계좌 관리" url="/account" />
-      <Button variant="solid" size="lg">
+      <Button variant="solid" size="lg" onClick={handleClick}>
         공유하기
       </Button>
     </DrawerContent>
