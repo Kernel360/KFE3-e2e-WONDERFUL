@@ -61,7 +61,7 @@ const NicknameInput = ({
     if (checkResult) {
       return checkResult.available ? 'text-success-500' : 'text-danger-500';
     }
-    return 'text-neutral-400';
+    return 'text-primary-500';
   };
 
   // 기존 닉네임과 동일한지 확인
@@ -106,7 +106,7 @@ const NicknameInput = ({
           {isChecking ? '확인중...' : '중복확인'}
         </button>
       </div>
-      <p className={`text-primary-500 m-2 min-h-[1.25rem] text-sm ${getMessageColor()}`}>
+      <p className={`m-2 min-h-[1.25rem] text-sm ${getMessageColor()}`}>
         {error ||
           (hasChecked && checkResult?.message) ||
           (hasChecked && isSameAsInitial ? '현재 닉네임과 동일합니다.' : '') ||
