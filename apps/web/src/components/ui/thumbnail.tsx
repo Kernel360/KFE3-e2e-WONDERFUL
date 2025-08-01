@@ -21,6 +21,8 @@ const Thumbnail = ({ className, url, alt, ...props }: ThumbnailProps) => {
         {...props}
         width={104}
         height={104}
+        sizes="104px"
+        quality={80}
       />
     </div>
   );
