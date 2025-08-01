@@ -5,11 +5,17 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
   transpilePackages: ['@repo/db', '@repo/ui'],
   output: 'standalone', // 배포용
+  swcMinify: true, // SWC 최적화 활성화
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production', // 프로덕션에서 console 제거
+  },
 
   experimental: {
     serverActions: {
       bodySizeLimit: '5mb', // 5MB로 증가
     },
+    optimizeCss: true, // CSS 최적화
+    optimizePackageImports: ['lodash', 'date-fns', 'react-icons'], // 패키지 트리쉐이킹
   },
 
   images: {
@@ -37,6 +43,51 @@ const nextConfig: NextConfig = {
 
   typescript: {
     ignoreBuildErrors: false,
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            //MIME 타입 보호
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            //클릭재킹 방지
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            //XSS 보호
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+      {
+        //폰트 캐싱
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // 정적 파일 캐싱
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
 
   webpack: (config, { isServer }) => {
