@@ -14,7 +14,6 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '5mb', // 5MB로 증가
     },
-    optimizeCss: true, // CSS 최적화
     optimizePackageImports: ['lodash', 'date-fns', 'react-icons'], // 패키지 트리쉐이킹
   },
 
