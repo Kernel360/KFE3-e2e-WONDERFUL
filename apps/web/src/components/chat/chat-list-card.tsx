@@ -67,6 +67,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
           url={auction.thumbnailUrl as string}
           alt={'sample'}
           className="w-15 h-15 shrink-0"
+          size={60}
         />
         <div className="flex w-full shrink flex-col">
           <div>
