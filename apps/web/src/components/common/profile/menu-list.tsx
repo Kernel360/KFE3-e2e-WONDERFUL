@@ -2,7 +2,8 @@ import Link from 'next/link';
 
 interface MenuItem {
   title: string;
-  route: string;
+  route?: string;
+  url?: string;
 }
 
 interface MenuSection {
@@ -25,8 +26,11 @@ const menuSections: MenuSection[] = [
     id: 'support',
     title: '고객 지원',
     items: [
-      { title: 'Q&A', route: '/profile/support' },
-      { title: '설정', route: '/profile/settings' },
+      { title: '공지사항', route: '/profile/support' },
+      {
+        title: '문의하기',
+        url: 'https://docs.google.com/forms/d/e/1FAIpQLScMWkhRBarGwD0Tu7hedNc8XIRYvdJ0BYyNqKBBRyf31XIAtg/viewform?usp=header',
+      },
     ],
   },
 ];
@@ -38,10 +42,21 @@ const MenuList = () => (
         <h2 className="mb-4 text-sm font-bold text-neutral-400">{section.title}</h2>
         <ul className="space-y-4">
           {section.items.map((item) => (
-            <li key={item.route}>
-              <Link href={item.route} className="block py-1 text-sm font-medium text-neutral-900">
-                {item.title}
-              </Link>
+            <li key={item.route || item.url}>
+              {item.route ? (
+                <Link href={item.route} className="block py-1 text-sm font-medium text-neutral-900">
+                  {item.title}
+                </Link>
+              ) : item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-medium block py-1 text-sm no-underline"
+                >
+                  {item.title}
+                </a>
+              ) : null}
             </li>
           ))}
         </ul>

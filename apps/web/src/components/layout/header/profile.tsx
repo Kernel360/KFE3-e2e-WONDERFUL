@@ -17,7 +17,7 @@ const HEADER_CONFIG: Record<string, HeaderInfo> = {
   '/profile/purchases': { title: '구매목록', showBackButton: true },
   '/profile/wishlist': { title: '관심목록', showBackButton: true },
   '/profile/location': { title: '내 동네 설정', showBackButton: true },
-  '/profile/support': { title: 'Q&A', showBackButton: true },
+  '/profile/support': { title: '공지사항', showBackButton: true },
   '/profile/settings': { title: '설정', showBackButton: true },
 };
 
