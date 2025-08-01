@@ -10,7 +10,7 @@ import BidderAvatar from './bidder-avatar';
 
 const BidTableRow = ({ item }: { item: BidType }) => {
   const [userid, setUserid] = useState<string | null>(null);
-  const isAuthor = userid && item.bidder.id === userid;
+  const isAuthor = userid === item.bidder.id;
   const bid = formatCurrencyWithUnit(item.price);
 
   useEffect(() => {
@@ -24,12 +24,13 @@ const BidTableRow = ({ item }: { item: BidType }) => {
 
     getUser();
   }, []);
+
   return (
     <li className="flex items-center justify-between text-center">
       <BidderAvatar
-        userId={item.bidder.id}
         profileImg={item.bidder.profileImg || ''}
         nickname={item.bidder.nickname}
+        isAuthor={isAuthor}
       />
       <div
         className={cn(
