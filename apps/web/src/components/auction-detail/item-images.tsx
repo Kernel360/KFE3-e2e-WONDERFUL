@@ -44,6 +44,9 @@ const ItemImages = ({ urls }: ItemImagesProps) => {
               className="aspect-square w-full object-cover"
               width={480}
               height={480}
+              priority={index === 0}
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+              quality={80}
             />
           </CarouselItem>
         ))}
