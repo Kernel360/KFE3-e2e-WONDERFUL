@@ -102,11 +102,11 @@ h6 {
 
   /* Font Family */
   --font-heading:
-    var(--font-pretendard), 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, sans-serif;
+    var(--font-pretendard), 'Pretendard Variable', Pretendard, system-ui, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
   --font-body:
-    var(--font-pretendard), 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, sans-serif;
+    var(--font-pretendard), 'Pretendard Variable', Pretendard, system-ui, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
 
   /* Font Weights */
   --font-weight-regular: 400;

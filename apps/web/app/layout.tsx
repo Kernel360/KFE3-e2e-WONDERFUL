@@ -16,9 +16,11 @@ import './globals.css';
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
   display: 'swap',
-  weight: '45 920',
+  weight: '400 700',
   style: 'normal',
   variable: '--font-pretendard',
+  fallback: ['system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+  preload: true,
 });
 
 const APP_NAME = '지역 경매 서비스';
