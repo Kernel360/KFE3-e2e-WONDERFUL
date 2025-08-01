@@ -4,27 +4,28 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
   transpilePackages: ['@repo/db', '@repo/ui'],
-  output: 'standalone', // 배포용
+  output: 'standalone',
 
   experimental: {
     serverActions: {
-      bodySizeLimit: '5mb', // 5MB로 증가
+      bodySizeLimit: '5mb',
     },
   },
 
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
-      // Supabase Storage
       {
         protocol: 'https',
         hostname: 'autkdwezfwdduoqiadsc.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
     ],
+    imageSizes: [28, 40, 46, 58, 104],
+    deviceSizes: [150, 375, 500],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
   },
 
-  // Firebase 환경변수 관리
   env: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
