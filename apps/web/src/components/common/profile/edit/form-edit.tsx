@@ -91,7 +91,7 @@ const ProfileEditForm = () => {
   }
 
   return (
-    <form className="flex flex-1 flex-col" onSubmit={handleSubmit}>
+    <form className="flex flex-1 flex-col px-4 py-4" onSubmit={handleSubmit}>
       <ProfileImageUploader
         defaultImage={profile?.profileImg || ''}
         onChange={(e) => {
@@ -100,19 +100,24 @@ const ProfileEditForm = () => {
         }}
       />
 
-      <div className="px-4">
+      <div className="px-4 py-4">
         <NicknameInput
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           onValidationChange={handleNicknameValidationChange}
           error={nicknameError}
-          initialValue={profile?.nickname} // 기존 닉네임 전달
+          initialValue={profile?.nickname}
         />
       </div>
 
-      <div className="mb-8 mt-2 px-4">
-        <Button type="submit" fullWidth disabled={isPending || !isNicknameValid}>
-          {isNicknameValid ? (isPending ? '수정 중...' : '수정 하기') : '닉네임 중복 체크'}
+      <div className="absolute bottom-0 left-0 z-10 w-full bg-white px-8 pb-6">
+        <Button
+          type="submit"
+          form="profile-edit-form"
+          fullWidth
+          disabled={isPending || !isNicknameValid}
+        >
+          {isNicknameValid ? (isPending ? '수정 중...' : '프로필 수정') : '닉네임 중복 체크'}
         </Button>
       </div>
     </form>
