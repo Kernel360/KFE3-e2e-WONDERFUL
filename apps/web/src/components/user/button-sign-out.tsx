@@ -3,8 +3,6 @@ import { FC } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
-
 import { signOut } from '@/lib/actions/auth';
 
 const ButtonSignOut: FC = () => {
@@ -20,9 +18,12 @@ const ButtonSignOut: FC = () => {
     }
   };
   return (
-    <Button variant="outline" color="secondary" onClick={handleLogout}>
+    <button
+      className="mt-10 mb-4 px-8 text-sm font-bold text-neutral-400 underline"
+      onClick={handleLogout}
+    >
       로그아웃
-    </Button>
+    </button>
   );
 };
 
