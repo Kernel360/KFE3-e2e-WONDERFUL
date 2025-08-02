@@ -76,7 +76,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <QueryProvider>
           <UserProvider>
             <div
-              className="mx-auto flex h-[100vh] max-h-screen min-h-screen min-w-[320px] max-w-[480px] flex-col justify-between bg-white"
+              className="relative mx-auto flex h-[100vh] max-h-screen min-h-screen min-w-[320px] max-w-[480px] flex-col justify-between bg-white"
               style={{
                 height: '100dvh',
                 minHeight: '-webkit-fill-available',
