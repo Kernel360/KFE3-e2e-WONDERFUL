@@ -59,10 +59,6 @@ const AuctionDetailContainer = () => {
     return <Skeleton />;
   }
 
-  if (error || !auctionDetailData?.data) {
-    return <Skeleton />;
-  }
-
   const auction = auctionDetailData.data;
   const { location } = auction;
 
