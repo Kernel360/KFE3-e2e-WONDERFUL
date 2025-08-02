@@ -19,7 +19,7 @@ const ButtonSignOut: FC = () => {
   };
   return (
     <button
-      className="mt-10 mb-4 px-8 text-sm font-bold text-neutral-400 underline"
+      className="mt-10 mb-6 px-8 text-sm font-bold text-neutral-400 underline"
       onClick={handleLogout}
     >
       로그아웃
