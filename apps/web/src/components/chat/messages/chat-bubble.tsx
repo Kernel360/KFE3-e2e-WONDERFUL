@@ -1,8 +1,4 @@
-import Image from 'next/image';
-
 import { tv } from 'tailwind-variants';
-
-import Thumbnail from '@/components/ui/thumbnail';
 
 const style = tv({
   base: 'inline-block p-3 rounded-xl text-sm break-words',
