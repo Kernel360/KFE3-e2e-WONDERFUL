@@ -63,7 +63,7 @@ const SignupNicknameInput = ({
             onBlur={handleBlur}
             placeholder={placeholder}
             maxLength={12}
-            className={`selection:bg-primary selection:text-primary-foreground file:text-foreground aria-invalid:ring-destructive/20 aria-invalid:border-destructive w-[270px] text-black file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+            className={`selection:bg-primary file:text-foreground aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 w-[270px] text-black selection:text-neutral-50 file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
           />
         </div>
       </div>

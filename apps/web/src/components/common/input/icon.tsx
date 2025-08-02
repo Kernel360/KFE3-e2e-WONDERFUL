@@ -3,6 +3,7 @@ import React from 'react';
 import { RotateCcw } from 'lucide-react';
 
 import { formatCurrency } from '@/lib/utils/price';
+
 interface InputIconProps extends React.HTMLProps<HTMLInputElement> {
   id: string;
   label?: string;
@@ -41,7 +42,7 @@ const InputIcon = ({
             id={id}
             value={value}
             {...props}
-            className="selection:bg-primary selection:text-primary-foreground file:text-foreground aria-invalid:ring-destructive/20 aria-invalid:border-destructive w-[270px] text-black file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="selection:bg-primary file:text-foreground aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 w-[270px] text-black selection:text-neutral-50 file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
         <div className="[&>button>svg]:h-5 [&>button>svg]:w-5 [&>svg]:h-5 [&>svg]:w-5">
