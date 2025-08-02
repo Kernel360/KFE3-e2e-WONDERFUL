@@ -48,14 +48,17 @@ const AuctionDetailContainer = () => {
   }
 
   if (error || !auctionDetailData?.data) {
-    showToast({
-      status: 'error',
-      title: '경매 불러오기 실패',
-      subtext: '경매 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도 해주세요.',
-      autoClose: true,
-    });
-
-    return <Skeleton />;
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <div className="text-danger-600 text-lg">경매 정보를 불러오는 중 오류가 발생했습니다.</div>
+        <button
+          onClick={() => refetchAuction()}
+          className="bg-primary-500 hover:bg-primary-600 rounded-lg px-4 py-2 text-white transition-colors"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
   }
 
   const auction = auctionDetailData.data;
