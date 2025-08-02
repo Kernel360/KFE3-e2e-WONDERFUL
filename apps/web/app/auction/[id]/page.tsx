@@ -1,4 +1,4 @@
-import AuctionDetailContainer from '@/components/auction-detail/container';
+import { AuctionDetailContainer } from '@/components/auction-detail';
 
 const Page = () => {
   return <AuctionDetailContainer />;
