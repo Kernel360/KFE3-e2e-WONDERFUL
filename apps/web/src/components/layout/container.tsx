@@ -14,7 +14,7 @@ const Container = ({
     variants: {
       noNav: {
         true: 'max-h-[calc(100vh-56px)]',
-        false: 'min-h-[calc(100vh-56px-80px)]',
+        false: 'min-h-[calc(100vh-136px)]',
       },
     },
     defaultVariants: {
