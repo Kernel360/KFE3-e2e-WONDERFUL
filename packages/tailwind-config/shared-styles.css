@@ -59,36 +59,23 @@ h6 {
   --color-primary-100: #dde4ff;
   --color-primary-200: #c2ccfe;
   --color-primary-300: #9dabff;
-  --color-primary-400: #747dff;
   --color-primary-500: #5758fe;
   --color-primary-600: #4238f1;
   --color-primary-700: #372ecf;
-  --color-primary-800: #2e29a0;
   --color-primary-950: #16214a;
 
   /* Success Colors */
   --color-success-50: #f0fdfa;
-  --color-success-100: #cbfbf1;
-  --color-success-200: #96f7e4;
-  --color-success-300: #46ecd5;
-  --color-success-400: #00d5be;
   --color-success-500: #00bba7;
   --color-success-600: #008b7e;
-  --color-success-700: #00786f;
-  --color-success-800: #005f5a;
 
   /* Danger Colors */
   --color-danger-50: #fff2ef;
   --color-danger-70: #ffeff0;
   --color-danger-100: #ffe6e0;
-  --color-danger-200: #fed0c6;
-  --color-danger-300: #ffa197;
-  --color-danger-400: #ff765a;
   --color-danger-500: #ff4c00;
   --color-danger-600: #ec3300;
-  --color-danger-650: #e80039;
   --color-danger-700: #c73500;
-  --color-danger-800: #a52c00;
 
   /* Neutral Colors */
   --color-neutral-50: #fafafa;
@@ -113,11 +100,8 @@ h6 {
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
 
   /* Font Sizes */
-  --text-h2: 2rem;
-  /* 32px */
   --text-h3: 1.5rem;
   /* 24px */
   --text-h4: 1.25rem;
@@ -158,13 +142,4 @@ h6 {
     0px -3px 7px 0px rgba(203, 195, 195, 0.1);
 
   --shadow-md: inset 0 60px 25px -17px rgba(0, 0, 0, 0.1);
-}
-.korean-calendar th:first-child {
-  color: rgb(239 68 68);
-  /* red-500 */
-}
-
-.korean-calendar th:last-child {
-  color: rgb(59 130 246);
-  /* blue-500 */
 }

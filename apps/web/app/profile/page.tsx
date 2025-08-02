@@ -19,7 +19,7 @@ const ProfilePage = async () => {
   }
 
   return (
-    <div className="height-auto w-full bg-white">
+    <div className="h-full w-full bg-white">
       {/* Profile Card */}
       <div className="border-b-4 border-neutral-100 py-1">
         <ProfileCard
