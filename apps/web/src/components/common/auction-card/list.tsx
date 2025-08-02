@@ -57,7 +57,7 @@ const AuctionItemList = ({
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
-        {Array.from({ length: 8 }).map((_, index) => (
+        {Array.from({ length: 3 }).map((_, index) => (
           <AuctionCardSkeleton key={index} />
         ))}
       </div>
@@ -81,9 +81,9 @@ const AuctionItemList = ({
   return (
     <div className="flex flex-col gap-3">
       {filteredData && filteredData.length > 0 ? (
-        filteredData.map((auction) => {
+        filteredData.map((auction, idx) => {
           const auctionItemProps = convertToAuctionItemProps(auction);
-          return <AuctionCard key={auction.id} {...auctionItemProps} />;
+          return <AuctionCard key={auction.id} {...auctionItemProps} idx={idx} />;
         })
       ) : (
         <div className="flex flex-col items-center justify-center py-16">

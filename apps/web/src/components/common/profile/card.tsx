@@ -12,7 +12,7 @@ const ProfileCard = ({ nickname, profileImg, location, children }: ProfileCardPr
     <ProfileImage
       src={profileImg || '/avatar-male.svg'}
       alt={`${nickname} 프로필 이미지`}
-      className="size-10"
+      size={'small'}
     />
     <div className="flex flex-col">
       <span className="text-base font-medium">{nickname}</span>

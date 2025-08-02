@@ -86,6 +86,7 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
             url={auction.thumbnailUrl}
             alt={auction.title}
             className="h-12 w-12 shrink-0"
+            size={60}
           />
         )}
         <p className={productCardStyle().infoBox()}>

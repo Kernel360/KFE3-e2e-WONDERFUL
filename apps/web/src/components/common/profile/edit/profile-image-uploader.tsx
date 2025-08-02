@@ -51,9 +51,9 @@ const ProfileImageUploader = ({
   };
 
   return (
-    <div className="relative mt-8 mb-4 flex flex-col items-center">
+    <div className="relative mb-4 mt-8 flex flex-col items-center">
       <div className="relative">
-        <ProfileImage src={preview} alt="프로필 이미지" className="size-[130px]" />
+        <ProfileImage src={preview} alt="프로필 이미지" size={'xlarge'} />
         <input
           type="file"
           id={id}
@@ -66,7 +66,7 @@ const ProfileImageUploader = ({
         <button
           type="button"
           onClick={handleButtonClick}
-          className="absolute -right-1 -bottom-1 flex h-11 w-11 items-center justify-center rounded-full border-4 border-white bg-neutral-300"
+          className="absolute -bottom-1 -right-1 flex h-11 w-11 items-center justify-center rounded-full border-4 border-white bg-neutral-300"
           aria-label="프로필 이미지 변경"
         >
           <Pencil className="h-5 w-5 text-white" />

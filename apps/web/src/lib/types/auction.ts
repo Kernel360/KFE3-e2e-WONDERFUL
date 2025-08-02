@@ -1,6 +1,7 @@
 export interface AuctionItemProps {
   id: string;
   title: string;
+  idx?: number;
   status: '경매중' | '경매종료';
   originalPrice: number;
   currentPrice: number;

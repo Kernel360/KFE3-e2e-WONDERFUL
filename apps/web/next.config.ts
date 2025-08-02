@@ -9,10 +9,9 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production', // 프로덕션에서 console 제거
   },
-
   experimental: {
     serverActions: {
-      bodySizeLimit: '5mb', // 5MB로 증가
+      bodySizeLimit: '5mb',
     },
     optimizePackageImports: [
       'lodash',
@@ -27,8 +26,10 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
+    imageSizes: [28, 40, 46, 58, 106, 212, 480],
+    deviceSizes: [150, 375, 500],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
     remotePatterns: [
-      // Supabase Storage
       {
         protocol: 'https',
         hostname: 'autkdwezfwdduoqiadsc.supabase.co',
@@ -37,7 +38,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Firebase 환경변수 관리
   env: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

@@ -89,7 +89,7 @@ const NicknameInput = ({
                   : checkResult && !checkResult.available
                     ? 'border-danger-500 focus:ring-danger-500/20'
                     : 'focus:border-primary-500 focus:ring-primary-500/20 border-neutral-300'
-            } text-neutral-900 placeholder:text-neutral-400 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-50`}
+            } text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-neutral-50`}
           />
         </div>
 

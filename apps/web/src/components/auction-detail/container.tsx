@@ -111,7 +111,7 @@ const AuctionDetailContainer = () => {
   return (
     <>
       <article className={cn(`flex flex-col items-center break-keep bg-neutral-100`, sectionStyle)}>
-        <ItemImages urls={images} />
+        <ItemImages urls={images} title={auction.title} />
         <ProfileCard
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}

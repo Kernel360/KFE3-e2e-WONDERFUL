@@ -23,11 +23,7 @@ const TAB_STATUS_MAP: Record<BasicTabId, AuctionStatus[]> = {
   completed: ['COMPLETED', 'CANCELLED'],
 };
 
-interface WishlistProps {
-  userId: string;
-}
-
-const Wishlist = ({ userId }: WishlistProps) => {
+const Wishlist = () => {
   const selectedTab = (useFilterStore((store) => store.selectedItems.trade) || 'all') as BasicTabId;
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +57,7 @@ const Wishlist = ({ userId }: WishlistProps) => {
       <div>
         <FilterTab filterKey="trade" items={AUCTION_TABS_BASIC} />
         <div className="flex flex-col gap-3">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {Array.from({ length: 3 }).map((_, index) => (
             <AuctionCardSkeleton key={index} />
           ))}
         </div>
