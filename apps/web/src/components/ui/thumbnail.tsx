@@ -10,7 +10,9 @@ interface ThumbnailProps extends HTMLAttributes<HTMLDivElement> {
   url: string;
   alt: string;
   size: number;
+  quality?: number;
   priority?: boolean;
+  fetchPriority?: 'high' | undefined;
 }
 
 const Thumbnail = ({
@@ -19,6 +21,8 @@ const Thumbnail = ({
   alt,
   size = 104,
   priority = false,
+  fetchPriority,
+  quality = 80,
   ...props
 }: ThumbnailProps) => {
   return (
@@ -30,8 +34,10 @@ const Thumbnail = ({
         width={size}
         height={size}
         sizes={`${size}px`}
-        quality={80}
+        quality={quality}
         priority={priority}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={fetchPriority}
         {...props}
       />
     </div>

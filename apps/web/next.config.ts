@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
+    imageSizes: [28, 40, 46, 58, 106, 212, 480],
+    deviceSizes: [150, 375, 500],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
     remotePatterns: [
       {
         protocol: 'https',
@@ -33,9 +36,6 @@ const nextConfig: NextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
-    imageSizes: [28, 40, 46, 58, 104],
-    deviceSizes: [150, 375, 500],
-    minimumCacheTTL: 60 * 60 * 24 * 7,
   },
 
   env: {

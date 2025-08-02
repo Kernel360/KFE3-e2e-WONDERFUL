@@ -39,6 +39,7 @@ const renderTimeBadge = ({
 const AuctionItemCard = ({
   id,
   title,
+  idx,
   status,
   originalPrice,
   currentPrice,
@@ -50,12 +51,19 @@ const AuctionItemCard = ({
   // 실제 경매 상태 확인 (props로 받은 status와 시간 기반 확인 모두 고려)
   const isAuctionEnded = status === '경매종료' || isExpired;
   const finalStatus: '경매중' | '경매종료' = isAuctionEnded ? '경매종료' : '경매중';
-
   return (
     <Link href={`/auction/${id}`} className="flex w-full items-center justify-between gap-2.5">
       <div className="relative">
         <BadgeBidStatus status={finalStatus} />
-        <Thumbnail url={thumbnailUrl} alt={`${title} 썸네일`} size={106} />
+        <Thumbnail
+          url={thumbnailUrl}
+          alt={`${title} 썸네일`}
+          size={106}
+          className="size-26.5"
+          priority={idx < 5}
+          quality={50}
+          fetchPriority={idx === 0 ? 'high' : undefined}
+        />
       </div>
       <div className="w-full shrink">
         <p className="leading-5.5 mb-1.5 line-clamp-2 text-lg font-medium text-neutral-900">
