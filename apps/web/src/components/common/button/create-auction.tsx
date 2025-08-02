@@ -8,7 +8,7 @@ import { FloatButton } from '@/components/ui/float-button';
 
 import { useLocationStore, useToastStore } from '@/lib/zustand/store';
 
-const CreateAuctionButton = () => {
+const CreateAuctionButtonClient = () => {
   const router = useRouter();
   const { selectedLocation } = useLocationStore();
   const { showToast } = useToastStore();
@@ -28,11 +28,11 @@ const CreateAuctionButton = () => {
   };
 
   return (
-    <div className="absolute bottom-28 right-6 z-50">
+    <div className="absolute bottom-4 right-4 z-50">
       <FloatButton
         onClick={handleClick}
         size="medium"
-        className="bg-indigo-500 text-white shadow-[0px_4px_8px_0px_rgba(0,0,0,0.2)]"
+        className="shadow-[0px_4px_8px_0px_rgba(0,0,0,0.2)]"
       >
         <Plus className="size-7" />
       </FloatButton>
@@ -40,4 +40,4 @@ const CreateAuctionButton = () => {
   );
 };
 
-export default CreateAuctionButton;
+export default CreateAuctionButtonClient;

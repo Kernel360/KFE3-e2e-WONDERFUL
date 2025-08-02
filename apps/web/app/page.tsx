@@ -7,7 +7,7 @@ const Page = () => {
   return (
     <>
       <MainHeader />
-      <Container className="px-4">
+      <Container className="relative px-4">
         <AuctionList />
         <CreateAuctionButton />
       </Container>

@@ -52,8 +52,11 @@ const AuctionItemCard = ({
   const isAuctionEnded = status === '경매종료' || isExpired;
   const finalStatus: '경매중' | '경매종료' = isAuctionEnded ? '경매종료' : '경매중';
   return (
-    <Link href={`/auction/${id}`} className="flex w-full items-center justify-between gap-2.5">
-      <div className="relative">
+    <Link
+      href={`/auction/${id}`}
+      className="relative flex w-full items-center justify-between gap-2.5 overflow-hidden"
+    >
+      <div className="z-auto">
         <BadgeBidStatus status={finalStatus} />
         <Thumbnail
           url={thumbnailUrl}

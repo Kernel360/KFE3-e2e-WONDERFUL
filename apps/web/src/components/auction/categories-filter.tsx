@@ -41,7 +41,7 @@ const CategoriesFilter = () => {
     updateCategories.push(item);
   });
 
-  return <FilterTab filterKey="category" items={updateCategories} />;
+  return <FilterTab filterKey="category" items={updateCategories} className="mt-2" />;
 };
 
 export default CategoriesFilter;
