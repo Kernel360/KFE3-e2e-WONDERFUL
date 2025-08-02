@@ -53,7 +53,7 @@ const ProfileImageUploader = ({
   return (
     <div className="relative mb-4 mt-8 flex flex-col items-center">
       <div className="relative">
-        <ProfileImage src={preview} alt="프로필 이미지" className="size-[150px]" />
+        <ProfileImage src={preview} alt="프로필 이미지" size={'xlarge'} />
         <input
           type="file"
           id={id}

@@ -30,7 +30,7 @@ const ReceivedMessage = ({ message }: { message: Message }) => {
 
   return (
     <div className="flex justify-start gap-2 py-2">
-      <ProfileImage src={profile?.profileImg ?? ''} alt="content" className="size-10" />
+      <ProfileImage src={profile?.profileImg ?? ''} alt="content" size={'medium'} />
       <ChatBubble type={type} color={color} content={message.content} />
       <p className="flex items-end text-xs font-light text-neutral-500">{time}</p>
     </div>

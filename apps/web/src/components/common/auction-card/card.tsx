@@ -55,7 +55,7 @@ const AuctionItemCard = ({
     <Link href={`/auction/${id}`} className="flex w-full items-center justify-between gap-2.5">
       <div className="relative">
         <BadgeBidStatus status={finalStatus} />
-        <Thumbnail url={thumbnailUrl} alt={`${title} 썸네일`} className="w-26.5 h-26.5" />
+        <Thumbnail url={thumbnailUrl} alt={`${title} 썸네일`} size={106} />
       </div>
       <div className="w-full shrink">
         <p className="leading-5.5 mb-1.5 line-clamp-2 text-lg font-medium text-neutral-900">
