@@ -7,6 +7,8 @@ import { HouseIcon, MessagesSquare, SearchIcon, UserRoundIcon } from 'lucide-rea
 
 import { ROUTES, type NavMenuItem } from '@/lib/constants/routes';
 
+import { cn } from '../../lib/cn';
+
 // route 작업 후 수정 필요
 const NAV_MENU: NavMenuItem[] = [
   { name: '홈', href: ROUTES.HOME, icon: HouseIcon },
@@ -19,14 +21,20 @@ const Navigation = () => {
   const pathname = usePathname();
   const showNavigation = ['/', '/auction', '/search', '/chat', '/profile'].includes(pathname || '');
 
-  if (!showNavigation) return null;
-
   return (
-    <nav className="mx-auto w-full min-w-[320px] max-w-[480px] bg-white shadow-[var(--shadow-nav)]">
-      <ul className="flex h-[88px] w-full">
+    <nav
+      className={cn(
+        ` ${
+          showNavigation
+            ? 'mx-auto h-[76px] w-full min-w-[320px] max-w-[480px] bg-white shadow-[var(--shadow-nav)]'
+            : 'hidden'
+        }`
+      )}
+      suppressHydrationWarning
+    >
+      <ul className="flex h-full w-full">
         {NAV_MENU.map(({ name, href, icon: Icon }) => {
           const isActive = pathname === href;
-
           return (
             <li key={href} className="h-full w-1/4">
               <Link
