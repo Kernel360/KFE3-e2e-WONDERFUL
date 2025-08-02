@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
@@ -43,17 +43,23 @@ const AuctionDetailContainer = () => {
 
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
+  useEffect(() => {
+    if (error || !auctionDetailData?.data) {
+      showToast({
+        status: 'error',
+        title: '경매 불러오기 실패',
+        subtext: '경매 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도 해주세요.',
+        autoClose: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
   if (isLoading) {
     return <Skeleton />;
   }
 
   if (error || !auctionDetailData?.data) {
-    showToast({
-      status: 'error',
-      title: '경매 불러오기 실패',
-      subtext: '경매 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도 해주세요.',
-      autoClose: true,
-    });
     return <Skeleton />;
   }
 
