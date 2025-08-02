@@ -10,10 +10,11 @@ import {
 } from '@/components/ui/carousel';
 
 interface ItemImagesProps {
-  urls?: string[];
+  urls: string[];
+  title: string;
 }
 
-const ItemImages = ({ urls }: ItemImagesProps) => {
+const ItemImages = ({ urls, title }: ItemImagesProps) => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -40,13 +41,15 @@ const ItemImages = ({ urls }: ItemImagesProps) => {
           <CarouselItem key={index}>
             <Image
               src={url}
-              alt={`item-${index}`}
+              alt={`${title} 상품 상세 이미지 ${index + 1}`}
               className="aspect-square w-full object-cover"
               width={480}
               height={480}
+              sizes="100vw"
               priority={index === 0}
               fetchPriority={index === 0 ? 'high' : 'auto'}
-              quality={80}
+              quality={index === 0 ? 80 : 70}
+              loading={index === 0 ? 'eager' : 'lazy'}
             />
           </CarouselItem>
         ))}

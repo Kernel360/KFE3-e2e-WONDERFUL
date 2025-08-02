@@ -60,7 +60,7 @@ const AuctionItemCard = ({
           alt={`${title} 썸네일`}
           size={106}
           className="size-26.5"
-          priority={idx < 5}
+          priority={idx! < 5}
           quality={50}
           fetchPriority={idx === 0 ? 'high' : undefined}
         />
