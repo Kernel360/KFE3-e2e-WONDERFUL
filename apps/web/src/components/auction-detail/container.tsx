@@ -11,8 +11,8 @@ import {
   ItemDescription,
   ItemImages,
   ItemSummary,
-} from '@/components/auction-detail';
-import { ProfileCard } from '@/components/common';
+  Skeleton,
+} from '@/components/auction-detail/index';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 import { useCurrentUser } from '@/hooks/queries/auth';
@@ -20,15 +20,19 @@ import { useBidsByAuction } from '@/hooks/queries/bids';
 
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
-import { BidType } from '@/lib/types/bid';
+import { useToastStore } from '@/lib/zustand/store';
+
+import { BidType } from '@/types/bid';
+
+import { ProfileCard } from '../common';
 
 const AuctionDetailContainer = () => {
   const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
 
-  // 현재 사용자 정보 훅 사용
   const { data: currentUser } = useCurrentUser();
+  const { showToast } = useToastStore();
 
   const {
     data: auctionDetailData,
@@ -37,19 +41,12 @@ const AuctionDetailContainer = () => {
     refetch: refetchAuction,
   } = useAuctionDetail(id as string);
 
-  // 초기 입찰 데이터 로드 추가
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
-  // 로딩 상태 처리
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg text-neutral-600">경매 정보를 불러오는 중...</div>
-      </div>
-    );
+    return <Skeleton />;
   }
 
-  // 에러 상태 처리
   if (error || !auctionDetailData?.data) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
@@ -65,19 +62,17 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const location = auction.location; // 위치 정보
+  const isAuctionExpired = new Date(auction.endTime) < new Date();
+  const { location } = auction;
 
-  // 초기 입찰 데이터 준비
   const initialBids = (initialBidsData?.data as BidType[]) || [];
 
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
-    // 모든 레코드의 urls를 하나의 배열로 합치기
     const allUrls = auction.auctionImages.flatMap((image) => image.urls || []);
     return allUrls.length > 0 ? allUrls : ['/no-image.png'];
   };
 
-  // Item 데이터 변환
   const item: ItemInfo = {
     title: auction.title,
     status: auction.status,
@@ -96,14 +91,12 @@ const AuctionDetailContainer = () => {
     category: auction.category.name,
   };
 
-  // 판매자 정보
   const { seller } = auction;
   const chatRoomSellerProps = {
     id: seller.id,
     nickname: seller.nickname,
   };
 
-  // 처리된 이미지 배열 가져오기
   const images = processImages();
 
   const sectionStyle = '[&_section]:w-full [&_section]:px-4 [&_section]:bg-white';
@@ -117,7 +110,7 @@ const AuctionDetailContainer = () => {
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
           location={location?.locationName}
         >
-          {currentUser?.id !== seller.id && (
+          {currentUser?.id !== seller.id && !isAuctionExpired && (
             <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
           )}
         </ProfileCard>
@@ -137,7 +130,7 @@ const AuctionDetailContainer = () => {
           bidTableRef={bidTableRef}
           isExpired={false}
           seller={chatRoomSellerProps}
-          currentUserId={currentUser?.id} // 현재 사용자 ID 전달
+          currentUserId={currentUser?.id}
         />
       </aside>
     </>
