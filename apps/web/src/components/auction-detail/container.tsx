@@ -64,7 +64,7 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const location = auction.location;
+  const { location } = auction;
 
   const initialBids = (initialBidsData?.data as BidType[]) || [];
 
