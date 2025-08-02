@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation';
 import { Pen } from 'lucide-react';
 
 import { MenuList, ProfileCard } from '@/components/common';
-import { LogoutButton } from '@/components/common/profile';
+import { ProfileShortcutMenu } from '@/components/common/profile';
+import ButtonSignOut from '@/components/user/button-sign-out';
 import { Button } from '@/components/ui';
 
 import { getMyProfile } from '@/lib/actions/profile';
@@ -16,32 +17,32 @@ const ProfilePage = async () => {
   if (!profile) {
     redirect('/auth/signin?redirectTo=/profile');
   }
+
   return (
-    <main className={`h-full overflow-auto bg-white`}>
-      <div className="height-auto w-full bg-white">
-        {/* Profile Card */}
-        <div className="border-b-4 border-neutral-200">
-          <ProfileCard
-            nickname={profile.nickname || '사용자'}
-            profileImg={profile.profileImg || '/avatar-male.svg'}
-          >
-            <Link href="/profile/edit">
-              <Button variant="outline" size={'sm'}>
-                <Pen />
-                프로필수정
-              </Button>
-            </Link>
-          </ProfileCard>
-        </div>
-
-        {/* Menu List */}
-        <div className="mt-8 px-6">
-          <MenuList />
-        </div>
-
-        <LogoutButton />
+    <div className="height-auto w-full bg-white">
+      {/* Profile Card */}
+      <div className="border-b-4 border-neutral-100 py-1">
+        <ProfileCard
+          nickname={profile.nickname || '사용자'}
+          profileImg={profile.profileImg || '/avatar-male.svg'}
+        >
+          <Link href="/profile/edit">
+            <Button variant="outline" size={'sm'}>
+              <Pen />
+              프로필수정
+            </Button>
+          </Link>
+        </ProfileCard>
       </div>
-    </main>
+
+      <ProfileShortcutMenu />
+
+      <div className="mt-6">
+        <MenuList />
+      </div>
+
+      <ButtonSignOut />
+    </div>
   );
 };
 
