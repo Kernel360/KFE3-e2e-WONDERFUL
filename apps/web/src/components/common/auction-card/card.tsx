@@ -48,13 +48,12 @@ const AuctionItemCard = ({
 }: AuctionItemProps) => {
   const { hours, minutes, isExpired } = useCountdown(new Date(deadline));
 
-  // 실제 경매 상태 확인 (props로 받은 status와 시간 기반 확인 모두 고려)
   const isAuctionEnded = status === '경매종료' || isExpired;
   const finalStatus: '경매중' | '경매종료' = isAuctionEnded ? '경매종료' : '경매중';
   return (
     <Link
       href={`/auction/${id}`}
-      className="relative my-3 flex w-full items-center justify-between gap-2.5 overflow-hidden"
+      className="relative mb-4 flex w-full items-center justify-between gap-2.5 overflow-hidden"
     >
       <div className="z-auto">
         <BadgeBidStatus status={finalStatus} />
