@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { CircleX, Search } from 'lucide-react';
+import { X, Search } from 'lucide-react';
 
 import { useSearchHistory } from '@/hooks/common/useSearchHistory';
 
@@ -66,29 +66,28 @@ const InputSearch = ({
   );
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="shadow-xs flex h-11 w-full min-w-0 items-center justify-between rounded-md border bg-transparent px-3 py-1 text-base text-neutral-400 transition-[color,box-shadow] focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm">
-        <div className="flex flex-1 items-center gap-2 [&>svg]:h-5 [&>svg]:w-5">
-          <Search className="text-neutral-400" />
-          <input
-            id={id}
-            type="text"
-            placeholder={placeholder}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            className="selection:bg-primary file:text-foreground aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 selection:text-primary-500 flex-1 text-black file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-          />
-        </div>
-        {value && (
-          <button
-            type="button"
-            onClick={handleClear}
-            className="cursor-pointer [&>svg]:h-5 [&>svg]:w-5"
-          >
-            <CircleX className="fill-neutral-300 text-white" />
-          </button>
-        )}
-      </div>
+    <form
+      onSubmit={handleSubmit}
+      className="border-b-1 flex h-[80%] w-full items-center gap-2 border-neutral-800 px-1 text-neutral-800 [&_input]:h-[60%]"
+    >
+      <Search size={24} className="shirkin" />
+      <input
+        id={id}
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="flex-1"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="flex size-5 cursor-pointer items-center justify-center rounded-full bg-neutral-800 text-white"
+        >
+          <X size={16} />
+        </button>
+      )}
     </form>
   );
 };
