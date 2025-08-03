@@ -41,7 +41,6 @@ interface CreateAuctionFormProps {
   currentPriceInfo?: CurrentPriceInfo; // 현재가 정보 추가
   onValidationChange?: (isValid: boolean) => void; // 유효성 검사 상태 변경 콜백
 }
-const MAX_PRICE = 2147483647;
 
 const CreateAuctionForm = ({
   errors,
@@ -51,31 +50,16 @@ const CreateAuctionForm = ({
   existingImages,
   onRemoveExistingImage,
   currentPriceInfo, // 현재가 정보
-  onValidationChange, // 유효성 검사 상태 변경 콜백
 }: CreateAuctionFormProps) => {
   const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(
     defaultValues?.is_instant_buy_enabled || false
   );
-  const [priceError, setPriceError] = useState('');
 
   // 각 input에 맞는 범위 설정
   const priceHandlers = useNumberInput({ min: 1000, max: 2000000000 });
   const timeHandlers = useNumberInput({ min: 1, max: 99 });
 
   const formatPrice = (price: number) => price.toLocaleString() + '원';
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    const hasError = value > MAX_PRICE;
-
-    if (hasError) {
-      setPriceError('경매 시작가는 21억원을 초과할 수 없습니다.');
-    } else {
-      setPriceError('');
-    }
-    // 부모에게 검증 상태 전달 (에러가 있으면 false, 없으면 true)
-    onValidationChange?.(!hasError);
-  };
 
   return (
     <div className="space-y-8">
@@ -260,25 +244,8 @@ const CreateAuctionForm = ({
             </PopoverContent>
           </Popover>
         </div>
-        {/* 숨겨진 input으로 값 전달 */}
         <input type="hidden" name="is_instant_buy_enabled" value={isInstantBuyEnabled.toString()} />
       </div>
-      {/* <div className={`flex items-center gap-2`}>
-        <Checkbox id="extend" />
-        <Label htmlFor="extend" className="text-md font-light">
-          연장 경매 사용하기
-        </Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <CircleAlert className="text-xs font-thin" width={20} height={20} strokeWidth={1} />
-          </PopoverTrigger>
-          <PopoverContent side="right" align="center" className="w-64 text-sm">
-            경매마감 1분 전에, 연장 버튼이 활성화
-            <br />
-            경매 당 3분 연장 1회 가능(1인 1회)
-          </PopoverContent>
-        </Popover>
-      </div> */}
     </div>
   );
 };

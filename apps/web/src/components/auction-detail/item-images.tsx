@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -15,11 +17,11 @@ interface ItemImagesProps {
 }
 
 const ItemImages = ({ urls, title }: ItemImagesProps) => {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) return;
 
     const timer = setTimeout(() => {
@@ -35,16 +37,16 @@ const ItemImages = ({ urls, title }: ItemImagesProps) => {
   }, [api, urls]);
 
   return (
-    <Carousel className="relative w-full" setApi={setApi}>
+    <Carousel className="relative h-3/5 w-full" setApi={setApi}>
       <CarouselContent>
         {urls?.map((url, index) => (
-          <CarouselItem key={index}>
+          <CarouselItem key={index} className="max-h-[360px]">
             <Image
               src={url}
               alt={`${title} 상품 상세 이미지 ${index + 1}`}
-              className="aspect-square w-full object-cover"
-              width={480}
-              height={480}
+              className="aspect-square h-full w-full object-cover"
+              width={500}
+              height={500}
               sizes="100vw"
               priority={index === 0}
               fetchPriority={index === 0 ? 'high' : 'auto'}

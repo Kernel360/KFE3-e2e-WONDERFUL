@@ -62,9 +62,8 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const isAuctionExpired = new Date(auction.endTime) < new Date();
-  const { location } = auction;
 
+  const { location } = auction;
   const initialBids = (initialBidsData?.data as BidType[]) || [];
 
   const processImages = (): string[] => {
@@ -78,8 +77,6 @@ const AuctionDetailContainer = () => {
     status: auction.status,
     endTime: auction.endTime.toString(),
     description: auction.description || '',
-
-    // 추가 필요한 필드들
     startPrice: auction.auctionPrice?.startPrice || 0,
     currentPrice: auction.auctionPrice?.currentPrice || 0,
     instantPrice: auction.auctionPrice?.instantPrice,
@@ -92,13 +89,16 @@ const AuctionDetailContainer = () => {
   };
 
   const { seller } = auction;
+  const nowDate = new Date().toISOString();
+  const { endTime } = item;
+  const isExpired = nowDate > endTime;
+
   const chatRoomSellerProps = {
     id: seller.id,
     nickname: seller.nickname,
   };
 
   const images = processImages();
-
   const sectionStyle = '[&_section]:w-full [&_section]:px-4 [&_section]:bg-white';
 
   return (
@@ -109,8 +109,9 @@ const AuctionDetailContainer = () => {
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
           location={location?.locationName}
+          className="w-full"
         >
-          {currentUser?.id !== seller.id && !isAuctionExpired && (
+          {currentUser?.id !== seller.id && !isExpired && (
             <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
           )}
         </ProfileCard>

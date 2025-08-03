@@ -1,5 +1,3 @@
-// apps/web/app/layout.tsx
-
 import localFont from 'next/font/local';
 
 import type { Metadata, Viewport } from 'next';
@@ -74,17 +72,18 @@ export const viewport: Viewport = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko" className={pretendard.variable}>
-      <body className={pretendard.className} suppressHydrationWarning>
+      <body className={pretendard.className}>
         <QueryProvider>
           <UserProvider>
             <div
-              className="relative mx-auto flex h-screen min-w-[320px] max-w-[480px] flex-col"
-              style={{ position: 'relative' }}
+              className="relative mx-auto flex h-[100vh] max-h-screen min-h-screen min-w-[320px] max-w-[480px] flex-col justify-between bg-white"
+              style={{
+                height: '100dvh',
+                minHeight: '-webkit-fill-available',
+              }}
             >
               {children}
-
               <Toast />
-
               <LocationModalProvider />
               <Navigation />
             </div>

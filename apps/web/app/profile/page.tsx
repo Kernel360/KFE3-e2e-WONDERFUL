@@ -5,44 +5,35 @@ import { Pen } from 'lucide-react';
 
 import { MenuList, ProfileCard } from '@/components/common';
 import { ProfileShortcutMenu } from '@/components/common/profile';
+import { Container } from '@/components/layout';
 import ButtonSignOut from '@/components/user/button-sign-out';
-import { Button } from '@/components/ui';
 
 import { getMyProfile } from '@/lib/actions/profile';
 
 export const dynamic = 'force-dynamic';
 const ProfilePage = async () => {
   const profile = await getMyProfile();
-  // 프로필이 없으면 (로그인하지 않았거나 에러) 로그인 페이지로 리다이렉트
   if (!profile) {
     redirect('/auth/signin?redirectTo=/profile');
   }
 
   return (
-    <div className="h-full w-full bg-white">
-      {/* Profile Card */}
-      <div className="border-b-4 border-neutral-100 py-1">
-        <ProfileCard
-          nickname={profile.nickname || '사용자'}
-          profileImg={profile.profileImg || '/avatar-male.svg'}
-        >
-          <Link href="/profile/edit">
-            <Button variant="outline" size={'sm'}>
-              <Pen />
-              프로필수정
-            </Button>
-          </Link>
-        </ProfileCard>
-      </div>
-
+    <Container className="w-fulle flex h-full flex-col space-y-2 bg-neutral-100 px-4 [&>div]:rounded-sm [&>div]:shadow-[0px_2px_8px_0px_rgba(0,0,0,.08)]">
+      <ProfileCard
+        nickname={profile.nickname || '사용자'}
+        profileImg={profile.profileImg || '/avatar-male.svg'}
+      >
+        <Link href="/profile/edit" className="flex h-10 items-center gap-2 text-sm">
+          <Pen size={16} />
+          프로필 수정
+        </Link>
+      </ProfileCard>
       <ProfileShortcutMenu />
-
-      <div className="mt-6">
-        <MenuList />
-      </div>
-
-      <ButtonSignOut />
-    </div>
+      <MenuList />
+      <span className="block w-full">
+        <ButtonSignOut />
+      </span>
+    </Container>
   );
 };
 
