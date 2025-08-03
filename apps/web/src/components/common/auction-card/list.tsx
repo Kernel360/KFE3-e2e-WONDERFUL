@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react';
 
+import { ListX } from 'lucide-react';
+
 import AuctionCardSkeleton from '@/components/auction/auction-card-skeleton';
 import { AuctionCard } from '@/components/common';
 
@@ -88,16 +90,9 @@ const AuctionItemList = ({
       ) : (
         <div className="flex flex-col items-center justify-center py-16">
           <div className="mb-2 text-neutral-400">
-            <svg className="h-16 w-16" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <ListX size={60} />
           </div>
-          <h3 className="mb-1 text-lg font-medium text-neutral-900">경매가 없습니다</h3>
-          <p className="text-neutral-600">현재 진행 중인 경매가 없습니다.</p>
+          <p className="text-neutral-600">진행 중인 경매가 없습니다.</p>
         </div>
       )}
     </div>
