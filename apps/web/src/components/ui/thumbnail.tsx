@@ -26,7 +26,13 @@ const Thumbnail = ({
   ...props
 }: ThumbnailProps) => {
   return (
-    <div className={cn('overflow-hidden rounded-md border border-neutral-200', className)}>
+    <div
+      className={cn(
+        'flex-shrink-0 overflow-hidden rounded-md border border-neutral-200',
+        className
+      )}
+      style={{ width: `${size}px`, height: `${size}px` }}
+    >
       <Image
         src={url}
         alt={alt}
