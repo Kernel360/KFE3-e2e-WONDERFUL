@@ -27,7 +27,6 @@ const AuctionDetailContainer = () => {
   const params = useParams();
   const { id } = params;
 
-  // 현재 사용자 정보 훅 사용
   const { data: currentUser } = useCurrentUser();
 
   const {
@@ -37,10 +36,8 @@ const AuctionDetailContainer = () => {
     refetch: refetchAuction,
   } = useAuctionDetail(id as string);
 
-  // 초기 입찰 데이터 로드 추가
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
-  // 로딩 상태 처리
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -49,7 +46,6 @@ const AuctionDetailContainer = () => {
     );
   }
 
-  // 에러 상태 처리
   if (error || !auctionDetailData?.data) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
@@ -65,26 +61,21 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const location = auction.location; // 위치 정보
+  const location = auction.location;
 
-  // 초기 입찰 데이터 준비
   const initialBids = (initialBidsData?.data as BidType[]) || [];
 
   const processImages = (): string[] => {
     if (!auction?.auctionImages?.length) return ['/no-image.png'];
-    // 모든 레코드의 urls를 하나의 배열로 합치기
     const allUrls = auction.auctionImages.flatMap((image) => image.urls || []);
     return allUrls.length > 0 ? allUrls : ['/no-image.png'];
   };
 
-  // Item 데이터 변환
   const item: ItemInfo = {
     title: auction.title,
     status: auction.status,
     endTime: auction.endTime.toString(),
     description: auction.description || '',
-
-    // 추가 필요한 필드들
     startPrice: auction.auctionPrice?.startPrice || 0,
     currentPrice: auction.auctionPrice?.currentPrice || 0,
     instantPrice: auction.auctionPrice?.instantPrice,
@@ -96,16 +87,14 @@ const AuctionDetailContainer = () => {
     category: auction.category.name,
   };
 
-  // 판매자 정보
   const { seller } = auction;
+
   const chatRoomSellerProps = {
     id: seller.id,
     nickname: seller.nickname,
   };
 
-  // 처리된 이미지 배열 가져오기
   const images = processImages();
-
   const sectionStyle = '[&_section]:w-full [&_section]:px-4 [&_section]:bg-white';
 
   return (
@@ -137,7 +126,7 @@ const AuctionDetailContainer = () => {
           bidTableRef={bidTableRef}
           isExpired={false}
           seller={chatRoomSellerProps}
-          currentUserId={currentUser?.id} // 현재 사용자 ID 전달
+          currentUserId={currentUser?.id}
         />
       </aside>
     </>

@@ -81,7 +81,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 height: '100dvh',
                 minHeight: '-webkit-fill-available',
               }}
-              suppressHydrationWarning
             >
               {children}
               <Toast />
