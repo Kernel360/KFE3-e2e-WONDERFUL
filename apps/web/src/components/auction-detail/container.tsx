@@ -108,6 +108,7 @@ const AuctionDetailContainer = () => {
           nickname={seller.nickname}
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
           location={location?.locationName}
+          className="w-full"
         >
           {currentUser?.id !== seller.id && !isExpired && (
             <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
