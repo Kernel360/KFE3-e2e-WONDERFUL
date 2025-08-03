@@ -54,7 +54,7 @@ const AuctionItemCard = ({
   return (
     <Link
       href={`/auction/${id}`}
-      className="relative flex w-full items-center justify-between gap-2.5 overflow-hidden"
+      className="relative my-3 flex w-full items-center justify-between gap-2.5 overflow-hidden"
     >
       <div className="z-auto">
         <BadgeBidStatus status={finalStatus} />

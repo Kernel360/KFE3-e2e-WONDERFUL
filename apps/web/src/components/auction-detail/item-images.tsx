@@ -37,7 +37,7 @@ const ItemImages = ({ urls, title }: ItemImagesProps) => {
   }, [api, urls]);
 
   return (
-    <Carousel className="relative h-3/5" setApi={setApi}>
+    <Carousel className="relative h-3/5 w-full" setApi={setApi}>
       <CarouselContent>
         {urls?.map((url, index) => (
           <CarouselItem key={index} className="max-h-[360px]">
@@ -45,8 +45,8 @@ const ItemImages = ({ urls, title }: ItemImagesProps) => {
               src={url}
               alt={`${title} 상품 상세 이미지 ${index + 1}`}
               className="aspect-square h-full w-full object-cover"
-              width={480}
-              height={480}
+              width={500}
+              height={500}
               sizes="100vw"
               priority={index === 0}
               fetchPriority={index === 0 ? 'high' : 'auto'}
