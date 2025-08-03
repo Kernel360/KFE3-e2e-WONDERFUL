@@ -18,9 +18,9 @@ interface HeaderInfo {
 const HEADER_CONFIG: Record<string, HeaderInfo> = {
   '/profile': { title: '나의 프로필', showBackButton: false },
   '/profile/edit': { title: '프로필 수정하기', showBackButton: true },
-  '/profile/sales': { title: '판매목록', showBackButton: true },
-  '/profile/purchases': { title: '구매목록', showBackButton: true },
-  '/profile/wishlist': { title: '관심목록', showBackButton: true },
+  '/profile/sales': { title: '판매 목록', showBackButton: true },
+  '/profile/purchases': { title: '입찰 목록', showBackButton: true },
+  '/profile/wishlist': { title: '관심 목록', showBackButton: true },
   '/profile/location': { title: '내 동네 설정', showBackButton: true },
   '/profile/support': { title: '공지사항', showBackButton: true },
   '/profile/settings': { title: '설정', showBackButton: true },
