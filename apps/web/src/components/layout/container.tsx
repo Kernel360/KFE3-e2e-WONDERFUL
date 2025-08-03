@@ -21,7 +21,7 @@ const Container = ({
       noNav: false,
     },
   });
-  return <main className={containerStyle({ noNav: noNav, className })}>{children}</main>;
+  return <main className={`${containerStyle({ noNav: noNav })} ${className}`}>{children}</main>;
 };
 
 export default Container;

@@ -30,7 +30,10 @@ const ProfileHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { title, showBackButton } = HEADER_CONFIG[pathname]!;
+  const { title, showBackButton } = HEADER_CONFIG[pathname] || {
+    title: '나의 프로필',
+    showBackButton: false,
+  };
 
   const titleStyle = tv({
     base: 'text-h4 font-bold mt-[3px]',
