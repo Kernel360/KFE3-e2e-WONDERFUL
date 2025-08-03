@@ -88,6 +88,9 @@ const AuctionDetailContainer = () => {
   };
 
   const { seller } = auction;
+  const nowDate = new Date().toISOString();
+  const { endTime } = item;
+  const isExpired = nowDate > endTime;
 
   const chatRoomSellerProps = {
     id: seller.id,
@@ -106,7 +109,7 @@ const AuctionDetailContainer = () => {
           profileImg={seller.profileImg ? seller.profileImg : '/avatar-female.svg'}
           location={location?.locationName}
         >
-          {currentUser?.id !== seller.id && (
+          {currentUser?.id !== seller.id && !isExpired && (
             <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
           )}
         </ProfileCard>
