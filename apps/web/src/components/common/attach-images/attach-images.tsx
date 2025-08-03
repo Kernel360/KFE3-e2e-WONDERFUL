@@ -26,7 +26,7 @@ const AttachImages = ({
   const currentImgLength = previewImages.length;
 
   const { handleChange, syncCurrentFiles } = useOnChangePreview(
-    (length) => {},
+    () => {},
     setPreviewImages,
     setFiles
   );
@@ -71,7 +71,7 @@ const AttachImages = ({
       <AttachImagesInput onChange={handleNewImageChange} imgLength={totalImagesCount} id={id} />
       <div className="scrollbar-hide-x flex w-full gap-1">
         {isEdit &&
-          existingImages.map((imageUrl, index) => (
+          existingImages.map((imageUrl) => (
             <AttachImagesThumbnail
               key={`existing-${imageUrl}`}
               url={imageUrl}

@@ -5,9 +5,8 @@ import { usePathname } from 'next/navigation';
 
 import { HouseIcon, MessagesSquare, SearchIcon, UserRoundIcon } from 'lucide-react';
 
+import { cn } from '@/lib/cn';
 import { ROUTES, type NavMenuItem } from '@/lib/constants/routes';
-
-import { cn } from '../../lib/cn';
 
 // route 작업 후 수정 필요
 const NAV_MENU: NavMenuItem[] = [
@@ -24,7 +23,7 @@ const Navigation = () => {
   return (
     <nav
       className={cn(
-        ` ${
+        `z-50 ${
           showNavigation
             ? 'mx-auto h-[76px] w-full min-w-[320px] max-w-[480px] bg-white shadow-[var(--shadow-nav)]'
             : 'hidden'
