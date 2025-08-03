@@ -19,9 +19,7 @@ export interface Item {
 
 const ItemSummary = ({ item }: ItemInformationProps) => {
   const deadline = formatDate(new Date(item.endTime));
-
   const { isExpired } = useCountdown(new Date(item.endTime));
-
   const actualStatus = isExpired ? '경매종료' : '경매중';
 
   const getBadgeVariant = () => {

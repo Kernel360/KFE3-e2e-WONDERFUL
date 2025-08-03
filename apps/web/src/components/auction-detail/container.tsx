@@ -11,8 +11,8 @@ import {
   ItemDescription,
   ItemImages,
   ItemSummary,
-} from '@/components/auction-detail';
-import { ProfileCard } from '@/components/common';
+  Skeleton,
+} from '@/components/auction-detail/index';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 import { useCurrentUser } from '@/hooks/queries/auth';
@@ -20,7 +20,11 @@ import { useBidsByAuction } from '@/hooks/queries/bids';
 
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
-import { BidType } from '@/lib/types/bid';
+import { useToastStore } from '@/lib/zustand/store';
+
+import { BidType } from '@/types/bid';
+
+import { ProfileCard } from '../common';
 
 const AuctionDetailContainer = () => {
   const bidTableRef = useRef<HTMLDivElement>(null);
@@ -28,6 +32,7 @@ const AuctionDetailContainer = () => {
   const { id } = params;
 
   const { data: currentUser } = useCurrentUser();
+  const { showToast } = useToastStore();
 
   const {
     data: auctionDetailData,
@@ -39,11 +44,7 @@ const AuctionDetailContainer = () => {
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg text-neutral-600">경매 정보를 불러오는 중...</div>
-      </div>
-    );
+    return <Skeleton />;
   }
 
   if (error || !auctionDetailData?.data) {
@@ -61,8 +62,8 @@ const AuctionDetailContainer = () => {
   }
 
   const auction = auctionDetailData.data;
-  const location = auction.location;
 
+  const { location } = auction;
   const initialBids = (initialBidsData?.data as BidType[]) || [];
 
   const processImages = (): string[] => {
