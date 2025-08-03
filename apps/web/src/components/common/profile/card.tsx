@@ -1,14 +1,17 @@
 import { ProfileImage } from '@/components/common';
 
+import { cn } from '@/lib/cn';
+
 interface ProfileCardProps {
   nickname: string;
   profileImg?: string;
   location?: string | null;
   children: React.ReactNode;
+  className?: string;
 }
 
-const ProfileCard = ({ nickname, profileImg, location, children }: ProfileCardProps) => (
-  <div className="flex w-full items-center gap-3 bg-white px-4 py-3">
+const ProfileCard = ({ nickname, profileImg, location, children, className }: ProfileCardProps) => (
+  <div className={cn(`flex items-center gap-3 bg-white px-4 py-3 ${className}`)}>
     <ProfileImage
       src={profileImg || '/avatar-male.svg'}
       alt={`${nickname} 프로필 이미지`}
