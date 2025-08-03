@@ -21,20 +21,15 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
 
   const queryClient = useQueryClient();
 
-  // TanStack Query 캐시에서 실시간 데이터 가져오기
   const bidQueryKey = bidKeys.list(auctionId, 10);
   const cachedBidsData = queryClient.getQueryData<BidListResponse>(bidQueryKey);
 
-  // currentBids를 useMemo로 최적화
   const currentBids = useMemo(() => {
     return cachedBidsData?.data || initialBids || [];
   }, [cachedBidsData?.data, initialBids]);
 
-  // 이제 currentBids는 의존성이 변경될 때만 새로운 값을 가짐
   const sortedBids = useMemo(() => {
-    return [...currentBids]
-      .sort((a, b) => Number(b.price) - Number(a.price)) // 가격 높은 순
-      .slice(0, 5); // 상위 5개만
+    return [...currentBids].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 5);
   }, [currentBids]);
 
   useEffect(() => {
@@ -43,18 +38,15 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
     }
   }, [currentBids.length, hasAnimated]);
 
-  // 🔧 낙관적 업데이트 상태 표시 (항상 연결됨)
-  // const isConnected = true;
   return (
     <div className="bg-primary-50/60 rounded-sm p-3 [&_p]:flex-1">
-      {/* 입찰 목록 */}
-      <BidTableHead />
       {currentBids.length < 1 ? (
         <p className="py-8 text-center">아직 입찰 내역이 없습니다.</p>
       ) : (
         <>
+          <BidTableHead />
           <div className="relative">
-            <span className="w-7.5 absolute flex h-full items-center justify-center">
+            <span className="w-7.5 absolute flex h-full items-center justify-center text-neutral-400">
               <i className="bg-primary-100 h-9/10 block w-1"></i>
             </span>
             <ul ref={animationParent} className="space-y-2">
