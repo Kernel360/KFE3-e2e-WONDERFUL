@@ -10,11 +10,11 @@ const Container = ({
   noNav?: boolean;
 }) => {
   const containerStyle = tv({
-    base: 'w-full flex-1 h-full scrollbar-hide-y `',
+    base: 'w-full flex-1 h-full scrollbar-hide-y',
     variants: {
       noNav: {
         true: 'max-h-[calc(100vh-56px)]',
-        false: 'min-h-[calc(100vh-136px)]',
+        false: 'max-h-[calc(100vh)]',
       },
     },
     defaultVariants: {
