@@ -80,7 +80,7 @@ const AuctionItemCard = ({
             </p>
             {renderTimeBadge({ hours, minutes, isExpired: isAuctionEnded })}
           </div>
-          <div className="w-fll flex shrink flex-col justify-end gap-2 text-right">
+          <div className="flex w-full shrink flex-col justify-end gap-2 text-right">
             <p className="text-xs leading-3 text-neutral-600" style={{ letterSpacing: '-0.75px' }}>
               현재 입찰가
             </p>
