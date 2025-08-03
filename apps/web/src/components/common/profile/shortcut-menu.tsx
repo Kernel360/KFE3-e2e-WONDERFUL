@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import { ShoppingCart, Tag, Heart } from 'lucide-react';
 
 const items = [
@@ -8,9 +9,9 @@ const items = [
 ];
 
 const ProfileShortcutMenu = () => (
-  <div className="flex justify-around border-b-4 border-neutral-100 bg-white py-5">
+  <div className="flex justify-around bg-white py-5">
     {items.map(({ icon, label, href }) => (
-      <Link key={label} href={href} className="flex flex-col items-center gap-2">
+      <Link key={label} href={href} className="flex w-1/5 flex-col items-center gap-2">
         {icon}
         <span className="text-xs text-neutral-600">{label}</span>
       </Link>

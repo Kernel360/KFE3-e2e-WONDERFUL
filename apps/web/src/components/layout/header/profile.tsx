@@ -1,10 +1,14 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+
 import { ChevronLeft } from 'lucide-react';
+import { tv } from 'tailwind-variants';
 
 import { HeaderWrapper } from '@/components/layout/';
 import { Button } from '@/components/ui';
+
+import { cn } from '@/lib/cn';
 
 interface HeaderInfo {
   title: string;
@@ -13,6 +17,7 @@ interface HeaderInfo {
 
 const HEADER_CONFIG: Record<string, HeaderInfo> = {
   '/profile': { title: '나의 프로필', showBackButton: false },
+  '/profile/edit': { title: '프로필 수정하기', showBackButton: true },
   '/profile/sales': { title: '판매목록', showBackButton: true },
   '/profile/purchases': { title: '구매목록', showBackButton: true },
   '/profile/wishlist': { title: '관심목록', showBackButton: true },
@@ -25,30 +30,28 @@ const ProfileHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { title, showBackButton } = HEADER_CONFIG[pathname] || {
-    title: '프로필',
-    showBackButton: true,
-  };
+  const { title, showBackButton } = HEADER_CONFIG[pathname]!;
+
+  const titleStyle = tv({
+    base: 'text-h4 font-bold mt-[3px]',
+    variants: {
+      showBackButton: {
+        true: 'absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]',
+        false: '',
+      },
+    },
+  });
 
   return (
-    <HeaderWrapper className="relative flex h-14 items-center justify-between bg-white">
-      {showBackButton ? (
-        <Button
-          variant="solid"
-          color="transparent"
-          onClick={router.back}
-          className="p-2"
-          aria-label="뒤로가기"
-        >
-          <ChevronLeft size={24} />
+    <HeaderWrapper
+      className={cn(`relative ${pathname === '/profile' ? 'bg-neutral-100' : 'bg-white'}`)}
+    >
+      {showBackButton && (
+        <Button color={'transparent'} className="!px-0" onClick={() => router.back()}>
+          <ChevronLeft />
         </Button>
-      ) : (
-        <div className="w-10" />
       )}
-
-      <h2 className="text-h4 flex-1 text-center font-bold">{title}</h2>
-
-      <div className="w-10" />
+      <h2 className={titleStyle({ showBackButton })}>{title}</h2>
     </HeaderWrapper>
   );
 };

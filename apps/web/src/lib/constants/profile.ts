@@ -2,8 +2,7 @@ import { AuctionListItem } from '@/lib/types/auction-prisma';
 
 interface MenuItem {
   title: string;
-  route?: string;
-  url?: string;
+  route: string;
 }
 
 interface MenuSection {
@@ -81,7 +80,8 @@ export const menuSections: MenuSection[] = [
       { title: '공지사항', route: '/profile/support' },
       {
         title: '문의하기',
-        url: 'https://docs.google.com/forms/d/e/1FAIpQLScMWkhRBarGwD0Tu7hedNc8XIRYvdJ0BYyNqKBBRyf31XIAtg/viewform?usp=header',
+        route:
+          'https://docs.google.com/forms/d/e/1FAIpQLScMWkhRBarGwD0Tu7hedNc8XIRYvdJ0BYyNqKBBRyf31XIAtg/viewform?usp=header',
       },
     ],
   },
