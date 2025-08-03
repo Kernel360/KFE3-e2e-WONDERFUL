@@ -7,7 +7,7 @@ import useFilterChange from '@/hooks/common/useFilterItem';
 import { cn } from '@/lib/cn';
 import { FilterTabProps } from '@/lib/types/filter';
 
-const FilterTab = ({ filterKey, items, className }: FilterTabProps) => {
+const FilterTab = ({ filterKey, items, className = '' }: FilterTabProps) => {
   const { selectedItem, handleChangeItem } = useFilterChange(filterKey);
 
   if (!items || items.length === 0) return null;

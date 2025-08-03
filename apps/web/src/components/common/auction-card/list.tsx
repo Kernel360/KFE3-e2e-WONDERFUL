@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import { ListX } from 'lucide-react';
 
-import AuctionCardSkeleton from '@/components/auction/auction-card-skeleton';
+import AuctionItemCardSkeleton from '@/components/auction/auction-card-skeleton';
 import { AuctionCard } from '@/components/common';
 
 import { useAuctions } from '@/hooks/queries/auction';
@@ -58,9 +58,9 @@ const AuctionItemList = ({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[100vhd] flex-col gap-3">
+      <div className="flex min-h-[100vhd] flex-col gap-4">
         {Array.from({ length: 5 }).map((_, index) => (
-          <AuctionCardSkeleton key={index} />
+          <AuctionItemCardSkeleton key={index} />
         ))}
       </div>
     );
