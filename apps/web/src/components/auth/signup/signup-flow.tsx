@@ -37,6 +37,8 @@ const SignupFlow = () => {
       <div className="flex w-full flex-col items-center gap-4">
         <SignupForm
           formData={signupForm.formData}
+          agreeToTerms={signupForm.agreeToTerms}
+          onAgreeToTerms={signupForm.handleAgreeToTerms}
           showPassword={signupForm.showPassword}
           isSubmitting={signupForm.isSubmitting}
           fieldErrors={signupForm.fieldErrors}
