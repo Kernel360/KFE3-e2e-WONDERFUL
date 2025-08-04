@@ -1,7 +1,7 @@
 import SearchView from '@/components/search/search-view';
 
-const SearchPage = () => {
+const Page = () => {
   return <SearchView />;
 };
 
-export default SearchPage;
+export default Page;

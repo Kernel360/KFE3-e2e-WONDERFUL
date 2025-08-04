@@ -1,5 +1,3 @@
-'use client';
-
 import { HeaderWrapper } from '@/components/layout';
 import InputSearch from '@/components/search/input-search';
 
