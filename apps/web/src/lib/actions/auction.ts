@@ -237,18 +237,47 @@ export const getAuctionStatus = async (itemId: string) => {
 
   return data.status;
 };
-
 export const updateAuctionStatus = async (itemId: string, status: AuctionStatus) => {
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from('auction_items')
-    .update({ status })
-    .eq('id', itemId)
-    .select('status')
-    .single();
+  try {
+    const { data: existingAuction, error: fetchError } = await supabase
+      .from('auction_items')
+      .select('id, status')
+      .eq('id', itemId)
+      .maybeSingle();
 
-  if (error) {
-    throw new Error(`경매 상태 업데이트 실패: ${error.message}`);
+    if (fetchError) {
+      throw new Error(`경매 조회 실패: ${fetchError.message}`);
+    }
+
+    if (!existingAuction) {
+      throw new Error(`존재하지 않는 경매입니다: ${itemId}`);
+    }
+
+    if (existingAuction.status === status) {
+      return;
+    }
+
+    const { error: updateError, data: updatedData } = await supabase
+      .from('auction_items')
+      .update({
+        status,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq('id', itemId)
+      .select('id, status')
+      .single();
+
+    if (updateError) {
+      throw new Error(`경매 상태 업데이트 실패: ${updateError.message}`);
+    }
+
+    if (!updatedData) {
+      throw new Error(`업데이트 결과를 확인할 수 없습니다: ${itemId}`);
+    }
+  } catch (error) {
+    console.error('updateAuctionStatus 오류:', error);
+    throw error; // 상위로 에러 전파
   }
 };

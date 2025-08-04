@@ -31,21 +31,35 @@ const AuctionDetailContainer = () => {
   const bidTableRef = useRef<HTMLDivElement>(null);
   const params = useParams();
   const { id } = params;
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   const {
     data: auctionDetailData,
-    isLoading,
+    isLoading: isAuctionLoading,
     error,
     refetch: refetchAuction,
   } = useAuctionDetail(id as string);
 
-  const { data: initialBidsData } = useBidsByAuction(id as string, 10);
+  const { data: initialBidsData, isLoading: isBidsLoading } = useBidsByAuction(id as string, 10);
 
   const countdown = useCountdown(
     auctionDetailData?.data ? new Date(auctionDetailData.data.endTime) : null,
     'second'
   );
+
+  const isCountdownReady = useMemo(() => {
+    if (auctionDetailData?.data && !countdown) return false;
+    if (
+      auctionDetailData?.data &&
+      countdown.hours === '00' &&
+      countdown.minutes === '00' &&
+      countdown.seconds === '00' &&
+      !countdown.isExpired
+    ) {
+      return false;
+    }
+    return true;
+  }, [auctionDetailData?.data, countdown]);
 
   const countdownData = useMemo(
     () => ({
@@ -56,6 +70,16 @@ const AuctionDetailContainer = () => {
     }),
     [countdown.hours, countdown.minutes, countdown.seconds, countdown.isExpired]
   );
+
+  const isLoadingWithAllData = useMemo(() => {
+    return (
+      isUserLoading ||
+      isAuctionLoading ||
+      isBidsLoading ||
+      !auctionDetailData?.data ||
+      !isCountdownReady //
+    );
+  }, [isUserLoading, isAuctionLoading, isBidsLoading, auctionDetailData?.data, isCountdownReady]);
 
   const processImages = useCallback((): string[] => {
     if (!auctionDetailData?.data?.auctionImages?.length) return ['/no-image.png'];
@@ -107,7 +131,7 @@ const AuctionDetailContainer = () => {
     updateStatus();
   }, [countdownData.isExpired, id, auctionDetailData?.data?.status, refetchAuction]);
 
-  if (isLoading) {
+  if (isLoadingWithAllData) {
     return <Skeleton />;
   }
 
@@ -125,6 +149,7 @@ const AuctionDetailContainer = () => {
     );
   }
 
+  // 이 시점에서는 데이터가 확실히 존재
   const auction = auctionDetailData.data;
 
   const { location } = auction;
@@ -160,7 +185,7 @@ const AuctionDetailContainer = () => {
           currentPrice={item.currentPrice}
           endTime={item.endTime}
           bidTableRef={bidTableRef}
-          isExpired={countdownData.isExpired}
+          isExpired={countdownData.isExpired} // 실제 만료 상태 전달
           seller={chatRoomSellerProps}
           currentUserId={currentUser?.id}
         />
