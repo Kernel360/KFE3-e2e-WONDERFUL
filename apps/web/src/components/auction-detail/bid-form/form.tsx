@@ -6,7 +6,6 @@ import { X } from 'lucide-react';
 
 import { BidFormBottom, BidFormInput, ButtonDirectDeal } from '@/components/auction-detail';
 
-import useCountdown from '@/hooks/common/useCountdown';
 import { useBidMutation } from '@/hooks/mutations/bids';
 import { useAuctionDetail } from '@/hooks/queries/auction';
 
@@ -23,6 +22,7 @@ const BidForm = ({
   bidTableRef,
   seller,
   currentUserId,
+  isExpired,
 }: BidFormProps) => {
   const [isBidInputOpen, setIsBidInputOpen] = useState<boolean>(false);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
@@ -32,8 +32,6 @@ const BidForm = ({
   const minBidUnit = data?.data.auctionPrice?.minBidUnit || 1000;
 
   const bidMutation = useBidMutation();
-
-  const { isExpired } = useCountdown(new Date(endTime));
 
   const isOwnAuction = currentUserId === seller.id;
 
