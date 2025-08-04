@@ -9,11 +9,12 @@ import {
   MinUnitSelectBox,
   Notice,
 } from '@/components/common';
-import { Input, Label, Popover, PopoverContent, PopoverTrigger, Textarea } from '@/components/ui';
+import { Input, Label, Textarea } from '@/components/ui';
 
 import { useNumberInput } from '@/hooks/common/useNumberInput';
 
 import { Checkbox } from '../ui/checkbox';
+
 const colClass = 'space-y-2 [&_label]:text-sm [&_label]:text-neutral-900 [&_label]:font-medium';
 
 interface DefaultValuesType {
@@ -37,9 +38,9 @@ interface CreateAuctionFormProps {
   defaultValues?: DefaultValuesType;
   isEdit?: boolean;
   existingImages?: string[];
-  onRemoveExistingImage?: (imageUrl: string) => void; // 기존 이미지 삭제 콜백
-  currentPriceInfo?: CurrentPriceInfo; // 현재가 정보 추가
-  onValidationChange?: (isValid: boolean) => void; // 유효성 검사 상태 변경 콜백
+  onRemoveExistingImage?: (imageUrl: string) => void;
+  currentPriceInfo?: CurrentPriceInfo;
+  onValidationChange?: (isValid: boolean) => void;
 }
 
 const CreateAuctionForm = ({
@@ -49,13 +50,12 @@ const CreateAuctionForm = ({
   isEdit,
   existingImages,
   onRemoveExistingImage,
-  currentPriceInfo, // 현재가 정보
+  currentPriceInfo,
 }: CreateAuctionFormProps) => {
   const [isInstantBuyEnabled, setIsInstantBuyEnabled] = useState(
     defaultValues?.is_instant_buy_enabled || false
   );
 
-  // 각 input에 맞는 범위 설정
   const priceHandlers = useNumberInput({ min: 1000, max: 2000000000 });
   const timeHandlers = useNumberInput({ min: 1, max: 99 });
 
@@ -102,7 +102,7 @@ const CreateAuctionForm = ({
         <AttachImages
           id="images"
           setFiles={setFiles}
-          existingImages={existingImages} // 기존 이미지 URL 배열
+          existingImages={existingImages}
           isEdit={isEdit}
           onRemoveExistingImage={onRemoveExistingImage}
         />
@@ -114,7 +114,6 @@ const CreateAuctionForm = ({
           <Label htmlFor="start_price">경매 시작가</Label>
           {isEdit ? (
             <>
-              {/* 수정 모드: 현재가를 경매 시작가 필드에 표시 */}
               <Input
                 value={
                   currentPriceInfo
@@ -126,14 +125,12 @@ const CreateAuctionForm = ({
                 placeholder="현재 경매가"
               />
 
-              {/* 실제 submit용 hidden input (현재가로 전송) */}
               <input
                 type="hidden"
                 name="start_price"
                 value={currentPriceInfo?.currentPrice || defaultValues?.start_price || 0}
               />
 
-              {/* 입찰 정보 표시 */}
               {currentPriceInfo && currentPriceInfo.bidCount > 0 && (
                 <div className="text-sm text-blue-600">
                   총 {currentPriceInfo.bidCount}회 입찰로 {formatPrice(currentPriceInfo.startPrice)}
@@ -142,13 +139,12 @@ const CreateAuctionForm = ({
               )}
             </>
           ) : (
-            /* 등록 모드: 일반 input */
             <Input
               id="start_price"
               name="start_price"
-              type="text" // type을 text로 변경
-              inputMode="numeric" // 모바일에서 숫자 키패드 표시
-              pattern="[0-9]*" // iOS에서 숫자 키패드 강제
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder="최소 1,000원, 최대 20억 원 입니다. (예) 1000"
               defaultValue={defaultValues?.start_price || ''}
               className="text-md placeholder:text-md h-12"
@@ -163,7 +159,7 @@ const CreateAuctionForm = ({
           )}
         </div>
         <div className={`${colClass}`}>
-          <Label htmlFor="min_bid_unit">최소 입찰 금액</Label>
+          <Label htmlFor="min_bid_unit">입찰 금액 최소 단위</Label>
           <div className="mr-2 flex items-center gap-3">
             <MinUnitSelectBox
               name="min_bid_unit"
@@ -181,25 +177,22 @@ const CreateAuctionForm = ({
       </fieldset>
 
       <div className={`${colClass}`}>
-        <Label htmlFor="end_time">경매 종료시간</Label>
+        <Label htmlFor="end_time">경매 종료 시간</Label>
         {isEdit ? (
           <>
-            {/* 수정 모드: 표시용 disabled input */}
             <Input
               type="number"
               value={defaultValues?.end_time || ''}
               disabled
               className="bg-gray-100"
             />
-            {/* 실제 submit용 hidden input */}
             <input type="hidden" name="end_time" value={defaultValues?.end_time || ''} />
           </>
         ) : (
-          /* 등록 모드: 일반 input */
           <Input
             id="end_time"
             name="end_time"
-            type="text" // type을 text로 변경
+            type="text"
             inputMode="numeric"
             pattern="[0-9]*"
             placeholder="최소 1시간, 최대 99시간입니다. (예) 1, 2, 3, ..., 99"
@@ -233,16 +226,6 @@ const CreateAuctionForm = ({
           <Label htmlFor="instant" className="text-md font-light">
             즉시 구매 사용하기
           </Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <CircleAlert className="text-xs font-thin" width={20} height={20} strokeWidth={1} />
-            </PopoverTrigger>
-            <PopoverContent side="right" align="center" className="w-64 text-sm">
-              즉시구매가 : 현재 가 * 1.2배
-              <br />
-              빠른 입찰을 원하신다면 즉시 구매를 이용해보세요.
-            </PopoverContent>
-          </Popover>
         </div>
         <input type="hidden" name="is_instant_buy_enabled" value={isInstantBuyEnabled.toString()} />
       </div>
