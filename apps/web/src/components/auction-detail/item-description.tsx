@@ -1,4 +1,4 @@
-import { Item } from './item-summary';
+import { Item } from '@/lib/types/auction';
 
 interface ItemInformationProps {
   item: Item;

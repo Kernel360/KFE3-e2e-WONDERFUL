@@ -45,7 +45,7 @@ const AuctionItemCard = ({
   deadline,
   thumbnailUrl,
 }: AuctionItemProps) => {
-  const { hours, minutes, isExpired } = useCountdown(new Date(deadline));
+  const { hours, minutes, isExpired } = useCountdown(new Date(deadline), 'minute');
 
   const isAuctionEnded = status === '경매종료' || isExpired;
   // const finalStatus: '경매중' | '경매종료' = isAuctionEnded ? '경매종료' : '경매중';

@@ -80,3 +80,23 @@ export interface ItemInfo extends Item {
   // 카테고리
   category: string;
 }
+
+export interface CountdownProps {
+  hours: string;
+  minutes: string;
+  seconds: string;
+  isExpired: boolean;
+}
+
+export interface ItemInformationProps {
+  item: Item;
+  id: string;
+  countdown: CountdownProps;
+}
+
+export interface Item {
+  title: string;
+  status: string;
+  endTime: string;
+  description: string;
+}
