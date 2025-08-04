@@ -9,7 +9,7 @@ interface InputIconProps extends Omit<React.HTMLProps<HTMLInputElement>, 'childr
 }
 
 const InputIcon = ({ id, label, children, iconStyle, value, ...props }: InputIconProps) => {
-  const leftIcon = (iconStyle === 'left' || 'both') && React.Children.toArray(children)[0];
+  const leftIcon = iconStyle === 'left' || 'both' ? React.Children.toArray(children)[0] : '';
   const rightIcon =
     iconStyle === 'right'
       ? React.Children.toArray(children)[0]
