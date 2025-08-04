@@ -112,9 +112,7 @@ const BidForm = ({
       >
         {!isExpired && data?.data.auctionPrice?.isInstantBuyEnabled && !isOwnAuction && (
           <ButtonDirectDeal
-            directPrice={formatCurrencyWithUnit(
-              data.data.auctionPrice.instantPrice || currentPrice * 1.2
-            )}
+            directPrice={formatCurrencyWithUnit(currentPrice * 1.2)}
             auctionId={auctionId}
             seller={seller}
             currentUserId={currentUserId}
