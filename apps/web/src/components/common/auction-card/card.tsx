@@ -72,18 +72,13 @@ const AuctionItemCard = ({
         </p>
         <div className="flex justify-between">
           <div className="w-fll flex flex-col justify-evenly gap-2">
-            <p
-              className="font-regular text-xs leading-3 text-neutral-400"
-              style={{ letterSpacing: '-0.75px' }}
-            >
+            <p className="font-regular text-xs leading-3 text-neutral-400">
               시작가 <span className="line-through">{originalPrice.toLocaleString()}</span>
             </p>
             {renderTimeBadge({ hours, minutes, isExpired: isAuctionEnded })}
           </div>
           <div className="flex w-full shrink flex-col justify-end gap-2 text-right">
-            <p className="text-xs leading-3 text-neutral-600" style={{ letterSpacing: '-0.75px' }}>
-              현재 입찰가
-            </p>
+            <p className="text-xs leading-3 text-neutral-600">현재 입찰가</p>
             <p className="text-h5 text-primary-500 leading-none">
               <strong className="mr-0.5">{currentPrice.toLocaleString('ko-KR')}</strong>
               <span className="text-xs">원</span>
