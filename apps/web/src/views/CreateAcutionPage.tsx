@@ -16,11 +16,11 @@ const CreateAuctionPage = () => {
     <form onSubmit={handleSubmit} className="relative">
       <section className="flex w-full flex-col gap-8 p-4">
         <CreateAuctionForm errors={errors} setFiles={setFiles} />
-        <Notice status="caution">
+        <Notice status="notice">
           {NOTICE_DESCRIPTION.map(({ id, description }) => (
             <p key={id} className="flex items-start justify-start gap-1">
               <CircleAlert size={15} className="shrink" />
-              <span className="flex-1 leading-none">{description}</span>
+              <span className="flex-1 whitespace-pre-wrap leading-none">{description}</span>
             </p>
           ))}
         </Notice>
