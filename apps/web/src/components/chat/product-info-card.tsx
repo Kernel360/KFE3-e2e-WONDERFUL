@@ -107,7 +107,7 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
         >
           새로고침
         </Button>
-        {auction?.sellerId == currentUserId && (
+        {auction?.seller.id == currentUserId && (
           <Button
             variant="outline"
             color={color}

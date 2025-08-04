@@ -1,25 +1,12 @@
 import Countdown from '@/components/auction-detail/countdown';
 import { Badge } from '@/components/ui/badge';
 
-import useCountdown from '@/hooks/common/useCountdown';
-
+import { ItemInformationProps } from '@/lib/types/auction';
 import { formatDate } from '@/lib/utils/date';
 
-interface ItemInformationProps {
-  item: Item;
-  id: string;
-}
-
-export interface Item {
-  title: string;
-  status: string;
-  endTime: string;
-  description: string;
-}
-
-const ItemSummary = ({ item }: ItemInformationProps) => {
+const ItemSummary = ({ item, id, countdown }: ItemInformationProps) => {
+  const { isExpired } = countdown;
   const deadline = formatDate(new Date(item.endTime));
-  const { isExpired } = useCountdown(new Date(item.endTime));
   const actualStatus = isExpired ? '경매종료' : '경매중';
 
   const getBadgeVariant = () => {
@@ -38,7 +25,7 @@ const ItemSummary = ({ item }: ItemInformationProps) => {
           <span className="text-sm font-medium text-neutral-900">마감시간</span>
           <time className="text-sm font-medium text-neutral-400">{deadline}</time>
         </div>
-        <Countdown date={new Date(item.endTime)} />
+        <Countdown countdown={countdown} />
       </div>
     </section>
   );

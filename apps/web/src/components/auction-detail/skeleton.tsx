@@ -1,6 +1,6 @@
 const Skeleton = () => (
   <div className="flex min-h-screen animate-pulse flex-col items-start justify-start gap-4">
-    <div className="aspect-square w-full bg-neutral-200 object-cover" />
+    <div className="aspect-square max-h-[360px] w-full bg-neutral-200 object-cover" />
     <div className="flex w-full items-center gap-3 bg-white px-4 py-3">
       <div className="flex size-10 rounded-full bg-neutral-200" />
       <div className="flex w-1/2 flex-col gap-2">

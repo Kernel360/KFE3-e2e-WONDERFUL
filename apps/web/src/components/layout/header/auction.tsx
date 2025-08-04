@@ -35,10 +35,10 @@ const AuctionHeader = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const shouldFetchAuction = id && id !== 'createAuction';
-  const { data: auctionData } = useAuctionDetail(shouldFetchAuction ? (id as string) : '');
+  const { data } = useAuctionDetail(shouldFetchAuction ? (id as string) : '');
+  const auctionData = data?.data;
 
-  const isOwner =
-    auctionData?.currentUserId && auctionData?.data?.sellerId === auctionData?.currentUserId;
+  const isOwner = data?.currentUserId && auctionData?.seller.id === data?.currentUserId;
 
   const handleBackClick = () => {
     if (pathname.includes('createAuction')) {
@@ -78,8 +78,8 @@ const AuctionHeader = () => {
   };
 
   // 경매 마감 여부 확인
-  const isAuctionExpired = auctionData?.data?.endTime
-    ? new Date() > new Date(auctionData.data.endTime)
+  const isAuctionExpired = auctionData?.endTime
+    ? new Date() > new Date(auctionData.endTime)
     : false;
 
   // 더보기 메뉴 아이템들
