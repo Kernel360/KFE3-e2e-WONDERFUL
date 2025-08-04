@@ -83,9 +83,8 @@ export const getAuctionsWithParams = async (
   if (params.sort) {
     queryParams.sort = params.sort;
   }
-
-  if (params.includeCompleted !== undefined) {
-    queryParams.includeCompleted = params.includeCompleted.toString();
+  if (params.includeCompleted !== undefined && params.includeCompleted !== null) {
+    queryParams.includeCompleted = String(queryParams.includeCompleted);
   }
 
   const response = await apiClient.get<AuctionListResponse>('/auctions', {

@@ -117,6 +117,10 @@ const AuctionDetailContainer = () => {
   }, [auctionDetailData?.data?.seller]);
 
   useEffect(() => {
+    if (!countdownData.isExpired || auctionDetailData?.data?.status === 'COMPLETED') {
+      return;
+    }
+
     const updateStatus = async () => {
       try {
         if (countdownData.isExpired && auctionDetailData?.data?.status !== 'COMPLETED') {
