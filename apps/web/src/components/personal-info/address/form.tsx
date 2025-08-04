@@ -15,7 +15,6 @@ const AddressForm = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
   const [isLoading, setIsLoading] = useState(false);
-
   const [formData, setFormData] = useState<CreateAddressRequest>({
     userName: '',
     address: '',
@@ -28,8 +27,8 @@ const AddressForm = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isPrimary: checked }));
+  const handleCheckboxChange = (checked: boolean | string) => {
+    setFormData((prev) => ({ ...prev, isPrimary: checked === true }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

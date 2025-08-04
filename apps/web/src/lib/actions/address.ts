@@ -1,8 +1,13 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
 import type { Address, CreateAddressRequest } from '@/lib/types/address';
+import {
+  getAuthenticatedUser,
+  handlePrimaryUpdate,
+  revalidatePages,
+  createTimestamps,
+  updateTimestamp,
+} from '@/lib/utils/server-actions';
 
 const transform = (item: any): Address => ({
   id: item.id,
@@ -17,29 +22,24 @@ const transform = (item: any): Address => ({
   updatedAt: item.updated_at,
 });
 
-const getUser = async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  return { user, error, supabase };
-};
-
 export async function getAddresses(): Promise<{ data?: Address[]; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { data, error } = await supabase
       .from('addresses')
       .select('*')
       .eq('user_id', user.id)
-      .order('is_primary', { ascending: false })
-      .order('created_at', { ascending: false });
+      .single();
 
-    if (error) return { error: error.message };
-    return { data: data?.map(transform) };
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return { data: [] };
+      }
+      return { error: error.message };
+    }
+    return { data: data ? [transform(data)] : [] };
   } catch {
     return { error: '주소 조회 중 오류가 발생했습니다.' };
   }
@@ -49,30 +49,42 @@ export async function createAddress(
   addressData: CreateAddressRequest
 ): Promise<{ data?: Address; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
     if (!addressData.address) return { error: '주소는 필수 입력 항목입니다.' };
 
     const { label, userName, phone, address, addressDetail, isPrimary } = addressData;
+
     const { data: existingAddress } = await supabase
       .from('addresses')
-      .select('id')
+      .select('*')
       .eq('user_id', user.id)
       .single();
 
-    const operation = existingAddress
-      ? supabase
-          .from('addresses')
-          .update({
-            label,
-            user_name: userName,
-            phone,
-            address,
-            address_detail: addressDetail,
-            is_primary: isPrimary || false,
-          })
-          .eq('user_id', user.id)
-      : supabase.from('addresses').insert({
+    if (existingAddress) {
+      const { data, error } = await supabase
+        .from('addresses')
+        .update({
+          label,
+          user_name: userName,
+          phone,
+          address,
+          address_detail: addressDetail,
+          is_primary: isPrimary || false,
+          ...(await updateTimestamp()),
+        })
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) return { error: error.message };
+
+      await revalidatePages(['/chat', '/address']);
+      return { data: transform(data) };
+    } else {
+      const { data, error } = await supabase
+        .from('addresses')
+        .insert({
           user_id: user.id,
           label,
           user_name: userName,
@@ -80,14 +92,16 @@ export async function createAddress(
           address,
           address_detail: addressDetail,
           is_primary: isPrimary || false,
-        });
+          ...(await createTimestamps()),
+        })
+        .select()
+        .single();
 
-    const { data, error } = await operation.select().single();
-    if (error) return { error: error.message };
+      if (error) return { error: error.message };
 
-    revalidatePath('/chat');
-    revalidatePath('/address');
-    return { data: transform(data) };
+      await revalidatePages(['/chat', '/address']);
+      return { data: transform(data) };
+    }
   } catch {
     return { error: '주소 등록 중 오류가 발생했습니다.' };
   }
@@ -98,18 +112,13 @@ export async function updateAddress(
   addressData: CreateAddressRequest
 ): Promise<{ data?: Address; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { label, userName, phone, address, addressDetail, isPrimary } = addressData;
 
     if (isPrimary) {
-      await supabase
-        .from('addresses')
-        .update({ is_primary: false })
-        .eq('user_id', user.id)
-        .eq('is_primary', true)
-        .neq('id', id);
+      await handlePrimaryUpdate(supabase, 'addresses', user.id, id);
     }
 
     const { data, error } = await supabase
@@ -121,6 +130,7 @@ export async function updateAddress(
         address,
         address_detail: addressDetail,
         is_primary: isPrimary,
+        ...(await updateTimestamp()),
       })
       .eq('id', id)
       .eq('user_id', user.id)
@@ -129,8 +139,7 @@ export async function updateAddress(
 
     if (error) return { error: error.message };
 
-    revalidatePath('/chat');
-    revalidatePath('/address');
+    await revalidatePages(['/chat', '/address']);
     return { data: transform(data) };
   } catch {
     return { error: '주소 수정 중 오류가 발생했습니다.' };
@@ -139,14 +148,13 @@ export async function updateAddress(
 
 export async function deleteAddress(id: string): Promise<{ error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { error } = await supabase.from('addresses').delete().eq('id', id).eq('user_id', user.id);
     if (error) return { error: error.message };
 
-    revalidatePath('/chat');
-    revalidatePath('/address');
+    await revalidatePages(['/chat', '/address']);
     return {};
   } catch {
     return { error: '주소 삭제 중 오류가 발생했습니다.' };

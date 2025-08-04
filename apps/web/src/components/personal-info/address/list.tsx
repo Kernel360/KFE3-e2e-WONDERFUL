@@ -63,8 +63,15 @@ const AddressList = () => {
           ))
         )}
       </ul>
-      <ButtonCreate url="address/create" status="default">
-        주소 추가하기
+      <ButtonCreate
+        url={
+          addressList.length > 0 && addressList[0]
+            ? `/address/edit/${addressList[0].id}`
+            : '/address/create'
+        }
+        status="default"
+      >
+        {addressList.length > 0 ? '주소 수정하기' : '주소 추가하기'}
       </ButtonCreate>
     </div>
   );

@@ -1,8 +1,13 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
-import { revalidatePath } from 'next/cache';
 import type { Account, CreateAccountRequest } from '@/lib/types/account';
+import {
+  getAuthenticatedUser,
+  handlePrimaryUpdate,
+  revalidatePages,
+  createTimestamps,
+  updateTimestamp,
+} from '@/lib/utils/server-actions';
 
 const transform = (item: any): Account => ({
   id: item.id,
@@ -15,18 +20,9 @@ const transform = (item: any): Account => ({
   updatedAt: item.updated_at,
 });
 
-const getUser = async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  return { user, error, supabase };
-};
-
 export async function getAccounts(): Promise<{ data?: Account[]; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { data, error } = await supabase
@@ -47,19 +43,15 @@ export async function createAccount(
   accountData: CreateAccountRequest
 ): Promise<{ data?: Account; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { bankName, accountNumber, accountHolder, isPrimary } = accountData;
-    if (!bankName || !accountNumber || !accountHolder)
+    if (!bankName?.trim() || !accountNumber?.trim() || !accountHolder?.trim())
       return { error: '모든 필드는 필수 입력 항목입니다.' };
 
     if (isPrimary) {
-      await supabase
-        .from('accounts')
-        .update({ is_primary: false })
-        .eq('user_id', user.id)
-        .eq('is_primary', true);
+      await handlePrimaryUpdate(supabase, 'accounts', user.id);
     }
 
     const { data, error } = await supabase
@@ -70,13 +62,14 @@ export async function createAccount(
         account_number: accountNumber,
         account_holder: accountHolder,
         is_primary: isPrimary || false,
+        ...(await createTimestamps()),
       })
       .select()
       .single();
 
     if (error) return { error: error.message };
 
-    revalidatePath('/account');
+    await revalidatePages(['/account']);
     return { data: transform(data) };
   } catch {
     return { error: '계좌 등록 중 오류가 발생했습니다.' };
@@ -88,17 +81,13 @@ export async function updateAccount(
   accountData: CreateAccountRequest
 ): Promise<{ data?: Account; error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { bankName, accountNumber, accountHolder, isPrimary } = accountData;
 
     if (isPrimary) {
-      await supabase
-        .from('accounts')
-        .update({ is_primary: false })
-        .eq('user_id', user.id)
-        .eq('is_primary', true);
+      await handlePrimaryUpdate(supabase, 'accounts', user.id, id);
     }
 
     const { data, error } = await supabase
@@ -108,6 +97,7 @@ export async function updateAccount(
         account_number: accountNumber,
         account_holder: accountHolder,
         is_primary: isPrimary || false,
+        ...(await updateTimestamp()),
       })
       .eq('id', id)
       .eq('user_id', user.id)
@@ -116,7 +106,7 @@ export async function updateAccount(
 
     if (error) return { error: error.message };
 
-    revalidatePath('/account');
+    await revalidatePages(['/account']);
     return { data: transform(data) };
   } catch {
     return { error: '계좌 수정 중 오류가 발생했습니다.' };
@@ -125,13 +115,13 @@ export async function updateAccount(
 
 export async function deleteAccount(id: string): Promise<{ error?: string }> {
   try {
-    const { user, error: authError, supabase } = await getUser();
+    const { user, error: authError, supabase } = await getAuthenticatedUser();
     if (authError || !user) return { error: '인증이 필요합니다.' };
 
     const { error } = await supabase.from('accounts').delete().eq('id', id).eq('user_id', user.id);
     if (error) return { error: error.message };
 
-    revalidatePath('/account');
+    await revalidatePages(['/account']);
     return {};
   } catch {
     return { error: '계좌 삭제 중 오류가 발생했습니다.' };
