@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { prisma } from '@repo/db';
+import { Prisma, prisma } from '@repo/db';
 
 import { AuctionListResponse, SortOption } from '@/types/auction-prisma';
 
@@ -13,10 +13,12 @@ export async function GET(request: NextRequest) {
     const sort = (searchParams.get('sort') as SortOption) || 'latest';
     const includeCompleted = searchParams.get('includeCompleted') === 'true';
 
-    const where: any = {};
+    const where: Prisma.AuctionItemWhereInput = {
+      status: 'ACTIVE',
+    };
 
-    if (!includeCompleted) {
-      where.status = 'ACTIVE';
+    if (includeCompleted) {
+      delete where.status;
     }
 
     if (locationName) {
@@ -28,7 +30,7 @@ export async function GET(request: NextRequest) {
       where.categoryId = categoryId;
     }
 
-    let orderBy: any = {};
+    let orderBy: Prisma.AuctionItemOrderByWithRelationInput = {};
 
     switch (sort) {
       case 'latest':
@@ -59,24 +61,21 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             locationName: true,
-            latitude: true,
-            longitude: true,
           },
         },
         category: {
           select: {
-            id: true,
             name: true,
+            id: true,
           },
         },
         auctionPrice: {
           select: {
             startPrice: true,
             currentPrice: true,
-            instantPrice: true, // 즉시구매가
+            instantPrice: true,
             minBidUnit: true,
             isInstantBuyEnabled: true,
-            isExtendedAuction: true,
           },
         },
         auctionImages: {
@@ -95,7 +94,6 @@ export async function GET(request: NextRequest) {
       orderBy,
     });
 
-    // 응답 데이터 구성 (상태 변환 제거 - 프론트엔드에서 처리)
     const response: AuctionListResponse = {
       data: auctions,
       total,
