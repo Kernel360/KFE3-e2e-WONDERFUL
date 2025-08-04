@@ -1,17 +1,18 @@
-import { UserRound } from 'lucide-react';
+import React from 'react';
+
+import { RotateCcw, UserRound } from 'lucide-react';
 import { tv } from 'tailwind-variants';
 
-import { InputIcon } from '@/components/common';
 import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 
-import { formatCurrencyWithUnit, formatToKoreanUnit } from '@/lib/utils/price';
+import { formatCurrency, formatCurrencyWithUnit, formatToKoreanUnit } from '@/lib/utils/price';
 
 import { BidInputProps } from '@/types/bid';
 
 const bidInputWrapper = tv({
-  base: 'transition-all duration-600 overflow-hidden',
+  base: 'transition-all duration-600 overflow-hidden px-1',
   variants: {
     open: {
       true: 'pt-2 max-h-[150px] translate-y-0',
@@ -74,20 +75,34 @@ const BidFormInput = ({
 
   return (
     <div className={bidInputWrapper({ open: isBidInputOpen })}>
-      <InputIcon
-        id="price"
-        type="number"
-        value={bidPrice ?? defaultBidPrice}
-        label="희망입찰가"
-        placeholder={placeholder}
-        onChange={handleChange}
-        minBidUnit={minBidUnit}
-        resetValue={defaultBidPrice}
-        onReset={handleReset}
-        className={validationError && 'border-red-500'}
-      >
-        <UserRound />
-      </InputIcon>
+      <div className="h-25 flex w-full flex-col items-start justify-center gap-2">
+        <label htmlFor="price">
+          <p className="font-medium">희망입찰가</p>
+          <span className="text-xs text-neutral-500">
+            (입찰 단위: <strong>{formatCurrency(minBidUnit || 0)}</strong>원)
+          </span>
+        </label>
+        <div className="shadow-xs flex h-14 w-full min-w-0 items-center justify-between rounded-sm border bg-transparent p-1 text-base text-neutral-400 focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm [&>svg]:h-5 [&>svg]:w-5">
+          <div className="flex items-center gap-2 pl-2">
+            <UserRound />
+            <input
+              id="price"
+              value={bidPrice ?? defaultBidPrice}
+              placeholder={placeholder}
+              onChange={handleChange}
+              className="aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 selection:text-primary-500 w-[270px] text-black placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="flex size-10 items-center justify-center"
+            title="현재가로 초기화"
+          >
+            <RotateCcw className="text-neutral-400" />
+          </button>
+        </div>
+      </div>
       {validationError && <div className="mt-1 text-sm text-red-500">{validationError}</div>}
       <div className="grid grid-cols-4 gap-2 py-2">
         {increaseButtons.map(({ label, amount, multiplier }) => (
