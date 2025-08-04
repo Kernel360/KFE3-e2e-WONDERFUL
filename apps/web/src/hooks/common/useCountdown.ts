@@ -14,26 +14,26 @@ const getRemainingTime = (deadline: Date) => {
   return { hours, minutes, seconds, isExpired };
 };
 
-const useCountdown = (deadline: Date) => {
+const useCountdown = (deadline: Date, type: 'minute' | 'second') => {
   const stableDeadline = useMemo(() => new Date(deadline), [deadline]);
   const [remaining, setRemaining] = useState(() => getRemainingTime(stableDeadline));
 
   useEffect(() => {
     // 이미 만료된 경우 초기값만 설정하고 종료
     if (remaining.isExpired) return;
+    const intervalMs = type === 'minute' ? 60000 : 1000;
 
     const interval = setInterval(() => {
       const updated = getRemainingTime(stableDeadline);
       setRemaining(updated);
 
-      // 만료되었으면 타이머 제거
       if (updated.isExpired) {
         clearInterval(interval);
       }
-    }, 1000);
+    }, intervalMs);
 
     return () => clearInterval(interval);
-  }, [remaining.isExpired, stableDeadline]);
+  }, [remaining.isExpired, stableDeadline, type]);
 
   return remaining;
 };
