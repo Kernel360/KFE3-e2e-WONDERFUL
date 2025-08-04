@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
+
 import { ProductCardSkeleton } from '@/components/chat';
 import ProductCardError from '@/components/chat/product-card-error';
 import productCardStyle from '@/components/chat/style';
@@ -49,6 +51,7 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
   const price = formatCurrencyWithUnit(currentPrice);
 
   const color = isDone ? 'disabled' : 'primary';
+  const href = !isDone ? `/item/${auction?.id}` : '';
 
   const handleComplete = () => {
     showToast({
@@ -82,12 +85,14 @@ const ProductInfoCard = ({ auctionId, status }: ProductInfoCardProps) => {
     <div className={productCardStyle().wrapper()}>
       <div className={productCardStyle().content()}>
         {auction && auction.thumbnailUrl && auction.thumbnailUrl.length > 0 && (
-          <Thumbnail
-            url={auction.thumbnailUrl}
-            alt={auction.title}
-            className="h-12 w-12 shrink-0"
-            size={60}
-          />
+          <Link href={href}>
+            <Thumbnail
+              url={auction.thumbnailUrl}
+              alt={auction.title}
+              className="h-12 w-12 shrink-0"
+              size={60}
+            />
+          </Link>
         )}
         <p className={productCardStyle().infoBox()}>
           <span className="overflow-hidden truncate whitespace-nowrap text-base font-medium">
