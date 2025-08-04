@@ -22,6 +22,6 @@ Sentry.init({
   tracesSampleRate: 1,
   debug: false,
 
-  replaysOnErrorSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 0, //1.0
+  replaysSessionSampleRate: 0, //0.1
 });
