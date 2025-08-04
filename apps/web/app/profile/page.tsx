@@ -18,7 +18,7 @@ const ProfilePage = async () => {
   }
 
   return (
-    <Container className="w-fulle flex h-full flex-col space-y-2 bg-neutral-100 px-4 [&>div]:rounded-sm [&>div]:shadow-[0px_2px_8px_0px_rgba(0,0,0,.08)]">
+    <Container className="w-fulle [&>div]:border-1 bg-primary-50/30 flex h-full flex-col space-y-2 px-4 pt-2 [&>div]:rounded-sm [&>div]:border-neutral-100 [&>div]:shadow-[0px_1px_9px_0px_rgba(87,88,254,.11)]">
       <ProfileCard
         nickname={profile.nickname || '사용자'}
         profileImg={profile.profileImg || '/avatar-male.svg'}
