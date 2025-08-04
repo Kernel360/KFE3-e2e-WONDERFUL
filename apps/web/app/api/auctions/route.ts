@@ -111,25 +111,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-// 만료된 경매들의 상태를 업데이트하는 함수
-export async function updateExpiredAuctions(request: NextRequest) {
-  try {
-    const { auctionId } = await request.json();
-    if (!auctionId) {
-      return Response.json({ success: false }, { status: 400 });
-    }
-
-    await prisma.auctionItem.update({
-      where: { id: auctionId },
-      data: {
-        status: 'COMPLETED',
-      },
-    });
-
-    return Response.json({ success: true });
-  } catch (error) {
-    console.error('경매 종료 처리 실패:', error);
-    return Response.json({ success: false }, { status: 500 });
-  }
-}

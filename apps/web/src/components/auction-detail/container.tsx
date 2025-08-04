@@ -19,12 +19,12 @@ import { useAuctionDetail } from '@/hooks/queries/auction';
 import { useCurrentUser } from '@/hooks/queries/auth';
 import { useBidsByAuction } from '@/hooks/queries/bids';
 
+import { updateAuctionStatus } from '@/lib/actions/auction';
 import { cn } from '@/lib/cn';
 import { ItemInfo } from '@/lib/types/auction';
 
 import { BidType } from '@/types/bid';
 
-import { updateAuctionStatus } from '../../lib/actions/auction';
 import { ProfileCard } from '../common';
 
 const AuctionDetailContainer = () => {
@@ -43,11 +43,19 @@ const AuctionDetailContainer = () => {
   const { data: initialBidsData } = useBidsByAuction(id as string, 10);
 
   const countdown = useCountdown(
-    auctionDetailData ? new Date(auctionDetailData?.data.endTime) : new Date('2099-12-31'),
+    auctionDetailData?.data ? new Date(auctionDetailData.data.endTime) : null,
     'second'
   );
 
-  const isExpired = useMemo(() => countdown.isExpired, [countdown.isExpired]);
+  const countdownData = useMemo(
+    () => ({
+      hours: countdown.hours,
+      minutes: countdown.minutes,
+      seconds: countdown.seconds,
+      isExpired: countdown.isExpired,
+    }),
+    [countdown.hours, countdown.minutes, countdown.seconds, countdown.isExpired]
+  );
 
   const processImages = useCallback((): string[] => {
     if (!auctionDetailData?.data?.auctionImages?.length) return ['/no-image.png'];
@@ -57,8 +65,8 @@ const AuctionDetailContainer = () => {
 
   const item: ItemInfo = useMemo(() => {
     if (!auctionDetailData?.data) return {} as ItemInfo;
-    const auction = auctionDetailData.data;
 
+    const auction = auctionDetailData.data;
     return {
       title: auction.title,
       status: auction.status,
@@ -87,7 +95,7 @@ const AuctionDetailContainer = () => {
   useEffect(() => {
     const updateStatus = async () => {
       try {
-        if (isExpired && auctionDetailData?.data?.status !== 'COMPLETED') {
+        if (countdownData.isExpired && auctionDetailData?.data?.status !== 'COMPLETED') {
           await updateAuctionStatus(id as string, 'COMPLETED');
           refetchAuction();
         }
@@ -97,7 +105,7 @@ const AuctionDetailContainer = () => {
     };
 
     updateStatus();
-  }, [isExpired, id, auctionDetailData?.data?.status, refetchAuction]);
+  }, [countdownData.isExpired, id, auctionDetailData?.data?.status, refetchAuction]);
 
   if (isLoading) {
     return <Skeleton />;
@@ -134,11 +142,11 @@ const AuctionDetailContainer = () => {
           location={location?.locationName}
           className="w-full"
         >
-          {currentUser?.id !== auction.seller.id && !isExpired && (
+          {currentUser?.id !== auction.seller.id && !countdownData.isExpired && (
             <ButtonChat auctionId={auction.id} seller={chatRoomSellerProps} />
           )}
         </ProfileCard>
-        <ItemSummary item={item} id={id as string} />
+        <ItemSummary item={item} id={id as string} countdown={countdownData} />
         <ItemDescription item={item} />
         <section ref={bidTableRef} className="space-y-2 pb-10 pt-6">
           <h3 className="mb-2.5 text-base font-bold">입찰 현황</h3>
@@ -152,7 +160,7 @@ const AuctionDetailContainer = () => {
           currentPrice={item.currentPrice}
           endTime={item.endTime}
           bidTableRef={bidTableRef}
-          isExpired={isExpired}
+          isExpired={countdownData.isExpired}
           seller={chatRoomSellerProps}
           currentUserId={currentUser?.id}
         />

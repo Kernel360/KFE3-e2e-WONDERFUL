@@ -109,3 +109,16 @@ export const getAuctionDetailWithParams = async (
   });
   return response.data;
 };
+
+// 경매 상태를 업데이트하는 함수 (기존 updateAuctionStatus와 동일한 방식)
+export const updateExpiredAuctions = async (auctionId: string): Promise<{ success: boolean }> => {
+  try {
+    await apiClient.patch(`/auctions/${auctionId}/status`, {
+      status: 'COMPLETED',
+    });
+
+    return { success: true };
+  } catch {
+    throw new Error('경매 상태 업데이트에 실패했습니다.');
+  }
+};
