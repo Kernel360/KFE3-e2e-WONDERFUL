@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
   transpilePackages: ['@repo/db', '@repo/ui'],
   output: 'standalone', // 배포용
-  swcMinify: true, // SWC 최적화 활성화
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production', // 프로덕션에서 console 제거
   },
@@ -20,6 +19,8 @@ const nextConfig: NextConfig = {
       'lucide-react',
       '@radix-ui',
       '@tanstack',
+      '@/components',
+      '@/lib',
     ], // 패키지 트리쉐이킹
     webpackBuildWorker: true, // 빌드 속도 향상
   },
@@ -128,9 +129,25 @@ const nextConfig: NextConfig = {
         })
       );
     }
-
-    // 번들 크기 최적화 (클라이언트 사이드만)
+    //React DevTools 비활성화
     if (!dev && !isServer) {
+      const webpack = require('webpack');
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })',
+        })
+      );
+    }
+
+    //React DOM 중복 제거 및 최적화
+    if (!dev && !isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-dom$': 'react-dom/client',
+        'react-dom/client$': 'react-dom/client',
+      };
+
       config.optimization = {
         ...config.optimization,
         splitChunks: {
@@ -142,19 +159,35 @@ const nextConfig: NextConfig = {
               test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
               name: 'react',
               chunks: 'all',
-              priority: 30,
+              priority: 50,
+              enforce: true,
+              reuseExistingChunk: true,
+            },
+            // Next.js 코어
+            nextjs: {
+              test: /[\\/]node_modules[\\/]next[\\/]/,
+              name: 'nextjs',
+              chunks: 'all',
+              priority: 40,
             },
             // UI 라이브러리들
             ui: {
               test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|@formkit)[\\/]/,
               name: 'ui',
               chunks: 'all',
-              priority: 25,
+              priority: 30,
             },
             // 쿼리/상태관리
             query: {
               test: /[\\/]node_modules[\\/](@tanstack|zustand)[\\/]/,
               name: 'query',
+              chunks: 'all',
+              priority: 25,
+            },
+            // Sentry
+            sentry: {
+              test: /[\\/]node_modules[\\/](@sentry)[\\/]/,
+              name: 'sentry',
               chunks: 'all',
               priority: 20,
             },
