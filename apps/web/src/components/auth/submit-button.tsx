@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button';
-
 interface SubmitButtonProps {
   isFormValid: boolean;
   isSubmitting: boolean;
@@ -13,18 +11,7 @@ const SubmitButton = ({
   children,
   className = 'h-[60px] w-full rounded-[99px]',
 }: SubmitButtonProps) => {
-  return (
-    <Button
-      type="submit"
-      size="lg"
-      color={isFormValid ? 'primary' : 'disabled'}
-      fullWidth={false}
-      disabled={isSubmitting || !isFormValid}
-      className={className}
-    >
-      {isSubmitting ? 'Loading...' : children}
-    </Button>
-  );
+  return <></>;
 };
 
 export default SubmitButton;

@@ -52,6 +52,7 @@ const ResetPasswordNew = ({
           name="newPassword"
           type={showPassword ? 'text' : 'password'}
           placeholder="새 비밀번호 입력"
+          iconStyle="both"
           value={formData.newPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onInputChange('newPassword', e.target.value)
@@ -82,6 +83,7 @@ const ResetPasswordNew = ({
           name="confirmPassword"
           type={showConfirmPassword ? 'text' : 'password'}
           placeholder="새 비밀번호 확인"
+          iconStyle="both"
           value={formData.confirmPassword}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onInputChange('confirmPassword', e.target.value)

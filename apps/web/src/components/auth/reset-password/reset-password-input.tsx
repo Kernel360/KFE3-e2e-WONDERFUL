@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { User, Mail } from 'lucide-react';
+import { Mail, User } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
 import SubmitButton from '@/components/auth/submit-button';
@@ -42,6 +42,7 @@ const ResetPasswordInput = ({
           id="name"
           name="name"
           type="text"
+          iconStyle="left"
           placeholder="이름을 입력해주세요"
           value={formData.name}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -65,6 +66,7 @@ const ResetPasswordInput = ({
           id="email"
           name="email"
           type="email"
+          iconStyle="left"
           placeholder="이메일을 입력해주세요"
           value={formData.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
