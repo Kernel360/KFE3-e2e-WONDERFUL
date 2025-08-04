@@ -1,21 +1,22 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputPersonal } from '@/components/personal-info';
 import { Button } from '@/components/ui';
 import { Checkbox } from '@/components/ui/checkbox';
-import { createAddress } from '@/lib/actions/address';
+import { updateAddress } from '@/lib/actions/address';
+import { useAddresses } from '@/hooks/queries/addresses';
 import type { CreateAddressRequest } from '@/lib/types/address';
 import { useToastStore } from '@/lib/zustand/store';
 import { useQueryClient } from '@tanstack/react-query';
 
-const AddressForm = () => {
+const AddressEditForm = ({ addressId }: { addressId: string }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { data: addressList = [] } = useAddresses();
   const [isLoading, setIsLoading] = useState(false);
-
   const [formData, setFormData] = useState<CreateAddressRequest>({
     userName: '',
     address: '',
@@ -23,6 +24,19 @@ const AddressForm = () => {
     phone: '',
     isPrimary: false,
   });
+
+  useEffect(() => {
+    const address = addressList.find((addr) => addr.id === addressId);
+    if (address) {
+      setFormData({
+        userName: address.userName || '',
+        address: address.address,
+        addressDetail: address.addressDetail || '',
+        phone: address.phone || '',
+        isPrimary: address.isPrimary,
+      });
+    }
+  }, [addressList, addressId]);
 
   const handleInputChange = (field: keyof CreateAddressRequest, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -47,7 +61,7 @@ const AddressForm = () => {
     setIsLoading(true);
 
     try {
-      const result = await createAddress(formData);
+      const result = await updateAddress(addressId, formData);
 
       if (result.error) {
         throw new Error(result.error);
@@ -55,7 +69,7 @@ const AddressForm = () => {
 
       showToast({
         status: 'success',
-        title: '주소가 등록되었습니다.',
+        title: '주소가 수정되었습니다.',
         autoClose: true,
       });
 
@@ -64,7 +78,7 @@ const AddressForm = () => {
     } catch (error) {
       showToast({
         status: 'error',
-        title: error instanceof Error ? error.message : '주소 등록에 실패했습니다.',
+        title: error instanceof Error ? error.message : '주소 수정에 실패했습니다.',
         autoClose: true,
       });
     } finally {
@@ -119,11 +133,11 @@ const AddressForm = () => {
           <label htmlFor="isPrimary">대표 주소로 설정하기</label>
         </div>
         <Button type="submit" fullWidth disabled={isLoading}>
-          {isLoading ? '등록 중...' : '제출하기'}
+          {isLoading ? '수정 중...' : '수정하기'}
         </Button>
       </div>
     </form>
   );
 };
 
-export default AddressForm;
+export default AddressEditForm;
