@@ -1,60 +1,37 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-
-import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 import { X, Search } from 'lucide-react';
 
 import { useSearchHistory } from '@/hooks/common/useSearchHistory';
 
-interface InputSearchProps {
-  id: string;
-  onSearch?: (query: string) => void;
-  placeholder?: string;
-  defaultValue?: string;
-}
+import { useSearchStore } from '@/lib/zustand/store/search-store';
 
-const InputSearch = ({
-  id,
-  onSearch,
-  placeholder = '검색어를 입력하세요.',
-  defaultValue = '',
-}: InputSearchProps) => {
-  const [value, setValue] = useState(defaultValue);
-  const router = useRouter();
+const InputSearch = () => {
   const { addSearchQuery } = useSearchHistory();
+  const { query, setQuery, setShowResults, clearSearch } = useSearchStore();
+  const [value, setValue] = useState(query);
 
   useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
+    setValue(query);
+  }, [query]);
 
   const handleClear = useCallback(() => {
     setValue('');
-    if (onSearch) {
-      onSearch('');
-    } else {
-      // URL 방식으로 동작
-      router.push('/search');
-    }
-  }, [onSearch, router]);
+    clearSearch();
+  }, [clearSearch]);
 
   const performSearch = useCallback(
     (searchQuery: string) => {
       const trimmedQuery = searchQuery.trim();
       if (!trimmedQuery) return;
 
-      // 검색 기록에 추가
       addSearchQuery(trimmedQuery);
-
-      if (onSearch) {
-        onSearch(trimmedQuery);
-      } else {
-        // URL 방식으로 동작
-        router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
-      }
+      setQuery(trimmedQuery);
+      setShowResults(true);
     },
-    [onSearch, router, addSearchQuery]
+    [addSearchQuery, setQuery, setShowResults]
   );
 
   const handleSubmit = useCallback(
@@ -72,9 +49,8 @@ const InputSearch = ({
     >
       <Search size={24} className="shirkin" />
       <input
-        id={id}
         type="text"
-        placeholder={placeholder}
+        placeholder="검색어를 입력하세요."
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="flex-1"

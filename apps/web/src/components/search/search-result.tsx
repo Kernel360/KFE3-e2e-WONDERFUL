@@ -14,12 +14,10 @@ import { TabId } from '@/lib/types/filter';
 import { SearchTabStatus } from '@/lib/types/search';
 import { convertToAuctionItemProps } from '@/lib/utils/auction';
 import { useFilterStore, useSortStore } from '@/lib/zustand/store';
+import { useSearchStore } from '@/lib/zustand/store/search-store';
 
-interface SearchResultsProps {
-  query: string;
-}
-
-const SearchResult = ({ query }: SearchResultsProps) => {
+const SearchResult = () => {
+  const { query } = useSearchStore();
   const selectedTab = (useFilterStore((store) => store.selectedItems.search) ?? 'all') as TabId;
   const sortOption = useSortStore((state) => state.sortOption);
   const loadMoreRef = useRef<HTMLDivElement>(null);
