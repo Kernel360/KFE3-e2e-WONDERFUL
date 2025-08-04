@@ -49,7 +49,7 @@ const SignupForm = ({
 
       <Button
         type="submit"
-        size="lg"
+        size="xl"
         color={isFormValid() ? 'primary' : 'disabled'}
         fullWidth={true}
         disabled={isSubmitting || !isFormValid}

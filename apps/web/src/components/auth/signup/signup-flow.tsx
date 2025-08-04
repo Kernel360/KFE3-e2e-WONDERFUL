@@ -32,7 +32,7 @@ const SignupFlow = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white p-4">
       <h1 className="text-h3 text-center font-bold text-neutral-900">회원 가입</h1>
       <div className="flex w-full flex-col items-center gap-4">
         <SignupForm

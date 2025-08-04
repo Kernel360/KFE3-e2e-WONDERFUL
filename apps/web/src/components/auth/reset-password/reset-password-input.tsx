@@ -5,7 +5,6 @@ import React from 'react';
 import { Mail, User } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
-import SubmitButton from '@/components/auth/submit-button';
 import { InputIcon } from '@/components/common';
 
 interface ResetPasswordInputProps {
@@ -54,7 +53,6 @@ const ResetPasswordInput = ({
         </InputIcon>
       </div>
 
-      {/* 이메일 입력 */}
       <div
         className={`h-[54px] w-[327px] ${
           fieldErrors.email
@@ -79,12 +77,6 @@ const ResetPasswordInput = ({
       </div>
 
       <ErrorMessage errors={fieldErrors} />
-
-      <div className="mt-[26px]">
-        <SubmitButton isFormValid={isFormValid()} isSubmitting={isSubmitting}>
-          비밀번호 찾기
-        </SubmitButton>
-      </div>
     </form>
   );
 };

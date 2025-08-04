@@ -87,7 +87,7 @@ const SigninForm = () => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="flex w-full flex-col p-6">
+    <form onSubmit={handleFormSubmit} className="flex w-full flex-col gap-4 p-6">
       <SigninFields
         formData={formData}
         showPassword={showPassword}
@@ -96,10 +96,10 @@ const SigninForm = () => {
         onTogglePassword={handleTogglePassword}
       />
       <ErrorMessage errors={fieldErrors} />
-      <div className="flex w-full flex-col items-center justify-center gap-4">
+      <div className="flex w-full flex-col items-center justify-center gap-3">
         <Button
           type="submit"
-          size="lg"
+          size="xl"
           color={isFormValid() ? 'primary' : 'disabled'}
           fullWidth={true}
           disabled={isSubmitting || !isFormValid}

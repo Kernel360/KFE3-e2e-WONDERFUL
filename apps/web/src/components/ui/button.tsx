@@ -29,6 +29,7 @@ const buttonVariants = cva(
         medium:
           'h-11 px-4 py-2 has-[>svg]:px-3 text-base font-weight-medium [&_svg]:!w-6 [&_svg]:stroke-[2px]',
         lg: 'h-12 rounded-md px-5 has-[>svg]:px-4 text-lg [&_svg]:!w-6.5 [&_svg]:stroke-[2px]',
+        xl: 'h-16 rounded-md px-5 text-lg has-[>svg]:px-4 [&_svg]:!w-6.5 [&_svg]:stroke-[2px]',
       },
       fullWidth: {
         true: 'w-full',

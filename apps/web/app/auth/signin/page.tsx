@@ -6,7 +6,7 @@ import { SigninForm } from '@/components/auth/signin';
 
 const Page = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white p-4 text-center">
       <h1 className="text-h3 font-bold text-neutral-900">로그인</h1>
       <div className="flex w-full flex-col items-center gap-4">
         <Suspense fallback={<div>Loading...</div>}>

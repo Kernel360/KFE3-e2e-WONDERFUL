@@ -31,10 +31,10 @@ const GoogleLoginButton = ({ disabled }: { disabled?: boolean }) => {
   return (
     <Button
       type="button"
-      size="lg"
+      size="xl"
       onClick={handleGoogleLogin}
       disabled={disabled}
-      className="flex w-full items-center justify-center gap-2 rounded-sm border border-neutral-100 bg-white"
+      className="flex w-full items-center justify-center gap-2 rounded-sm border border-neutral-100 bg-white hover:bg-neutral-50"
     >
       <Image src="/icon/Google.svg" alt="Google 로그인" width={24} height={24} />
       <span className="text-neutral-600">Google로 시작하기</span>

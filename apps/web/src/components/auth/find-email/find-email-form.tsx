@@ -6,7 +6,6 @@ import { User } from 'lucide-react';
 
 import ErrorMessage from '@/components/auth/error-message';
 import { FindEmailSuccess } from '@/components/auth/find-email';
-import SubmitButton from '@/components/auth/submit-button';
 import InputIcon from '@/components/common/input/icon';
 
 type Step = 1 | 2;
@@ -98,12 +97,6 @@ const FindEmailForm = () => {
       </div>
 
       <ErrorMessage errors={fieldErrors} />
-
-      <div className="mt-[26px]">
-        <SubmitButton isFormValid={isFormValid()} isSubmitting={isSubmitting}>
-          이메일 찾기
-        </SubmitButton>
-      </div>
     </form>
   );
 
