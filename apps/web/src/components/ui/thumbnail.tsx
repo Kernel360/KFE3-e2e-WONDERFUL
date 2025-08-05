@@ -25,6 +25,8 @@ const Thumbnail = ({
   quality = 80,
   ...props
 }: ThumbnailProps) => {
+  console.log('Thumbnail props:', { size, url, devicePixelRatio: window.devicePixelRatio });
+
   return (
     <div
       className={cn(
