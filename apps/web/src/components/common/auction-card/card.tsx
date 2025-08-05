@@ -55,12 +55,10 @@ const AuctionItemCard = ({
       className="relative mb-2 flex w-full items-center justify-between gap-2.5 overflow-hidden"
     >
       <div className="z-auto">
-        {/* <BadgeBidStatus status={finalStatus} /> */}
         <Thumbnail
           url={thumbnailUrl}
           alt={`${title} 썸네일`}
           size={86}
-          className="size-24"
           priority={idx! < 5}
           quality={50}
           fetchPriority={idx === 0 ? 'high' : undefined}
