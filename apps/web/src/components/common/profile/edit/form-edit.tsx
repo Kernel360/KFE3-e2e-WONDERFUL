@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 
 import { useUpdateProfile } from '@/hooks/mutations/profile';
@@ -13,9 +15,9 @@ import NicknameInput from './nickname';
 import ProfileImageUploader from './profile-image-uploader';
 
 const ProfileEditForm = () => {
-  const { data: profile, isLoading } = useMyProfile(); // 프로필 데이터 가져오기
+  const { data: profile, isLoading } = useMyProfile();
 
-  const { showToast } = useToastStore(); // 토스트 store
+  const { showToast } = useToastStore();
 
   const {
     mutate: updateProfileMutation,
@@ -24,6 +26,8 @@ const ProfileEditForm = () => {
     isError,
     error,
   } = useUpdateProfile();
+
+  const router = useRouter();
 
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -46,8 +50,10 @@ const ProfileEditForm = () => {
         subtext: '변경사항이 성공적으로 저장되었어요!',
         autoClose: true,
       });
+      router.refresh();
+      router.push('/profile');
     }
-  }, [isSuccess, showToast]);
+  }, [isSuccess, showToast, router]);
 
   useEffect(() => {
     if (isError) {
@@ -90,7 +96,7 @@ const ProfileEditForm = () => {
   }
 
   return (
-    <form className="flex flex-1 flex-col p-4" onSubmit={handleSubmit}>
+    <form id="profile-edit-form" className="flex flex-1 flex-col p-4" onSubmit={handleSubmit}>
       <ProfileImageUploader
         defaultImage={profile?.profileImg || ''}
         onChange={(e) => {
@@ -109,12 +115,7 @@ const ProfileEditForm = () => {
       />
 
       <div className="absolute bottom-0 left-0 z-10 w-full bg-white px-8 pb-6">
-        <Button
-          type="submit"
-          form="profile-edit-form"
-          fullWidth
-          disabled={isPending || !isNicknameValid}
-        >
+        <Button type="submit" fullWidth disabled={isPending || !isNicknameValid}>
           {isNicknameValid ? (isPending ? '수정 중...' : '프로필 수정') : '닉네임 중복 체크'}
         </Button>
       </div>

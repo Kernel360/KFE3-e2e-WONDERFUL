@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Pencil } from 'lucide-react';
 
+import { useToastStore } from '@/lib/zustand/store';
+
 import ProfileImage from '../image';
 
 const DEFAULT_IMAGE = '/avatar-female.svg';
@@ -18,7 +20,8 @@ const ProfileImageUploader = ({
   const [preview, setPreview] = useState<string>(defaultImage);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 컴포넌트가 마운트/언마운트 상태를 추적하는 ref
+  const { showToast } = useToastStore();
+
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -28,7 +31,6 @@ const ProfileImageUploader = ({
     };
   }, []);
 
-  // defaultImage가 변경될 때마다 미리보기 업데이트
   useEffect(() => {
     setPreview(defaultImage);
   }, [defaultImage]);
@@ -38,9 +40,19 @@ const ProfileImageUploader = ({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file?.type === 'image/svg+xml') {
+      showToast({
+        status: 'notice',
+        title: '이미지 확장자 제한',
+        subtext: 'svg 파일 업로드는 현재 지원하지 않습니다. 다른 확장 파일로 다시 시도해주세요.',
+        autoClose: true,
+      });
+      return;
+    }
+
     if (onChange) onChange(e);
 
-    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
