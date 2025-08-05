@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 
 import { useAuctionDetail } from '@/hooks/queries/auction';
 
+import { cn } from '@/lib/cn';
 import { formatCurrency, formatCurrencyWithUnit, formatToKoreanUnit } from '@/lib/utils/price';
 
 import { BidInputProps } from '@/types/bid';
@@ -15,7 +16,7 @@ const bidInputWrapper = tv({
   base: 'transition-all duration-600 overflow-hidden px-1',
   variants: {
     open: {
-      true: 'pt-2 max-h-[150px] translate-y-0',
+      true: 'pt-2 max-h-[160px] translate-y-0',
       false: 'max-h-0 translate-y-4 pointer-events-none',
     },
   },
@@ -76,13 +77,17 @@ const BidFormInput = ({
   return (
     <div className={bidInputWrapper({ open: isBidInputOpen })}>
       <div className="h-25 flex w-full flex-col items-start justify-center gap-2">
-        <label htmlFor="price">
+        <label htmlFor="price" className="flex items-center gap-1">
           <p className="font-medium">희망입찰가</p>
           <span className="text-xs text-neutral-500">
             (입찰 단위: <strong>{formatCurrency(minBidUnit || 0)}</strong>원)
           </span>
         </label>
-        <div className="shadow-xs flex h-14 w-full min-w-0 items-center justify-between rounded-sm border bg-transparent p-1 text-base text-neutral-400 focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm [&>svg]:h-5 [&>svg]:w-5">
+        <div
+          className={cn(
+            `shadow-xs flex h-14 w-full min-w-0 items-center justify-between rounded-sm border bg-transparent p-1 text-base text-neutral-400 focus-within:border-neutral-400 focus-within:ring-[2px] focus-within:ring-neutral-400/50 md:text-sm [&>svg]:h-5 [&>svg]:w-5`
+          )}
+        >
           <div className="flex items-center gap-2 pl-2">
             <UserRound />
             <input
@@ -90,7 +95,7 @@ const BidFormInput = ({
               value={bidPrice ?? defaultBidPrice}
               placeholder={placeholder}
               onChange={handleChange}
-              className="aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 selection:text-primary-500 w-[270px] text-black placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="aria-invalid:ring-danger-700/20 aria-invalid:border-danger-700 selection:text-primary-500 w-full text-black placeholder:text-neutral-400 focus:shadow-none focus:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
           <button
