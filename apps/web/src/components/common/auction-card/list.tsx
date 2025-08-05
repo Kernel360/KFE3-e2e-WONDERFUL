@@ -15,7 +15,7 @@ import { useFilterStore, useLocationStore } from '@/lib/zustand/store';
 
 import { AuctionStatus } from '@/types/filter';
 
-interface AuctionItemListProps {
+export interface AuctionItemListProps {
   sortOption?: SortOption;
   includeCompleted?: boolean;
   selectedStatuses?: AuctionStatus[];
@@ -23,48 +23,33 @@ interface AuctionItemListProps {
 
 const AuctionItemList = ({
   sortOption = 'latest',
-  includeCompleted = false,
+  includeCompleted = true,
   selectedStatuses,
 }: AuctionItemListProps) => {
-  const selectedCategoryId = useFilterStore((state) => state.selectedItems.category);
+  const categoryId = useFilterStore((s) => s.selectedItems.category);
+  const location = useLocationStore((s) => s.selectedLocation.locationName);
 
-  const selectedLocationName = useLocationStore((state) => state.selectedLocation.locationName);
-
-  const {
-    data: auctionsData,
-    isLoading,
-    error,
-    refetch,
-  } = useAuctions(
-    selectedLocationName && selectedLocationName !== '위치 설정 필요'
-      ? selectedLocationName
-      : undefined,
-    selectedCategoryId || undefined,
+  const { data, isLoading, error, refetch } = useAuctions(
+    location !== '위치 설정 필요' ? location : undefined,
+    categoryId || undefined,
     sortOption,
     includeCompleted
   );
 
-  const filteredData = useMemo(() => {
-    if (!auctionsData?.data) return [];
-
-    let data = auctionsData.data;
-
-    if (!includeCompleted) {
-      data = data.filter((auction) => auction.status !== 'COMPLETED');
+  const filtered = useMemo(() => {
+    const list = data?.data ?? [];
+    const withoutCompleted = includeCompleted ? list : list.filter((a) => a.status !== 'COMPLETED');
+    if (selectedStatuses?.length) {
+      return withoutCompleted.filter((a) => selectedStatuses.includes(a.status as AuctionStatus));
     }
-
-    if (selectedStatuses && selectedStatuses.length > 0) {
-      data = data.filter((auction) => selectedStatuses.includes(auction.status as AuctionStatus));
-    }
-
-    return data;
-  }, [auctionsData?.data, selectedStatuses, includeCompleted]);
+    return withoutCompleted;
+  }, [data?.data, includeCompleted, selectedStatuses]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-[100vhd] flex-col gap-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <AuctionItemCardSkeleton key={index} />
+        {Array.from({ length: 5 }).map((_, i) => (
+          <AuctionItemCardSkeleton key={i} />
         ))}
       </div>
     );
@@ -86,10 +71,10 @@ const AuctionItemList = ({
 
   return (
     <div className="flex flex-col">
-      {filteredData && filteredData.length > 0 ? (
-        filteredData.map((auction, idx) => {
-          const auctionItemProps = convertToAuctionItemProps(auction);
-          return <AuctionCard key={auction.id} {...auctionItemProps} idx={idx} />;
+      {filtered.length > 0 ? (
+        filtered.map((auction, idx) => {
+          const props = convertToAuctionItemProps(auction);
+          return <AuctionCard key={auction.id} {...props} idx={idx} />;
         })
       ) : (
         <div className="flex flex-col items-center justify-center py-16">
