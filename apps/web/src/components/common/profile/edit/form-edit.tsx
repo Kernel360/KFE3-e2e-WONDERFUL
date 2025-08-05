@@ -96,29 +96,32 @@ const ProfileEditForm = () => {
   }
 
   return (
-    <form id="profile-edit-form" className="flex flex-1 flex-col p-4" onSubmit={handleSubmit}>
-      <ProfileImageUploader
-        defaultImage={profile?.profileImg || ''}
-        onChange={(e) => {
-          const file = e.target.files?.[0] || null;
-          setProfileImage(file || null);
-        }}
-      />
+    <form
+      id="profile-edit-form"
+      className="flex h-full flex-col justify-between p-4"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex flex-col gap-4" data-testid="profile-edit-form-content">
+        <ProfileImageUploader
+          defaultImage={profile?.profileImg || ''}
+          onChange={(e) => {
+            const file = e.target.files?.[0] || null;
+            setProfileImage(file || null);
+          }}
+        />
 
-      <NicknameInput
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
-        onValidationChange={handleNicknameValidationChange}
-        error={nicknameError}
-        initialValue={profile?.nickname}
-        className="p-4"
-      />
-
-      <div className="absolute bottom-0 left-0 z-10 w-full bg-white px-8 pb-6">
-        <Button type="submit" fullWidth disabled={isPending || !isNicknameValid}>
-          {isNicknameValid ? (isPending ? '수정 중...' : '프로필 수정') : '닉네임 중복 체크'}
-        </Button>
+        <NicknameInput
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          onValidationChange={handleNicknameValidationChange}
+          error={nicknameError}
+          initialValue={profile?.nickname}
+          className="p-4"
+        />
       </div>
+      <Button type="submit" fullWidth disabled={isPending || !isNicknameValid} className="my-4">
+        {isNicknameValid ? (isPending ? '수정 중...' : '프로필 수정') : '닉네임 중복 체크'}
+      </Button>
     </form>
   );
 };
