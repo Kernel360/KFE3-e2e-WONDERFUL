@@ -42,8 +42,8 @@ const AddressEditForm = ({ addressId }: { addressId: string }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, isPrimary: checked }));
+  const handleCheckboxChange = (checked: boolean | string) => {
+    setFormData((prev) => ({ ...prev, isPrimary: checked === true }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

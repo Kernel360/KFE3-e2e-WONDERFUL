@@ -63,7 +63,7 @@ const AccountList = () => {
           ))
         )}
       </ul>
-      <ButtonCreate url="account/create" status="default">
+      <ButtonCreate url="/account/create" status="default">
         계좌 추가하기
       </ButtonCreate>
     </div>

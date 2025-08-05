@@ -15,23 +15,28 @@ const AccountForm = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<CreateAccountRequest>({
+    bankName: '',
+    accountNumber: '',
+    accountHolder: '',
+    isPrimary: false,
+  });
+
+  const handleInputChange = (field: keyof CreateAccountRequest, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCheckboxChange = (checked: boolean | string) => {
+    setFormData((prev) => ({ ...prev, isPrimary: checked === true }));
+  };
 
   const handleAccountSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    const accountData: CreateAccountRequest = {
-      bankName: formData.get('bankName') as string,
-      accountNumber: formData.get('accountNumber') as string,
-      accountHolder: formData.get('accountHolder') as string,
-      isPrimary: formData.get('isPrimary') === 'on',
-    };
 
     if (
-      !accountData.bankName?.trim() ||
-      !accountData.accountNumber?.trim() ||
-      !accountData.accountHolder?.trim()
+      !formData.bankName?.trim() ||
+      !formData.accountNumber?.trim() ||
+      !formData.accountHolder?.trim()
     ) {
       showToast({
         status: 'error',
@@ -44,7 +49,7 @@ const AccountForm = () => {
     setIsLoading(true);
 
     try {
-      const result = await createAccount(accountData);
+      const result = await createAccount(formData);
 
       if (result.error) {
         throw new Error(result.error);
@@ -80,23 +85,33 @@ const AccountForm = () => {
           label="은행명"
           placeholder="사용하시는 은행명을 입력해주세요"
           type="text"
+          value={formData.bankName}
+          onChange={(e) => handleInputChange('bankName', e.target.value)}
         />
         <InputPersonal
           id="accountNumber"
           label="계좌"
           placeholder="입금받으실 계좌를 입력해주세요"
           type="number"
+          value={formData.accountNumber}
+          onChange={(e) => handleInputChange('accountNumber', e.target.value)}
         />
         <InputPersonal
           id="accountHolder"
           label="예금주"
           placeholder="계좌의 예금주를 정확히 입력해주세요"
           type="text"
+          value={formData.accountHolder}
+          onChange={(e) => handleInputChange('accountHolder', e.target.value)}
         />
       </div>
       <div className="flex w-full flex-col gap-4 pb-4">
         <div className="flex items-center gap-2">
-          <Checkbox id="isPrimary" name="isPrimary" />
+          <Checkbox
+            id="isPrimary"
+            checked={formData.isPrimary}
+            onCheckedChange={handleCheckboxChange}
+          />
           <label htmlFor="isPrimary">대표 계좌로 설정하기</label>
         </div>
         <Button type="submit" fullWidth disabled={isLoading}>
