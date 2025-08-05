@@ -11,8 +11,8 @@ const Page = () => {
       <Container className="px-4">
         <CategoriesFilter />
         <AuctionItemList />
-        <CreateAuctionButton />
       </Container>
+      <CreateAuctionButton />
       <Navigation />
     </>
   );
