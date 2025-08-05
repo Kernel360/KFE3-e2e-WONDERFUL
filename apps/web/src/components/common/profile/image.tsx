@@ -9,8 +9,6 @@ interface ProfileImageProps {
   className?: string;
   priority?: boolean;
 }
-const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
-
 const sizeConfig = {
   small: { width: 28, height: 28, className: 'size-7', quality: 75 },
   medium: { width: 40, height: 40, className: 'size-10', quality: 80 },
@@ -26,7 +24,6 @@ const ProfileImage = ({
   priority = false,
 }: ProfileImageProps) => {
   const config = sizeConfig[size];
-  const imageSrc = src || DEFAULT_AVATAR_URL;
 
   return (
     <div
@@ -35,7 +32,7 @@ const ProfileImage = ({
       )}
     >
       <Image
-        src={imageSrc}
+        src={src ? src : '/avatar-male.svg'}
         alt={alt}
         width={config.width}
         height={config.height}
