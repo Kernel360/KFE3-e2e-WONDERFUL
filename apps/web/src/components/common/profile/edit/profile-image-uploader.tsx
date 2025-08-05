@@ -48,6 +48,7 @@ const ProfileImageUploader = ({
         subtext: '다른 확장 파일로 다시 시도해주세요.',
         autoClose: true,
       });
+      e.target.value = '';
       return;
     }
 
