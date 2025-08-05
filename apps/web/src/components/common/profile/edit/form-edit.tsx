@@ -28,18 +28,16 @@ const ProfileEditForm = () => {
   const [nickname, setNickname] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState<string>('');
-  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true); // 닉네임 유효성 상태
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true);
 
-  // 프로필 데이터 로드 시, 폼 필드 초기화
   useEffect(() => {
     if (profile) {
       setNickname(profile.nickname || '');
       setNicknameError('');
-      setIsNicknameValid(true); // 기존 닉네임은 유효한 것으로 처리
+      setIsNicknameValid(true);
     }
   }, [profile]);
 
-  // mutation 결과에 따른 토스트 표시
   useEffect(() => {
     if (isSuccess) {
       showToast({
@@ -76,7 +74,7 @@ const ProfileEditForm = () => {
     formData.append('nickname', nickname.trim());
 
     if (profileImage) {
-      formData.append('profileImg', profileImage); // 서버 액션 키: 'profileImg'
+      formData.append('profileImg', profileImage);
     }
 
     updateProfileMutation(formData);
@@ -84,14 +82,15 @@ const ProfileEditForm = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <div>로딩 중...</div>
+      <div className="flex flex-1 flex-col items-center gap-8 p-12">
+        <div className="flex size-36 animate-pulse flex-col rounded-full bg-neutral-200" />
+        <div className="flex h-12 w-full animate-pulse flex-col rounded-xl bg-neutral-200" />
       </div>
     );
   }
 
   return (
-    <form className="flex flex-1 flex-col px-4 py-4" onSubmit={handleSubmit}>
+    <form className="flex flex-1 flex-col p-4" onSubmit={handleSubmit}>
       <ProfileImageUploader
         defaultImage={profile?.profileImg || ''}
         onChange={(e) => {
@@ -100,15 +99,14 @@ const ProfileEditForm = () => {
         }}
       />
 
-      <div className="px-4 py-4">
-        <NicknameInput
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          onValidationChange={handleNicknameValidationChange}
-          error={nicknameError}
-          initialValue={profile?.nickname}
-        />
-      </div>
+      <NicknameInput
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+        onValidationChange={handleNicknameValidationChange}
+        error={nicknameError}
+        initialValue={profile?.nickname}
+        className="p-4"
+      />
 
       <div className="absolute bottom-0 left-0 z-10 w-full bg-white px-8 pb-6">
         <Button
