@@ -17,22 +17,19 @@ import { AuctionStatus } from '@/types/filter';
 
 interface AuctionItemListProps {
   sortOption?: SortOption;
-  includeCompleted?: boolean; // 종료된 경매 포함 여부
+  includeCompleted?: boolean;
   selectedStatuses?: AuctionStatus[];
 }
 
 const AuctionItemList = ({
   sortOption = 'latest',
-  includeCompleted = false, // 기본값은 종료된 경매 미포함
+  includeCompleted = false,
   selectedStatuses,
 }: AuctionItemListProps) => {
   const selectedCategoryId = useFilterStore((state) => state.selectedItems.category);
 
-  // 정렬은 Zustand 전역 상태로 관리 (헤더와 공유)
   const selectedLocationName = useLocationStore((state) => state.selectedLocation.locationName);
-  includeCompleted = true;
 
-  // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
   const {
     data: auctionsData,
     isLoading,
@@ -47,14 +44,21 @@ const AuctionItemList = ({
     includeCompleted
   );
 
-  // 상태별 필터링
   const filteredData = useMemo(() => {
-    if (!selectedStatuses || !auctionsData?.data) return auctionsData?.data;
+    if (!auctionsData?.data) return [];
 
-    return auctionsData.data.filter((auction) =>
-      selectedStatuses.includes(auction.status as AuctionStatus)
-    );
-  }, [auctionsData?.data, selectedStatuses]);
+    let data = auctionsData.data;
+
+    if (!includeCompleted) {
+      data = data.filter((auction) => auction.status !== 'COMPLETED');
+    }
+
+    if (selectedStatuses && selectedStatuses.length > 0) {
+      data = data.filter((auction) => selectedStatuses.includes(auction.status as AuctionStatus));
+    }
+
+    return data;
+  }, [auctionsData?.data, selectedStatuses, includeCompleted]);
 
   if (isLoading) {
     return (
