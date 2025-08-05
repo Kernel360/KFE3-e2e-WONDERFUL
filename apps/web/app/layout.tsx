@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import type { Metadata, Viewport } from 'next';
 
 import Toast from '@/components/common/toast';
-import Navigation from '@/components/layout/navigation';
 
 import LocationModalProvider from '@/providers/location-modal-provider';
 import QueryProvider from '@/providers/query-provider';
