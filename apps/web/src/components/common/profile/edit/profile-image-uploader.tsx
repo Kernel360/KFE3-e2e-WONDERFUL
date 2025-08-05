@@ -44,8 +44,8 @@ const ProfileImageUploader = ({
     if (file?.type === 'image/svg+xml') {
       showToast({
         status: 'notice',
-        title: '이미지 확장자 제한',
-        subtext: 'svg 파일 업로드는 현재 지원하지 않습니다. 다른 확장 파일로 다시 시도해주세요.',
+        title: 'svg 파일 제한',
+        subtext: '다른 확장 파일로 다시 시도해주세요.',
         autoClose: true,
       });
       return;
