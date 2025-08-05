@@ -10,7 +10,6 @@ import ButtonSignOut from '@/components/user/button-sign-out';
 
 import { getMyProfile } from '@/lib/actions/profile';
 
-export const dynamic = 'force-dynamic';
 const ProfilePage = async () => {
   const profile = await getMyProfile();
   if (!profile) {
