@@ -47,7 +47,7 @@ const BidTable = ({ auctionId, initialBids }: BidTableProps) => {
           <BidTableHead />
           <div className="relative">
             <span className="w-7.5 absolute flex h-full items-center justify-center text-neutral-400">
-              <i className="bg-primary-100 h-9/10 block w-1"></i>
+              <i className="bg-primary-100 h-8/10 block w-1"></i>
             </span>
             <ul ref={animationParent} className="space-y-2">
               {sortedBids.map((item) => {

@@ -36,7 +36,7 @@ const BidTableRow = ({ item }: { item: BidType }) => {
       />
       <div
         className={cn(
-          'ml-3 flex w-full rounded-sm bg-white py-2.5 text-sm text-neutral-600 opacity-90',
+          'border-1 border-primary-100 ml-3 flex w-full rounded-sm bg-white py-2.5 text-sm text-neutral-600 opacity-90',
           isAuthor &&
             'border-1 border-primary-500 text-primary-600 shadow-primary-300 font-bold opacity-100 shadow-sm'
         )}

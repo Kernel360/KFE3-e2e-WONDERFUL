@@ -26,7 +26,7 @@ const BidderAvatar = ({
       src={profileImg}
       alt={nickname}
       size={'small'}
-      className={authorStyle({ author: isAuthor })}
+      className={`border-1 border-primary-100 ${authorStyle({ author: isAuthor })}`}
     />
   );
 };
