@@ -4,6 +4,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ProfileHeader />
+
       {children}
       <Navigation />
     </>

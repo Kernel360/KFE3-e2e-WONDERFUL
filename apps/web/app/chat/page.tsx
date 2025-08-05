@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 
 import { ChatListCard, ChatListCardSkeleton } from '@/components/chat';
 import { FilterTab } from '@/components/common';
+import { Container } from '@/components/layout';
 
 import useFilteredChatRooms from '@/hooks/chat/useFilteredChatRooms';
 
@@ -22,33 +23,39 @@ const Page = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-full w-full flex-col px-4">
-        <FilterTab filterKey={'chatStatus'} items={CHAT_STATUS} />
-        <ChatListCardSkeleton />
-      </div>
+      <Container>
+        <div className="flex h-full w-full flex-col px-4">
+          <FilterTab filterKey={'chatStatus'} items={CHAT_STATUS} />
+          <ChatListCardSkeleton />
+        </div>
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <div className="text-gray-500">채팅방 목록을 불러오는데 실패했습니다</div>
-      </div>
+      <Container>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-gray-500">채팅방 목록을 불러오는데 실패했습니다</div>
+        </div>
+      </Container>
     );
   }
 
   return (
-    <div className="flex h-full w-full flex-col px-4">
-      <FilterTab filterKey={'chatStatus'} items={CHAT_STATUS} />
-      {!sortedChatRooms.length && (
-        <div className="flex items-center justify-center py-8">
-          <div className="text-gray-500">대화 중인 채팅방이 없습니다</div>
-        </div>
-      )}
-      {sortedChatRooms.map((chat) => {
-        return <ChatListCard key={chat.id} chatInfo={chat} />;
-      })}
-    </div>
+    <Container>
+      <div className="flex h-full w-full flex-col px-4">
+        <FilterTab filterKey={'chatStatus'} items={CHAT_STATUS} />
+        {!sortedChatRooms.length && (
+          <div className="flex items-center justify-center py-8">
+            <div className="text-gray-500">대화 중인 채팅방이 없습니다</div>
+          </div>
+        )}
+        {sortedChatRooms.map((chat) => {
+          return <ChatListCard key={chat.id} chatInfo={chat} />;
+        })}
+      </div>
+    </Container>
   );
 };
 

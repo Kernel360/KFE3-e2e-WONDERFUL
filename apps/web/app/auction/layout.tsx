@@ -1,11 +1,10 @@
-import { AuctionHeader, Container, Navigation } from '@/components/layout';
+import { AuctionHeader } from '@/components/layout';
 
 const AuctionLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <AuctionHeader />
-      <Container>{children}</Container>
-      <Navigation />
+      {children}
     </>
   );
 };

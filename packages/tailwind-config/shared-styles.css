@@ -77,6 +77,12 @@ h6 {
   overscroll-behavior: contain;
 }
 
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 @theme {
   /* Primary Colors */
   --color-primary-50: #edf0ff;

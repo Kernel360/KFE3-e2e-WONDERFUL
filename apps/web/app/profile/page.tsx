@@ -19,22 +19,24 @@ const ProfilePage = async () => {
   }
 
   return (
-    <Container className="w-fulle [&>div]:border-1 bg-primary-50/30 flex h-full flex-col space-y-2 px-4 pt-2 [&>div]:rounded-sm [&>div]:border-neutral-100 [&>div]:shadow-[0px_1px_9px_0px_rgba(87,88,254,.11)]">
-      <ProfileCard
-        nickname={profile.nickname || ''}
-        profileImg={profile.profileImg || defaultAvatar}
-      >
-        <Link href="/profile/edit" className="flex h-10 items-center gap-2 text-sm">
-          <Pen size={16} />
-          프로필 수정
-        </Link>
-      </ProfileCard>
-      <ProfileShortcutMenu />
-      <MenuList />
-      <span className="block w-full">
-        <ButtonSignOut />
-      </span>
-    </Container>
+    <>
+      <Container className="[&>div]:border-1 bg-primary-50/30 space-y-2 px-4 [&>div]:rounded-sm [&>div]:border-neutral-100 [&>div]:shadow-[0px_1px_9px_0px_rgba(87,88,254,.11)]">
+        <ProfileCard
+          nickname={profile.nickname || ''}
+          profileImg={profile.profileImg || defaultAvatar}
+        >
+          <Link href="/profile/edit" className="flex h-10 items-center gap-2 text-sm">
+            <Pen size={16} />
+            프로필 수정
+          </Link>
+        </ProfileCard>
+        <ProfileShortcutMenu />
+        <MenuList />
+        <span className="mt-4 block w-full">
+          <ButtonSignOut />
+        </span>
+      </Container>
+    </>
   );
 };
 

@@ -20,11 +20,17 @@ const Navigation = () => {
   const showNavigation = ['/', '/auction', '/search', '/chat', '/profile'].includes(pathname || '');
 
   if (!showNavigation) {
-    return <div className="h-0 w-full"></div>;
+    return null;
   }
 
   return (
-    <nav className="z-50 h-[76px] w-full bg-white shadow-[var(--shadow-nav)]">
+    <nav
+      className="absolute bottom-0 left-0 right-0 z-50 bg-white shadow-[var(--shadow-nav)]"
+      style={{
+        height: 'calc(76px + env(safe-area-inset-bottom))',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}
+    >
       <ul className="flex h-full w-full">
         {NAV_MENU.map(({ name, href, icon: Icon }) => {
           const isActive = pathname === href;

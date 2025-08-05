@@ -77,7 +77,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body className={pretendard.className}>
         <QueryProvider>
           <UserProvider>
-            <div className="min-h-fill grid-header-main-nav mx-auto grid h-dvh max-h-dvh min-w-[320px] max-w-[480px] overflow-hidden bg-white">
+            <div className="relative mx-auto h-dvh min-w-[320px] max-w-[480px] overflow-hidden bg-white">
               {children}
               <Toast />
               <LocationModalProvider />

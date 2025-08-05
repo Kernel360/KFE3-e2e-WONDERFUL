@@ -48,9 +48,7 @@ const ProfileHeader = () => {
   const isProfileSubpage = pathname !== '/profile' && pathname.startsWith('/profile');
 
   return (
-    <HeaderWrapper
-      className={cn(isProfileSubpage ? 'relative bg-white' : 'bg-primary-50/30 relative')}
-    >
+    <HeaderWrapper className={cn(isProfileSubpage ? 'bg-white' : 'bg-primary-50/30')}>
       {showBackButton && (
         <Button color={'transparent'} className="!px-0" onClick={() => router.back()}>
           <ChevronLeft />

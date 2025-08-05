@@ -1,10 +1,10 @@
-import { ChatHeader, Container, Navigation } from '@/components/layout';
+import { ChatHeader, Navigation } from '@/components/layout';
 
 const layoutChat = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ChatHeader />
-      <Container>{children}</Container>
+      {children}
       <Navigation />
     </>
   );
