@@ -11,9 +11,9 @@ const CategoriesFilter = () => {
 
   if (isLoading || !categoriesData) {
     return (
-      <div className="my-3 flex gap-2">
+      <div className="mb-3 mt-2 flex gap-2">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="w-89 h-[35px] animate-pulse rounded bg-neutral-200" />
+          <div key={i} className="w-89 h-[35px] animate-pulse rounded-md bg-neutral-200" />
         ))}
       </div>
     ); // 로딩 상태에서의 스켈레톤 UI
