@@ -21,8 +21,8 @@ const pretendard = localFont({
   preload: true,
 });
 
-const APP_NAME = '지역 경매 서비스';
-const APP_DEFAULT_TITLE = '지역 경매 서비스';
+const APP_NAME = 'Living Auction';
+const APP_DEFAULT_TITLE = '리빙 옥션: 지역 기반 실시간 경매 플랫폼';
 const APP_TITLE_TEMPLATE = '%s - 경매앱';
 const APP_DESCRIPTION = '지역 기반 실시간 경매 플랫폼';
 
@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   manifest: '/manifest.webmanifest',
+  icons: {
+    icon: { url: '/logo.svg', type: 'image/svg+xml' },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
