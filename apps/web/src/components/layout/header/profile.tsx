@@ -46,9 +46,7 @@ const ProfileHeader = () => {
   });
 
   return (
-    <HeaderWrapper
-      className={cn(`relative ${pathname === '/profile' ? 'bg-neutral-100' : 'bg-white'}`)}
-    >
+    <HeaderWrapper className={cn(`bg-primary-50/30 relative`)}>
       {showBackButton && (
         <Button color={'transparent'} className="!px-0" onClick={() => router.back()}>
           <ChevronLeft />

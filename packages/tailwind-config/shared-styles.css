@@ -17,12 +17,8 @@ h6 {
 /* tab 가로 스크롤 스타일 숨김 */
 .scrollbar-hide-x {
   overflow-x: auto;
-  /* 가로 스크롤 가능 */
   overflow-y: hidden;
-  /* 세로 스크롤 숨김 */
   white-space: nowrap;
-  /* 내용이 한 줄로 유지되도록 */
-
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
@@ -31,26 +27,54 @@ h6 {
 
 .scrollbar-hide-y {
   overflow-y: auto;
-  /* 가로 스크롤 가능 */
   overflow-x: hidden;
-  /* 세로 스크롤 숨김 */
-
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
 }
 
-.scrollbar-hide-x::-webkit-scrollbar {
-  /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+/* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+.scrollbar-hide-x::-webkit-scrollbar,
+.scrollbar-hide-y::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
 
-.scrollbar-hide-y::-webkit-scrollbar {
-  /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
-  width: 0;
-  height: 0;
+.h-dvh {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.min-h-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.max-h-dvh {
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+.min-h-fill {
+  min-height: -webkit-fill-available;
+  min-height: stretch;
+}
+
+.grid-main-nav {
+  grid-template-rows: 1fr auto;
+}
+
+.grid-header-main-nav {
+  grid-template-rows: auto 1fr auto;
+}
+
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+.overscroll-contain {
+  overscroll-behavior: contain;
 }
 
 @theme {
