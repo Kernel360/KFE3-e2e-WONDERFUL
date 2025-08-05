@@ -15,52 +15,41 @@ import { useFilterStore, useLocationStore } from '@/lib/zustand/store';
 
 import { AuctionStatus } from '@/types/filter';
 
-interface AuctionItemListProps {
+export interface AuctionItemListProps {
   sortOption?: SortOption;
-  includeCompleted?: boolean; // 종료된 경매 포함 여부
+  includeCompleted?: boolean;
   selectedStatuses?: AuctionStatus[];
 }
 
 const AuctionItemList = ({
   sortOption = 'latest',
-  includeCompleted = false, // 기본값은 종료된 경매 미포함
+  includeCompleted = true,
   selectedStatuses,
 }: AuctionItemListProps) => {
-  const selectedCategoryId = useFilterStore((state) => state.selectedItems.category);
+  const categoryId = useFilterStore((s) => s.selectedItems.category);
+  const location = useLocationStore((s) => s.selectedLocation.locationName);
 
-  // 정렬은 Zustand 전역 상태로 관리 (헤더와 공유)
-  const selectedLocationName = useLocationStore((state) => state.selectedLocation.locationName);
-  includeCompleted = true;
-
-  // useAuctions 훅을 사용하여 경매 목록 조회 (카테고리 ID로 필터링)
-  const {
-    data: auctionsData,
-    isLoading,
-    error,
-    refetch,
-  } = useAuctions(
-    selectedLocationName && selectedLocationName !== '위치 설정 필요'
-      ? selectedLocationName
-      : undefined,
-    selectedCategoryId || undefined,
+  const { data, isLoading, error, refetch } = useAuctions(
+    location !== '위치 설정 필요' ? location : undefined,
+    categoryId || undefined,
     sortOption,
     includeCompleted
   );
 
-  // 상태별 필터링
-  const filteredData = useMemo(() => {
-    if (!selectedStatuses || !auctionsData?.data) return auctionsData?.data;
-
-    return auctionsData.data.filter((auction) =>
-      selectedStatuses.includes(auction.status as AuctionStatus)
-    );
-  }, [auctionsData?.data, selectedStatuses]);
+  const filtered = useMemo(() => {
+    const list = data?.data ?? [];
+    const withoutCompleted = includeCompleted ? list : list.filter((a) => a.status !== 'COMPLETED');
+    if (selectedStatuses?.length) {
+      return withoutCompleted.filter((a) => selectedStatuses.includes(a.status as AuctionStatus));
+    }
+    return withoutCompleted;
+  }, [data?.data, includeCompleted, selectedStatuses]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-[100vhd] flex-col gap-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <AuctionItemCardSkeleton key={index} />
+        {Array.from({ length: 5 }).map((_, i) => (
+          <AuctionItemCardSkeleton key={i} />
         ))}
       </div>
     );
@@ -82,10 +71,10 @@ const AuctionItemList = ({
 
   return (
     <div className="flex flex-col">
-      {filteredData && filteredData.length > 0 ? (
-        filteredData.map((auction, idx) => {
-          const auctionItemProps = convertToAuctionItemProps(auction);
-          return <AuctionCard key={auction.id} {...auctionItemProps} idx={idx} />;
+      {filtered.length > 0 ? (
+        filtered.map((auction, idx) => {
+          const props = convertToAuctionItemProps(auction);
+          return <AuctionCard key={auction.id} {...props} idx={idx} />;
         })
       ) : (
         <div className="flex flex-col items-center justify-center py-16">
