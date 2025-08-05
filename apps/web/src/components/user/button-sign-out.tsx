@@ -26,7 +26,7 @@ const ButtonSignOut = () => {
   };
   return (
     <button
-      className="border-b-1 mx-auto mb-8 mt-6 block border-neutral-400 text-sm font-medium leading-4 text-neutral-400"
+      className="border-b-1 mx-auto block border-neutral-400 text-sm font-medium leading-4 text-neutral-400"
       onClick={handleLogout}
     >
       로그아웃

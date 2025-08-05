@@ -7,7 +7,7 @@ import { menuSections } from '@/constants/profile';
 const MenuList = () => (
   <>
     {menuSections.map((section) => (
-      <div key={section.id} className="space-y-3 bg-white px-4 py-5">
+      <div key={section.id} className="space-y-3 bg-white px-4 py-4">
         <h3 className="text-min font-bold text-neutral-400">{section.title}</h3>
         <ul className="space-y-1">
           {section.items.map((item) => (
