@@ -5,17 +5,17 @@ export const runtime = 'edge';
 export const generateImageMetadata = () => {
   return [
     {
-      contentType: 'image/png',
+      contentType: 'image/svg',
       size: { width: 32, height: 32 },
       id: 'small',
     },
     {
-      contentType: 'image/png',
+      contentType: 'image/svg',
       size: { width: 192, height: 192 },
       id: 'medium',
     },
     {
-      contentType: 'image/png',
+      contentType: 'image/svg',
       size: { width: 512, height: 512 },
       id: 'large',
     },
@@ -23,9 +23,8 @@ export const generateImageMetadata = () => {
 };
 
 const Icon = ({ id }: { id: string }) => {
-  // id에 따라 크기 결정
   const size = id === 'large' ? 512 : id === 'medium' ? 192 : 32;
-  const iconSize = Math.floor(size * 0.6); // 아이콘 크기를 전체의 60%로 설정
+  const iconSize = Math.floor(size * 0.6);
 
   return new ImageResponse(
     (
