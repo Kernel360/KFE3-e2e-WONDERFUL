@@ -75,7 +75,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
               <span className="text-min text-neutral-500">{msgElapsed()}</span>
             </p>
           </div>
-          <p className="text-min line-clamp-1 min-h-6 flex-1 text-neutral-500">
+          <p className="text-min line-clamp-1 min-h-4 flex-1 text-neutral-500">
             {!messages.length ? '' : messages[0]?.content}
           </p>
         </div>
