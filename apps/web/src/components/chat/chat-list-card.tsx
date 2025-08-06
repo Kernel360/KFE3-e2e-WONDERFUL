@@ -80,7 +80,7 @@ const ChatListCard = ({ chatInfo }: { chatInfo: ChatRoom }) => {
           </p>
         </div>
       </Link>
-      <ButtonChatMore />
+      {/* <ButtonChatMore /> */}
     </div>
   );
 };
