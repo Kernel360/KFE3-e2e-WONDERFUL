@@ -18,7 +18,7 @@ const AccountHeader = () => {
 
   const handleOnClick = () => {
     if (pathname.includes('/create') || pathname.includes('/edit')) {
-      routes.push('/address');
+      routes.push('/account');
     } else {
       routes.push('/profile');
     }
