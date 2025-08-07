@@ -30,10 +30,11 @@ const nextConfig: NextConfig = {
     imageSizes: [28, 40, 46, 58, 86, 120, 150, 172, 212, 256, 375],
     deviceSizes: [150, 375, 500],
     minimumCacheTTL: 60 * 60 * 24 * 7,
+    domains: ['simjfysftupqszgxkosk.supabase.co'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'autkdwezfwdduoqiadsc.supabase.co',
+        hostname: 'simjfysftupqszgxkosk.supabase.co', // 새 프로젝트 추가
         pathname: '/storage/v1/object/public/**',
       },
     ],
